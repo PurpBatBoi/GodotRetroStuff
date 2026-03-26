@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://bmude0qwsshyw"]
+
+[ext_resource type="Script" uid="uid://dswi7l1eo448" path="res://Camera.gd" id="1_inftv"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_tca40"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_inftv"]
+size = Vector2(32, 32)
+subdivide_width = 32
+subdivide_depth = 32
+
+[node name="3d" type="Node3D" unique_id=1513778624]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=285019722]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4347203, 0)
+mesh = SubResource("BoxMesh_tca40")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=2005891658 node_paths=PackedStringArray("camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4347203, 2.928118)
+script = ExtResource("1_inftv")
+movement_speed = 5.0
+KEY_UP = "move_down"
+KEY_DOWN = "move_up"
+camera = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=683559793]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=718245533]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2762299, 1.4347203, 2.261145)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=442603781]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_inftv")
