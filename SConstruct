@@ -5,7 +5,7 @@ import sys
 from methods import print_error
 
 
-libname = "EXTENSION-NAME"
+libname = "n64visuals"
 projectdir = "project"
 
 localEnv = Environment(tools=["default"], PLATFORM="")

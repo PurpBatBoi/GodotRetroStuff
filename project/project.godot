@@ -27,6 +27,10 @@ window/size/window_width_override=640
 window/size/window_height_override=480
 window/stretch/mode="viewport"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/n64_visuals_billboards/plugin.cfg")
+
 [input]
 
 move_forward={

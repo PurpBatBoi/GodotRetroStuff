@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://csp0ddgjuy6ft"
+path="res://.godot/imported/structs.glsl-dc7f3f8cd2c063893b2241b3faeff75a.res"
+
+[deps]
+
+source_file="res://shaders/n64combinertest/original-glsl-version-reference/structs.glsl"
+dest_files=["res://.godot/imported/structs.glsl-dc7f3f8cd2c063893b2241b3faeff75a.res"]
+
+[params]
+

@@ -1,22 +1,508 @@
-[gd_scene format=3 uid="uid://bmude0qwsshyw"]
+[gd_scene format=4 uid="uid://bmude0qwsshyw"]
 
 [ext_resource type="Script" uid="uid://dswi7l1eo448" path="res://Camera.gd" id="1_inftv"]
+[ext_resource type="Shader" uid="uid://bwra7y6rfjeno" path="res://shaders/n64_vertex_lit.gdshader" id="2_gktqi"]
+[ext_resource type="Texture2D" uid="uid://crswxrjs073ay" path="res://assets/texture_atlas.png" id="3_jkk2y"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_tca40"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dr8x7"]
+vertex_color_use_as_albedo = true
 
-[sub_resource type="QuadMesh" id="QuadMesh_inftv"]
-size = Vector2(32, 32)
-subdivide_width = 32
-subdivide_depth = 32
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h1qt2"]
+vertex_color_use_as_albedo = true
 
-[node name="3d" type="Node3D" unique_id=1513778624]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xnuq7"]
+vertex_color_use_as_albedo = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=285019722]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4347203, 0)
-mesh = SubResource("BoxMesh_tca40")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mmuid"]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wok2r"]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_6dcwb"]
+resource_name = "scene_test_Plane_002"
+_surfaces = [{
+"aabb": AABB(-2.814154, -0.83791804, -2.814154, 5.628308, 0.83791804, 5.628308),
+"attribute_data": PackedByteArray("/3dm8xxG3oobIlgAiF0kqBEgWQBeXXmPFiRi/nlGTWMWJGL+kjcUiBMiXvThUnRrFiRi/pxiDUf/cWfzBUaorBUlY/6SN3+vEyNf5fpqcFMWJWL+b4ecNxEfVwAFZ854sE1l8/pSAMwUJGL+hkY61BEeVQBBeChnIyVaAARn5747LmLz/Wov5I5HZ/6wYpTwRC9dAIx4TdAWH1QAnHbCtQAAAAAYe0+VZThj8pKKVfH/hm7+rYf9/4E+XgBvj7TZAAAAANiUL74AAAAApJuqm5hGYvLnrGnx/7h0/tmv//+vSV0AI6iD2UwsUwAPtM7BAAAAAC+8AKLXU1oAGL9A0J1GYfJwzArk/9d4/tnUe/DXU1wAW9CGvqtJYfKc5OXL/9x3/hnxEdTHUFwA9dnHp5NDYfJc8Uus/8d3/v//C6+JP10Al9kij3E7YvtR8VKK/5lx/sn/XocgIVQAqMB+gVMyXABN0E14RDBi8f3jIGvkXWr+W/DRYiQmWgCkvgBnAAAAAGyiJ3lyPWXzA8wpUxcmZf451MxGGiNaAMWnsF0OGk4AQIOQdf9jZ/ONrChGFiZl/mevkjcVIVkAI4/rXf+AZuNgih9G"),
+"format": 34896613407,
+"index_count": 288,
+"index_data": PackedByteArray("AAABAAIAAAADAAQAAAAFAAMABQAGAAMABQAAAAIABwAAAAQAAAAHAAEABwAEAAgABQAJAAYACQAKAAYABQACAAsACQAFAAsADAAHAAgADAAIAA0ACQALAA4ABwAMAA8ABwAPAAEAEAAMAA0AEAANABEADAASAA8ADAAQABIAEwABAA8AEwAPABIAFAABABMAFAACAAEAFQAQABEAFQARABYAEAAXABIAEAAVABcAGAATABIAGAASABcAGQAUABMAGQATABgAGgAVABYAGgAWABsAFQAcABcAFQAaABwAHQAYABcAHQAXABwAHgAZABgAHgAYAB0AGgAfABwAIAAaABsAGgAgAB8AIAAbACEAIgAcAB8AIAAiAB8AIgAdABwAIwAgACEAIAAjACIAIwAhACQAJQAdACIAIwAlACIAJQAeAB0AJgAjACQAIwAmACUAJgAkACcAKAAeACUAJgAoACUAKQAmACcAJgApACgAKQAnACoAKAArAB4AKwAZAB4AKQAsACgALAArACgALQApACoAKQAtACwALQAqAC4ALAAvACsALQAvACwAKwAwABkALwAwACsAMAAUABkAMQAtAC4ALQAxAC8AMQAuADIALwAzADAAMQAzAC8AMAA0ABQAMwA0ADAANAACABQANAALAAIANQAxADIAMQA1ADMANQAyADYAMwA3ADQANwALADQANQA3ADMANwAOAAsAOAA1ADYANQA4ADcAOAAOADcAOAA2AAoAOAAJAA4ACQA4AAoA"),
+"material": SubResource("StandardMaterial3D_dr8x7"),
+"primitive": 3,
+"uv_scale": Vector4(4.0971546, 4.6066704, 0, 0),
+"vertex_count": 57,
+"vertex_data": PackedByteArray("uTL//7kyajl5X+J9ejEbQedD4n3nQ9o5vgn//wNPRTZ9Jf//fSXYLwkb//8tVsw0AAD///9/CD0tVv//CRuOPQNP//++CYoqtxL///9/3TC+Cf//+7BSQ3ox4n15Xw0y/3///7cSrkD/f///AAAEJwIr4n3/f+Ir/3/ifQIrA0bRqf//CRv7Qfuw//++CWElhaDifXox10h1geFRcUITP3lfYyJ5X9I4Rc3//7kyPUGB2v//fSWaJRe84n3nQ+ZHfqLbKYBdcz7/fwAA/38CN/Xk//8tVss+QPb//wNPySeEzuJ9eV9dQ4294VGJfh47haBjIoWgXTT81OJ9/382PUft////fzU7//////9/zCuEzuJ9haABN/Xk///RqRY3QPb///uwDTIXvOJ9F7y6L0XN//9FzSUzgdr//4HazjmFoOJ9hM54KdGp///15L4v+7D//0D2hkGJfuFRjb1YLv9/4n381EAm/3///0ftXi3/f/////9cR3lf4n2EzkskgF3bKX6iOC8tVv//9eQ3LANP//9A9npJ50PifRe8CSVxQuFRdYEPMrky//9FzWIsfSX//4Ha0Ud6MeJ9haC4Jwkb///RqfUtWryHl562rJWhuuqQ1brps5+/O7Dovb+WCrd0tLC6GZr+w2Wqzb9Fl1C1h7FavmGPibn1nRPHjKOFwHWRp7QmnMK4mKK0x0WdWrPHo3m53J7XvGqafrgYpzbGOZj2sxWs+rlepS2+6KAVuYKqj8NclG61ULLju0WqGL9fp2m3m7SeujqsIMDvkdG7N7TYvA2sI72kkAXAZ7C1v/WpqrpRkSvD5ar3wbOmp7jdlOHB7aI6xc6kaMPSoi+3VZtMxryemMEVnbrD+p66ta2j+cVamF/AIpj7wqKb17Srq9LDjZOPwf+Y")
+}, {
+"aabb": AABB(-3.4645195, -1.188314, -3.4645195, 6.929039, 1.188314, 6.929039),
+"attribute_data": PackedByteArray("/9d4/jHv/3///4H/hvdItv//h//N7ki2mCIQ/w34/v/4NxD/Ru7+//+4dP4i9/9//4Zu/hT//3//zXf/d/9Itv//gf+/9ki2OA4O/////v+YIhD/N/b+///cd/5A5/9///+H/5XvSLb//4f/3OZItvg3EP8c8P7/zS0Q/1Xm/v//x3f+Tt//f///h/+j50i2//+D/+veSLbNLRD/K+j+/1gSDf9j3v7//5lx/l3X/3///4P/st9Itv/xev/51ki2WBIN/zng/v8tCw//ctb+/+Rdav5sz/9///F6/8HXSLb/g27/CM9Iti0LD/9I2P7/DwcP/4HO/v8XJmX+e8f/f/+Dbv/Qz0i2ISpl/xfHSLYPBw//V9D+/wYFDv+Qxv7/FiZl/om//38hKmX/3sdIth4qZv8mv0i2BgUO/2bI/v8EBQ//nr7+/xYlYv6Yt/9/Hipm/+2/SLYbKGX/NLdItgQFD/90wP7/BAUP/622/v8WJGL+p6//fxsoZf/8t0i2Gyhj/0OvSLYEBQ//g7j+/wQEDf+8rv7/FiRi/rWn/38bKGP/CrBIthsnZf9Sp0i2BAQN/5Kw/v8FBQ//yqb+/xYkYv7En/9/Gydl/xmoSLYdKmb/YJ9ItgUFD/+gqP7/AwQN/9me/v8VJWP+05f/fx0qZv8ooEi2HChl/2+XSLYDBA3/r6D+/wQEDv/olv7/FCRi/uKP/38cKGX/N5hIth0pZv9+j0i2BAQO/76Y/v8FBQ7/947+/45HZ/7wh/9/HSlm/0WQSLbNWGr/jYdItgUFDv/NkP7/DgcQ/wWH/v//hm7+/3//f81Yav9UiEi2/813/5t/SLYOBxD/24j+/zgODv8Uf///"),
+"format": 34896613407,
+"index_count": 192,
+"index_data": PackedByteArray("AAABAAIAAgABAAMAAgADAAQAAAAFAAEABQAGAAcABQAHAAgACAAHAAkACAAJAAoACwAAAAwACwAMAA0ADQAMAA4ADQAOAA8AEAALABEAEAARABIAEgARABMAEgATABQAFQAQABYAFQAWABcAFwAWABgAFwAYABkAGgAVABsAGgAbABwAHAAbAB0AHAAdAB4AHwAaACAAHwAgACEAIQAgACIAIQAiACMAJAAfACUAJAAlACYAJgAlACcAJgAnACgAKQAkACoAKQAqACsAKwAqACwAKwAsAC0ALgApAC8ALgAvADAAMAAvADEAMAAxADIAMwAuADQAMwA0ADUANQA0ADYANQA2ADcAOAAzADkAOAA5ADoAOgA5ADsAOgA7ADwAPQA4AD4APQA+AD8APwA+AEAAPwBAAEEAQgA9AEMAQgBDAEQARABDAEUARABFAEYARwBCAEgARwBIAEkASQBIAEoASQBKAEsATABHAE0ATABNAE4ATgBNAE8ATgBPAFAA"),
+"material": SubResource("StandardMaterial3D_h1qt2"),
+"primitive": 3,
+"uv_scale": Vector4(28.723534, 1.495991, 0, 0),
+"vertex_count": 81,
+"vertex_data": PackedByteArray("9+f///9/5Md56Y63TlTu0Cryjrf/fxbEQPYAAANPiND//wAA/39uwg3g//81WCDbhMn//3o2R+G60I63RC8n4HnpjrdOVCDTgdoAAH0lE+BA9gAAA0/b0Q3g///Jp728KvKOt/9/78F56Y63sKtytf//AAD/fx/BQPYAAPuwQ7OEyf//hMmes3npjrewq2KzutCOt7rQradA9gAA+7D9sYHaAACB2rGkyaf//w3gzK260I63utDQpbCrjrd56RqcgdoAAIHagKP7sAAAQPbYl/9////355ussKuOt3npypr/f463KvJ1lvuwAABA9uyW/38AAP//K5E1WP//DeBnsP9/jrcq8nWWTlSOt3npypr/fwAA//8rkQNPAABA9uyWejb//4TJKbhOVI63eekanEQvjre60NClA08AAED22Jd9JQAAgdqAo/Ef///Jp3/CRC+Ot7rQraeFFo63sKtis30lAACB2rGkvgkAAPuw/bEHGP///3/kx4UWjrewq3K11A2Ot/9/78G+CQAA+7BDswAAAAD/fx/B8R///zVYINvUDY63/38WxIUWjrdOVO7QAAAAAP9/bsK+CQAAA0+I0Ho2//96NkfhhRaOt05UINNEL463RC8n4L4JAAADT9vRfSUAAH0lE+A1WP//8R/59UQvjrdEL17iTlSOt4UWfu99JQAAfSVo4QNPAAC+Ca/v/3///wcYWfxOVI63hRa48f9/jrfUDeH+A08AAL4JBfH/fwAAAABT/8mn///xH7fu/3+Ot9QN4f6wq463hRa48f9/AAAAAFP/+7AAAL4JBfGEyf//ejZp6LCrjreFFn7vutCOt0QvXuL7sAAAvgmv74HaAAB9JWjhk8f6KM2pmhRMrXoSQ6L9EKGlPA8MvgkUX73kFjGmBA8/p9ILIp9VDCCgkQlpzhc1Iq5RG+G00RoUpqkWvKyOFhrYQkbts0okk7+VJkarYx4vt1MheuhHY+K8KjKK0Vc6iLOsKvTJqTTx9uFnas5RTbH6nWeMxPtD1/sNaLjH356c50yFUM2UsQzoJ4T7w3G737Spq1a6dK4pshzDqLQKtqyqdcynp6K0lKZqwEmkEcxSoc7IY5641Pmoa7jQmh3LUJvb0Y2WQdOolurZCZTxwXqSsdKalDDWPI9c2vyQut3klp/C0Yu/2AOPzNmQid3fVYzc4H6C2c35hQ/e7okU3baElOQniKvjLbSbBmeAH+PthE/gMID36BaEZ+bXuN0Orp/tBN6cZwCXmRcEBpcwACu4YAvqou8J7qH5BVOcKAhqm7YE")
+}, {
+"aabb": AABB(-1.2882253, -0.70992565, -1.2882253, 2.5764506, 2.953321, 2.5764506),
+"attribute_data": PackedByteArray("AAAA/3uv/v//zWv/nMMmgxgkWP97ryaDAAAA/5zD/v8AAAD/W5v+////gP+91yaDGiRZ/1ubJoMAAAD/vdf//wAAAP86h/7///94/97rJoMZI1j/OocmgwAAAP/e6////4Bi////JoMAAAD//////wAAAP8Zc/7/GSRY/xlzJoMAAAD/+F7+//+AYv/4XiaD"),
+"format": 34896613407,
+"index_count": 48,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAAAAIAAwAFAAEABAACAAYAAwAHAAUACAAEAAYABwAJAAUACAAGAAoABwALAAkACwAMAAkACwANAAwADgAIAAoADgAKAA8AEAAOAA8AEAAPABEA"),
+"material": SubResource("StandardMaterial3D_xnuq7"),
+"primitive": 3,
+"uv_scale": Vector4(4.0262046, 2, 0, 0),
+"vertex_count": 18,
+"vertex_data": PackedByteArray("/38AAAAA3gPBxv//PTmsEP9////uGxISgdoAAH0lkgN9JQAAfSWSAxDk////f7kMPTn//z05rBD//wAA/3+8AgAAAAD/f7wCwcb//8HG3QbuG////3+5DIHaAACB2noB/3///xDk/Qb/fwAA//+YAX0lAACB2noBPTn//8HG3Qb/fwAA//+YAf9///8Q5P0G/v//f+bU7Yf///9/Q9nBgT3+RFmDufeMEfjmVIO+94IG/YM+VaCZkQfzgzlEpCiECoIslxyAzIXV+0UkZe5VIDL6HQDS6AsC")
+}, {
+"aabb": AABB(-1.007102, 2.2433953, -1.007102, 2.014204, 0.07460928, 2.014204),
+"attribute_data": PackedByteArray("/81r/9mrxSgWJmX/MWnNFBgkWP8xaSkNFSRh//ArLC4aJFn/iCbFKP97bv9ypiwu//+A/3bHbmsVJWX/kBJuaxkjWP/sCm5r/8N1/9G/bmv//3j/2asWrhUlZf/wK6+oGSRY/4gmFq7/tHT/cqavqP+AYv8xabPJz1hr/zFpDsI="),
+"format": 34896613407,
+"index_count": 66,
+"index_data": PackedByteArray("AAABAAIAAgABAAMAAgADAAQAAAAFAAEABgAFAAAABAADAAcAAQAHAAMABAAHAAgACQABAAUABgAJAAUACQAHAAEACgAJAAYACAAHAAsACAALAAwACgANAAkADgANAAoABwAJAA8ABwAPAAsADwAJAA0ADAALAA8ADgAPAA0ADAAPAA4A"),
+"material": SubResource("StandardMaterial3D_mmuid"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 16,
+"vertex_data": PackedByteArray("gdoAAH0lYOP/f///NAtt0f9/AAAAAOztaS3//2ktvcx9JQAAfSVn45XS//9pLb/M//8AAP9/vss0C////3/TwQAAAAD/f9bLyvT///9/18GB2gAAgdourWkt//+V0ma1fSUAAIHaPa2V0v//ldJqtf9/AAD//xGS/3///8r0ka4Tzbdj2f8WgOz/DoDm7subzuPesjjk/m6CuC9ckOzEpljcb8c72alspLCeXH7yzqK33FvPK92Wcq7/DoDE/xaA")
+}, {
+"aabb": AABB(-5.476459, -1.1504393, -5.476459, 10.952918, 1e-05, 10.952918),
+"attribute_data": PackedByteArray("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"),
+"format": 34896613407,
+"index_count": 1320,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAAAAIABAACAAUABgADAAAABgAHAAMACAAAAAQACAAGAAAACQAEAAUACQAFAAoACwAIAAQACwAEAAkADAAHAAYADAANAAcADgAGAAgADgAMAAYADwAIAAsADwAOAAgAEAANAAwAEAARAA0AEgAMAA4AEgAQAAwAEwAOAA8AEwASAA4AFAARABAAFAAVABEAFgAQABIAFgAUABAAFwASABMAFwAWABIAGAAVABQAGAAZABUAGgAUABYAGgAYABQAGwAWABcAGwAaABYAHAAZABgAHAAdABkAHgAYABoAHgAcABgAHwAaABsAHwAeABoAIAAdABwAIAAhAB0AIgAcAB4AIgAgABwAIwAeAB8AIwAiAB4AJAAhACAAJAAlACEAJgAgACIAJgAkACAAJwAiACMAJwAmACIAKAAlACQAKAApACUAKgAkACYAKgAoACQAKwAmACcAKwAqACYALAApACgALAAtACkALgAoACoALgAsACgALwAqACsALwAuACoAMAAtACwAMAAxAC0AMgAsAC4AMgAwACwAMwAuAC8AMwAyAC4ANAAxADAANAA1ADEANgAwADIANgA0ADAANwAyADMANwA2ADIAOAA1ADQAOAA5ADUAOgA0ADYAOgA4ADQAOwA2ADcAOwA6ADYAPAA5ADgAPAA9ADkAPgA9ADwAPgA/AD0AQAA+ADwAQQA8ADgAQAA8AEEAQQA4ADoAQgBAAEEAQwBBADoAQgBBAEMAQwA6ADsARABCAEMARABDAEUARQBDADsARgBEAEUARQA7AEcARgBFAEgASABFAEcARwA7ADcASQBGAEgARwA3AEoASgA3ADMASABHAEsASwBHAEoASQBIAEwATABIAEsATQBJAEwASgAzAE4ATgAzAC8ASwBKAE8ATwBKAE4ATABLAFAAUABLAE8ATQBMAFEAUQBMAFAAUgBNAFEATgAvAFMAUwAvACsATwBOAFQAVABOAFMAUgBRAFUAVgBPAFQAUABPAFYAVwBSAFUAUQBQAFgAWABQAFYAVQBRAFgAVwBVAFkAWgBXAFkAVQBYAFsAWQBVAFsAWABWAFwAWwBYAFwAXABWAF0AVgBUAF0AWgBZAF4AXwBaAF4AWQBbAGAAXgBZAGAAWwBcAGEAYABbAGEAYQBcAGIAXABdAGIAXwBeAGMAZABfAGMAXgBgAGUAYwBeAGUAYgBdAGYAYgBmAGcAXQBoAGYAXQBUAGgAVABTAGgAaABTAGkAUwArAGkAaABpAGoAaQArACcAagBpAGsAaQAnAGsAagBrAGwAawAnACMAbABrAG0AawAjAG0AbABtAG4AbQAjAB8AbgBtAG8AbQAfAG8AbgBvAHAAbwAfABsAcABvAHEAbwAbAHEAcABxAHIAcQAbABcAcgBxAHMAcQAXAHMAcgBzAHQAcwAXABMAcwATAHUAdABzAHUAdQATAA8AdAB1AHYAdwB0AHYAdQAPAHgAdgB1AHgAeAAPAAsAdwB2AHkAegB3AHkAdgB4AHsAeQB2AHsAeAALAHwAewB4AHwAfAALAAkAegB5AH0AfgB6AH0AeQB7AH8AfQB5AH8AewB8AIAAfwB7AIAAfAAJAIEAgAB8AIEAgQAJAAoAgQAKAIIAgwCBAIIAgACBAIMAgwCCAIQAfwCAAIUAhQCAAIMAhgCDAIQAhQCDAIYAhgCEAIcAiAB/AIUAfQB/AIgAiQCFAIYAiACFAIkAigCGAIcAiQCGAIoAigCHAIsAjAB9AIgAfgB9AIwAjQB+AIwAjACIAI4AjgCIAIkAjQCMAI8AjwCMAI4AkACNAI8AkQCJAIoAjgCJAJEAkgCKAIsAkQCKAJIAkgCLAJMAlACOAJEAjwCOAJQAlQCRAJIAlACRAJUAlgCSAJMAlQCSAJYAlgCTAJcAkACPAJgAmACPAJQAmQCQAJgAmgCUAJUAmACUAJoAmwCVAJYAmgCVAJsAnACWAJcAmwCWAJwAnACXAJ0AmQCYAJ4AngCYAJoAnwCcAJ0AnwCdAKAAoQCbAJwAoQCcAJ8AogCaAJsAogCbAKEAngCaAKIAowCfAKAAowCgAKQApQChAJ8ApQCfAKMApgCiAKEApgChAKUApwCeAKIApwCiAKYAqACeAKcAqACZAJ4AqQCnAKYAqgCZAKgAqgCrAJkArACoAKcArACnAKkArQCqAKgArQCoAKwArgCrAKoArgCvAKsAsACqAK0AsACuAKoAsQCvAK4AsQCyAK8AswCuALAAswCxAK4AtACyALEAtAC1ALIAtgCxALMAtgC0ALEAtwC1ALQAtwC4ALUAuQC0ALYAuQC3ALQAugC4ALcAugC7ALgAvAC3ALkAvAC6ALcAvQC5ALYAvgC8ALkAvgC5AL0AvQC2AL8AvwC2ALMAwAC+AL0AwQC9AL8AwAC9AMEAvwCzAMIAwgCzALAAwQC/AMMAwwC/AMIAxADAAMEAxADBAMUAxQDBAMMAxgDAAMQAxQDDAMcAxgDIAMAAyAC+AMAAyQDIAMYAxwDDAMoAwwDCAMoAxwDKAMsAyADMAL4AzAC8AL4AyQDNAMgAzQDMAMgAzgDNAMkAzADPALwAzwC6ALwAzQDQAMwA0ADPAMwAzgDRAM0A0QDQAM0A0gDRAM4AzwDTALoA0wC7ALoA0ADUAM8A1ADTAM8A0QDVANAA1QDUANAA0gDWANEA1gDVANEA1wDWANIA1wDYANYA2ADZANYA1gDZANUA2ADaANkA1QDbANQA2QDbANUA2gDcANkA2QDcANsA2gDdANwA2wDeANQA1ADeANMA3ADfANsA2wDfAN4A3QDgANwA3ADgAN8A3QBkAOAAZABjAOAA4ABjAOEA4ADhAN8AYwBlAOEA3wDiAN4A3wDhAOIA3gDjANMA3gDiAOMA0wDjALsA4wDkALsA4wDlAOQA4gDlAOMA5QDmAOQA4QDnAOIA4gDnAOUA4QBlAOcA5QDoAOYA5wDoAOUA6ADpAOYAZQDqAOcA5wDqAOgAZQBgAOoAYABhAOoA6gDrAOgA6ADrAOkA6gBhAOsA6wBnAOkAYQBiAOsA6wBiAGcA7ACkAO0A7ACjAKQA7gDsAO0A7gDtAO8A8ACjAOwA8AClAKMA8QDsAO4A8QDwAOwA8gDuAO8A8gDvAPMA9ADyAPMA9ADzAPUA9gDyAPQA9wDuAPIA9gD3APIA9wDxAO4A+AD3APYA+AD5APcA+QDxAPcA+gD5APgA+QD7APEA+wDwAPEA+gD8APkA/AD7APkA/QD8APoA+wD+APAA/gClAPAA/gCmAKUAqQCmAP4A/wD+APsA/wCpAP4A/AD/APsA/QAAAfwAAAH/APwAAQEAAf0AAgGpAP8AAAECAf8AAgGsAKkAAQEDAQABAwECAQABBAEDAQEBBQGsAAIBAwEFAQIBBQGtAKwABAEGAQMBBgEFAQMBywAGAQQBywDKAAYBBgEHAQUBBwGtAAUBygAHAQYBBwGwAK0AygDCAAcBwgCwAAcB"),
+"material": SubResource("StandardMaterial3D_wok2r"),
+"primitive": 3,
+"uv_scale": Vector4(5.2640386, 5.6122074, 0, 0),
+"vertex_count": 264,
+"vertex_data": PackedByteArray("/+8AAP8PwML//wAAAADAwv//AAD/D8DC/+8AAAAAwML/7wAA/x/Awv//AAD/H8DC/98AAP8PwML/3wAAAADAwv/fAAD/H8DC/+8AAP8vwML//wAA/y/Awv/fAAD/L8DC/88AAP8PwML/zwAAAADAwv/PAAD/H8DC/88AAP8vwML/vwAA/w/Awv+/AAAAAMDC/78AAP8fwML/vwAA/y/Awv+vAAD/D8DC/68AAAAAwML/rwAA/x/Awv+vAAD/L8DC/58AAP8PwML/nwAAAADAwv+fAAD/H8DC/58AAP8vwML/jwAA/w/Awv+PAAAAAMDC/48AAP8fwML/jwAA/y/Awv9/AAD/D8DC/38AAAAAwML/fwAA/x/Awv9/AAD/L8DC/28AAP8PwML/bwAAAADAwv9vAAD/H8DC/28AAP8vwML/XwAA/w/Awv9fAAAAAMDC/18AAP8fwML/XwAA/y/Awv9PAAD/D8DC/08AAAAAwML/TwAA/x/Awv9PAAD/L8DC/z8AAP8PwML/PwAAAADAwv8/AAD/H8DC/z8AAP8vwML/LwAA/w/Awv8vAAAAAMDC/y8AAP8fwML/LwAA/y/Awv8fAAD/D8DC/x8AAAAAwML/HwAA/x/Awv8fAAD/L8DC/w8AAP8PwML/DwAAAADAwgAAAAD/D8DCAAAAAAAAwMIAAAAA/x/Awv8PAAD/H8DCAAAAAP8vwML/DwAA/y/AwgAAAAD/P8DC/w8AAP8/wMIAAAAA/0/Awv8fAAD/P8DC/w8AAP9PwMIAAAAA/1/Awv8vAAD/P8DC/x8AAP9PwML/DwAA/1/AwgAAAAD/b8DC/z8AAP8/wML/LwAA/0/Awv8fAAD/X8DC/w8AAP9vwMIAAAAA/3/Awv9PAAD/P8DC/z8AAP9PwML/DwAA/3/Awv8vAAD/X8DCAAAAAP+PwML/HwAA/2/Awv8PAAD/j8DCAAAAAP+fwML/HwAA/3/Awv8vAAD/b8DC/z8AAP9fwML/DwAA/5/AwgAAAAD/r8DC/x8AAP+PwML/LwAA/3/Awv8/AAD/b8DC/w8AAP+vwMIAAAAA/7/Awv8fAAD/n8DC/08AAP9fwML/TwAA/2/Awv9PAAD/T8DC/18AAP8/wML/XwAA/0/Awv9vAAD/P8DC/28AAP9PwML/fwAA/z/Awv9/AAD/T8DC/48AAP8/wML/jwAA/0/Awv+fAAD/P8DC/58AAP9PwML/rwAA/z/Awv+vAAD/T8DC/78AAP8/wML/vwAA/0/Awv+vAAD/X8DC/88AAP8/wML/vwAA/1/Awv+vAAD/b8DC/88AAP9PwML/3wAA/z/Awv+/AAD/b8DC/68AAP9/wML/zwAA/1/Awv/fAAD/T8DC/+8AAP8/wML//wAA/z/Awv/vAAD/T8DC//8AAP9PwML/3wAA/1/Awv/vAAD/X8DC//8AAP9fwML/zwAA/2/Awv/fAAD/b8DC/+8AAP9vwML//wAA/2/Awv+/AAD/f8DC/68AAP+PwML/zwAA/3/Awv+/AAD/j8DC/68AAP+fwML/3wAA/3/Awv/vAAD/f8DC//8AAP9/wML/zwAA/4/Awv/fAAD/j8DC/+8AAP+PwML//wAA/4/Awv+/AAD/n8DC/68AAP+vwML/zwAA/5/Awv/fAAD/n8DC/+8AAP+fwML//wAA/5/Awv+/AAD/r8DC/+8AAP+vwML//wAA/6/Awv/fAAD/r8DC/88AAP+vwML/7wAA/7/Awv//AAD/v8DC/98AAP+/wML/zwAA/7/Awv+/AAD/v8DC/68AAP+/wML/vwAA/8/Awv+fAAD/v8DC/58AAP+vwML/rwAA/8/Awv+fAAD/z8DC/48AAP+/wML/jwAA/6/Awv+PAAD/z8DC/38AAP+/wML/fwAA/6/Awv9/AAD/z8DC/28AAP+/wML/bwAA/6/Awv9vAAD/z8DC/18AAP+/wML/XwAA/6/Awv9fAAD/z8DC/08AAP+/wML/TwAA/6/Awv9PAAD/z8DC/18AAP/fwML/TwAA/9/Awv9vAAD/38DC/08AAP/vwML/XwAA/+/Awv9/AAD/38DC/28AAP/vwML/TwAA///Awv9fAAD//8DC/z8AAP//wML/bwAA///Awv8/AAD/78DC/y8AAP//wML/fwAA/+/Awv9/AAD//8DC/z8AAP/fwML/LwAA/+/Awv8fAAD//8DC/z8AAP/PwML/LwAA/9/Awv8fAAD/78DC/w8AAP//wML/PwAA/7/Awv8vAAD/z8DC/x8AAP/fwML/DwAA/+/AwgAAAAD//8DCAAAAAP/vwML/DwAA/9/AwgAAAAD/38DC/x8AAP/PwML/DwAA/8/AwgAAAAD/z8DC/y8AAP+/wML/HwAA/7/Awv8PAAD/v8DC/x8AAP+vwML/LwAA/6/Awv8/AAD/r8DC/08AAP+fwML/PwAA/5/Awv9PAAD/j8DC/y8AAP+fwML/PwAA/4/Awv9PAAD/f8DC/y8AAP+PwML/PwAA/3/Awv/vAAD/z8DC//8AAP/PwML/7wAA/9/Awv//AAD/38DC/98AAP/PwML/3wAA/9/Awv/vAAD/78DC//8AAP/vwML/7wAA///Awv//AAD//8DC/98AAP//wML/3wAA/+/Awv/PAAD//8DC/88AAP/vwML/vwAA///Awv/PAAD/38DC/78AAP/vwML/rwAA///Awv/PAAD/z8DC/78AAP/fwML/rwAA/+/Awv+fAAD//8DC/68AAP/fwML/nwAA/+/Awv+PAAD//8DC/58AAP/fwML/jwAA/+/Awv+PAAD/38DCNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SWNdNkljXTZJY102SW")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_nhkuo"]
+load_path = "res://.godot/imported/texture_atlas.png-32448b32f6c4df7552ba899de1238142.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_vwhn5"]
+load_path = "res://.godot/imported/texture_atlas.png-32448b32f6c4df7552ba899de1238142.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jkk2y"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_gktqi")
+shader_parameter/Texture0 = SubResource("CompressedTexture2D_nhkuo")
+shader_parameter/Texture0_Mask = Vector2(64, 64)
+shader_parameter/Texture0_Scale = Vector2(1, 1)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = false
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/Texture0_Scroll = Vector2(0, 0)
+shader_parameter/Texture1 = SubResource("CompressedTexture2D_vwhn5")
+shader_parameter/Texture1_Mask = Vector2(64, 64)
+shader_parameter/Texture1_Scale = Vector2(1, 1)
+shader_parameter/Texture1_Offset = Vector2(0, 0)
+shader_parameter/Texture1_ClampX = false
+shader_parameter/Texture1_ClampY = false
+shader_parameter/Texture1_MirrorX = false
+shader_parameter/Texture1_MirrorY = false
+shader_parameter/Texture1_Scroll = Vector2(0, 0)
+shader_parameter/cc0_color_a = 1
+shader_parameter/cc0_color_b = 2
+shader_parameter/cc0_color_c = 11
+shader_parameter/cc0_color_d = 2
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/cc1_color_a = 0
+shader_parameter/cc1_color_b = 7
+shader_parameter/cc1_color_c = 4
+shader_parameter/cc1_color_d = 7
+shader_parameter/cc1_alpha_a = 7
+shader_parameter/cc1_alpha_b = 7
+shader_parameter/cc1_alpha_c = 8
+shader_parameter/cc1_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/material_env_r = 1.0
+shader_parameter/material_env_g = 1.0
+shader_parameter/material_env_b = 1.0
+shader_parameter/material_env_a = 1.0
+shader_parameter/chroma_key_center = Vector3(0, 0, 0)
+shader_parameter/chroma_key_scale = Vector3(0, 0, 0)
+shader_parameter/prim_lod_frac = 0.0
+shader_parameter/prim_lod_min = 0.0
+shader_parameter/mip_count = 1
+shader_parameter/alpha_clip = 0.0
+shader_parameter/atlas_region_0 = Vector2i(64, 64)
+shader_parameter/atlas_offset_0 = Vector2i(326, 261)
+shader_parameter/atlas_region_1 = Vector2i(64, 64)
+shader_parameter/atlas_offset_1 = Vector2i(1, 391)
+shader_parameter/atlas_seam_hiding = 0
+shader_parameter/atlas_seam_zoom = 0.0
+shader_parameter/use_tex_gen = false
+shader_parameter/filter_mode = 1
+shader_parameter/use_two_cycle = true
+shader_parameter/use_texture_lod = false
+shader_parameter/texture_detail_mode = 0
+shader_parameter/tex0_mono = false
+shader_parameter/tex1_mono = false
+shader_parameter/tex0_quantize = 0
+shader_parameter/tex1_quantize = 0
+shader_parameter/clamp_shade_input = true
+shader_parameter/clamp_combiner_output = true
+shader_parameter/use_vertex_color = true
+shader_parameter/use_vertex_alpha = false
+shader_parameter/shade_color = Color(1, 1, 1, 1)
+shader_parameter/use_material_ambient = true
+shader_parameter/material_ambient = Color(1, 1, 1, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/light_count = 2
+shader_parameter/light_vector_type = PackedVector4Array(3.533667, 3.9782686, -3.4655614, 0, -4.3653164, 3.2271376, 4.4288487, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(0.1534031, 0.5768902, 1, 1.64, 0.99999994, 0.23683512, 0.34442097, 1.68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(4.52, 3.18, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(0.26, 0.16, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_kllkn"]
+load_path = "res://.godot/imported/texture_atlas.png-32448b32f6c4df7552ba899de1238142.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nhkuo"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_gktqi")
+shader_parameter/Texture0 = SubResource("CompressedTexture2D_kllkn")
+shader_parameter/Texture0_Mask = Vector2(32, 32)
+shader_parameter/Texture0_Scale = Vector2(1, -1)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = false
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/Texture0_Scroll = Vector2(0, 0)
+shader_parameter/Texture1_Mask = Vector2(0, 0)
+shader_parameter/Texture1_Scale = Vector2(0, 0)
+shader_parameter/Texture1_Offset = Vector2(0, 0)
+shader_parameter/Texture1_ClampX = false
+shader_parameter/Texture1_ClampY = false
+shader_parameter/Texture1_MirrorX = false
+shader_parameter/Texture1_MirrorY = false
+shader_parameter/Texture1_Scroll = Vector2(0, 0)
+shader_parameter/cc0_color_a = 1
+shader_parameter/cc0_color_b = 7
+shader_parameter/cc0_color_c = 4
+shader_parameter/cc0_color_d = 7
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/cc1_color_a = 0
+shader_parameter/cc1_color_b = 7
+shader_parameter/cc1_color_c = 4
+shader_parameter/cc1_color_d = 7
+shader_parameter/cc1_alpha_a = 7
+shader_parameter/cc1_alpha_b = 7
+shader_parameter/cc1_alpha_c = 8
+shader_parameter/cc1_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/material_env_r = 1.0
+shader_parameter/material_env_g = 1.0
+shader_parameter/material_env_b = 1.0
+shader_parameter/material_env_a = 1.0
+shader_parameter/chroma_key_center = Vector3(0, 0, 0)
+shader_parameter/chroma_key_scale = Vector3(0, 0, 0)
+shader_parameter/prim_lod_frac = 0.0
+shader_parameter/prim_lod_min = 0.0
+shader_parameter/mip_count = 1
+shader_parameter/alpha_clip = 0.0
+shader_parameter/atlas_region_0 = Vector2i(32, 32)
+shader_parameter/atlas_offset_0 = Vector2i(625, 326)
+shader_parameter/atlas_region_1 = Vector2i(0, 0)
+shader_parameter/atlas_offset_1 = Vector2i(0, 0)
+shader_parameter/atlas_seam_hiding = 0
+shader_parameter/atlas_seam_zoom = 0.0
+shader_parameter/use_tex_gen = false
+shader_parameter/filter_mode = 1
+shader_parameter/use_two_cycle = false
+shader_parameter/use_texture_lod = false
+shader_parameter/texture_detail_mode = 0
+shader_parameter/tex0_mono = false
+shader_parameter/tex1_mono = false
+shader_parameter/tex0_quantize = 0
+shader_parameter/tex1_quantize = 0
+shader_parameter/clamp_shade_input = true
+shader_parameter/clamp_combiner_output = true
+shader_parameter/use_vertex_color = true
+shader_parameter/use_vertex_alpha = false
+shader_parameter/shade_color = Color(1, 1, 1, 1)
+shader_parameter/use_material_ambient = true
+shader_parameter/material_ambient = Color(1, 1, 1, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/light_count = 2
+shader_parameter/light_vector_type = PackedVector4Array(3.533667, 3.9782686, -3.4655614, 0, -4.3653164, 3.2271376, 4.4288487, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(0.1534031, 0.5768902, 1, 1.64, 0.99999994, 0.23683512, 0.34442097, 1.68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(4.52, 3.18, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(0.26, 0.16, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ecbkp"]
+load_path = "res://.godot/imported/texture_atlas.png-32448b32f6c4df7552ba899de1238142.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vwhn5"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_gktqi")
+shader_parameter/Texture0 = SubResource("CompressedTexture2D_ecbkp")
+shader_parameter/Texture0_Mask = Vector2(64, 64)
+shader_parameter/Texture0_Scale = Vector2(1, -1)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = false
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/Texture0_Scroll = Vector2(0, 0)
+shader_parameter/Texture1_Mask = Vector2(0, 0)
+shader_parameter/Texture1_Scale = Vector2(0, 0)
+shader_parameter/Texture1_Offset = Vector2(0, 0)
+shader_parameter/Texture1_ClampX = false
+shader_parameter/Texture1_ClampY = false
+shader_parameter/Texture1_MirrorX = false
+shader_parameter/Texture1_MirrorY = false
+shader_parameter/Texture1_Scroll = Vector2(0, 0)
+shader_parameter/cc0_color_a = 1
+shader_parameter/cc0_color_b = 7
+shader_parameter/cc0_color_c = 4
+shader_parameter/cc0_color_d = 7
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/cc1_color_a = 1
+shader_parameter/cc1_color_b = 7
+shader_parameter/cc1_color_c = 4
+shader_parameter/cc1_color_d = 7
+shader_parameter/cc1_alpha_a = 7
+shader_parameter/cc1_alpha_b = 7
+shader_parameter/cc1_alpha_c = 8
+shader_parameter/cc1_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/material_env_r = 1.0
+shader_parameter/material_env_g = 1.0
+shader_parameter/material_env_b = 1.0
+shader_parameter/material_env_a = 1.0
+shader_parameter/chroma_key_center = Vector3(0, 0, 0)
+shader_parameter/chroma_key_scale = Vector3(0, 0, 0)
+shader_parameter/prim_lod_frac = 0.0
+shader_parameter/prim_lod_min = 0.0
+shader_parameter/mip_count = 1
+shader_parameter/alpha_clip = 0.0
+shader_parameter/atlas_region_0 = Vector2i(64, 64)
+shader_parameter/atlas_offset_0 = Vector2i(1, 196)
+shader_parameter/atlas_region_1 = Vector2i(0, 0)
+shader_parameter/atlas_offset_1 = Vector2i(0, 0)
+shader_parameter/atlas_seam_hiding = 0
+shader_parameter/atlas_seam_zoom = 0.0
+shader_parameter/use_tex_gen = false
+shader_parameter/filter_mode = 1
+shader_parameter/use_two_cycle = false
+shader_parameter/use_texture_lod = false
+shader_parameter/texture_detail_mode = 0
+shader_parameter/tex0_mono = false
+shader_parameter/tex1_mono = false
+shader_parameter/tex0_quantize = 0
+shader_parameter/tex1_quantize = 0
+shader_parameter/clamp_shade_input = true
+shader_parameter/clamp_combiner_output = true
+shader_parameter/use_vertex_color = true
+shader_parameter/use_vertex_alpha = false
+shader_parameter/shade_color = Color(1, 1, 1, 1)
+shader_parameter/use_material_ambient = true
+shader_parameter/material_ambient = Color(1, 1, 1, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/light_count = 2
+shader_parameter/light_vector_type = PackedVector4Array(3.533667, 3.9782686, -3.4655614, 0, -4.3653164, 3.2271376, 4.4288487, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(0.1534031, 0.5768902, 1, 1.64, 0.99999994, 0.23683512, 0.34442097, 1.68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(4.52, 3.18, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(0.26, 0.16, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ty56h"]
+load_path = "res://.godot/imported/texture_atlas.png-32448b32f6c4df7552ba899de1238142.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_01ym8"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_gktqi")
+shader_parameter/Texture0 = SubResource("CompressedTexture2D_ty56h")
+shader_parameter/Texture0_Mask = Vector2(64, 64)
+shader_parameter/Texture0_Scale = Vector2(1, -1)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = false
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/Texture0_Scroll = Vector2(0, 0)
+shader_parameter/Texture1_Mask = Vector2(0, 0)
+shader_parameter/Texture1_Scale = Vector2(0, 0)
+shader_parameter/Texture1_Offset = Vector2(0, 0)
+shader_parameter/Texture1_ClampX = false
+shader_parameter/Texture1_ClampY = false
+shader_parameter/Texture1_MirrorX = false
+shader_parameter/Texture1_MirrorY = false
+shader_parameter/Texture1_Scroll = Vector2(0, 0)
+shader_parameter/cc0_color_a = 1
+shader_parameter/cc0_color_b = 7
+shader_parameter/cc0_color_c = 4
+shader_parameter/cc0_color_d = 7
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/cc1_color_a = 1
+shader_parameter/cc1_color_b = 7
+shader_parameter/cc1_color_c = 4
+shader_parameter/cc1_color_d = 7
+shader_parameter/cc1_alpha_a = 7
+shader_parameter/cc1_alpha_b = 7
+shader_parameter/cc1_alpha_c = 8
+shader_parameter/cc1_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/material_env_r = 1.0
+shader_parameter/material_env_g = 1.0
+shader_parameter/material_env_b = 1.0
+shader_parameter/material_env_a = 1.0
+shader_parameter/chroma_key_center = Vector3(0, 0, 0)
+shader_parameter/chroma_key_scale = Vector3(0, 0, 0)
+shader_parameter/prim_lod_frac = 0.0
+shader_parameter/prim_lod_min = 0.0
+shader_parameter/mip_count = 1
+shader_parameter/alpha_clip = 0.0
+shader_parameter/atlas_region_0 = Vector2i(64, 64)
+shader_parameter/atlas_offset_0 = Vector2i(1, 131)
+shader_parameter/atlas_region_1 = Vector2i(0, 0)
+shader_parameter/atlas_offset_1 = Vector2i(0, 0)
+shader_parameter/atlas_seam_hiding = 0
+shader_parameter/atlas_seam_zoom = 0.0
+shader_parameter/use_tex_gen = false
+shader_parameter/filter_mode = 1
+shader_parameter/use_two_cycle = false
+shader_parameter/use_texture_lod = false
+shader_parameter/texture_detail_mode = 0
+shader_parameter/tex0_mono = false
+shader_parameter/tex1_mono = false
+shader_parameter/tex0_quantize = 0
+shader_parameter/tex1_quantize = 0
+shader_parameter/clamp_shade_input = true
+shader_parameter/clamp_combiner_output = true
+shader_parameter/use_vertex_color = true
+shader_parameter/use_vertex_alpha = false
+shader_parameter/shade_color = Color(1, 1, 1, 1)
+shader_parameter/use_material_ambient = true
+shader_parameter/material_ambient = Color(1, 1, 1, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/light_count = 2
+shader_parameter/light_vector_type = PackedVector4Array(3.533667, 3.9782686, -3.4655614, 0, -4.3653164, 3.2271376, 4.4288487, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(0.1534031, 0.5768902, 1, 1.64, 0.99999994, 0.23683512, 0.34442097, 1.68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(4.52, 3.18, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(0.26, 0.16, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kllkn"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_gktqi")
+shader_parameter/Texture0 = ExtResource("3_jkk2y")
+shader_parameter/Texture0_Mask = Vector2(64, 64)
+shader_parameter/Texture0_Scale = Vector2(1, 1)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = true
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/Texture0_Scroll = Vector2(0, 0)
+shader_parameter/Texture1 = ExtResource("3_jkk2y")
+shader_parameter/Texture1_Mask = Vector2(64, 64)
+shader_parameter/Texture1_Scale = Vector2(1, 1)
+shader_parameter/Texture1_Offset = Vector2(0, 0)
+shader_parameter/Texture1_ClampX = false
+shader_parameter/Texture1_ClampY = false
+shader_parameter/Texture1_MirrorX = false
+shader_parameter/Texture1_MirrorY = false
+shader_parameter/Texture1_Scroll = Vector2(0, 0)
+shader_parameter/cc0_color_a = 2
+shader_parameter/cc0_color_b = 1
+shader_parameter/cc0_color_c = 11
+shader_parameter/cc0_color_d = 1
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/cc1_color_a = 0
+shader_parameter/cc1_color_b = 7
+shader_parameter/cc1_color_c = 4
+shader_parameter/cc1_color_d = 7
+shader_parameter/cc1_alpha_a = 7
+shader_parameter/cc1_alpha_b = 7
+shader_parameter/cc1_alpha_c = 8
+shader_parameter/cc1_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/material_env_r = 1.0
+shader_parameter/material_env_g = 1.0
+shader_parameter/material_env_b = 1.0
+shader_parameter/material_env_a = 1.0
+shader_parameter/chroma_key_center = Vector3(0, 0, 0)
+shader_parameter/chroma_key_scale = Vector3(0, 0, 0)
+shader_parameter/prim_lod_frac = 0.0
+shader_parameter/prim_lod_min = 0.0
+shader_parameter/mip_count = 1
+shader_parameter/alpha_clip = 0.0
+shader_parameter/atlas_region_0 = Vector2i(64, 64)
+shader_parameter/atlas_offset_0 = Vector2i(456, 196)
+shader_parameter/atlas_region_1 = Vector2i(64, 64)
+shader_parameter/atlas_offset_1 = Vector2i(326, 261)
+shader_parameter/atlas_seam_hiding = 0
+shader_parameter/atlas_seam_zoom = 0.0
+shader_parameter/use_tex_gen = false
+shader_parameter/filter_mode = 1
+shader_parameter/use_two_cycle = true
+shader_parameter/use_texture_lod = false
+shader_parameter/texture_detail_mode = 0
+shader_parameter/tex0_mono = false
+shader_parameter/tex1_mono = false
+shader_parameter/tex0_quantize = 0
+shader_parameter/tex1_quantize = 0
+shader_parameter/clamp_shade_input = true
+shader_parameter/clamp_combiner_output = true
+shader_parameter/use_vertex_color = false
+shader_parameter/use_vertex_alpha = true
+shader_parameter/shade_color = Color(1, 1, 1, 1)
+shader_parameter/use_material_ambient = false
+shader_parameter/material_ambient = Color(1, 1, 1, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/light_count = 2
+shader_parameter/light_vector_type = PackedVector4Array(3.533667, 3.9782686, -3.4655614, 0, -4.3653164, 3.2271376, 4.4288487, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(0.1534031, 0.5768902, 1, 1.64, 0.99999994, 0.23683512, 0.34442097, 1.68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(4.52, 3.18, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(0.26, 0.16, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="Environment" id="Environment_jkk2y"]
+fog_density = 0.0548
+
+[node name="Scene" type="N64VertexLightManager3D" unique_id=1513778624]
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=2005891658 node_paths=PackedStringArray("camera")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4347203, 2.928118)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4347203, 12.157887)
 script = ExtResource("1_inftv")
 movement_speed = 5.0
 KEY_UP = "move_down"
@@ -25,9 +511,29 @@ camera = NodePath("Camera3D")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=683559793]
 
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=718245533]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2762299, 1.4347203, 2.261145)
+[node name="Plane_001" type="N64LitMeshInstance3D" parent="." unique_id=1910728480]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1504393, 0)
+mesh = SubResource("ArrayMesh_6dcwb")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_jkk2y")
+surface_material_override/1 = SubResource("ShaderMaterial_nhkuo")
+surface_material_override/2 = SubResource("ShaderMaterial_vwhn5")
+surface_material_override/3 = SubResource("ShaderMaterial_01ym8")
+surface_material_override/4 = SubResource("ShaderMaterial_kllkn")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=442603781]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
-mesh = SubResource("QuadMesh_inftv")
+[node name="N64PointLight3D" type="N64PointLight3D" parent="." unique_id=2025706311]
+color = Color(0.99999994, 0.23683512, 0.34442097, 1)
+energy = 1.68
+range = 3.18
+attenuation = 0.16
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3653164, 3.2271376, 4.4288487)
+
+[node name="N64PointLight3D2" type="N64PointLight3D" parent="." unique_id=2021567353]
+color = Color(0.1534031, 0.5768902, 1, 1)
+energy = 1.64
+range = 4.52
+attenuation = 0.26
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.533667, 3.9782686, -3.4655614)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1061589836]
+environment = SubResource("Environment_jkk2y")

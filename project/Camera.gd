@@ -81,7 +81,7 @@ func _physics_process(delta: float) -> void:
 		rotate_player(delta)
 
 # Handle player movement input and apply to the character
-func handle_input(delta):
+func handle_input(_delta):
 	var move_direction = Vector3.ZERO # Initial movement direction is zero
 
 	# Toggle mouse capture when the escape key is pressed
