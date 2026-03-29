@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cdm7t4uv5igoe"]
+
+[ext_resource type="Script" uid="uid://dv7kruff4hh05" path="res://scripts/Camera.gd" id="1_72ieh"]
+[ext_resource type="Shader" uid="uid://cv5xqb0xx3xql" path="res://shaders/post/RDPpost.gdshader" id="2_4dohe"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_r66lb"]
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1txc5"]
+render_priority = 0
+shader = ExtResource("2_4dohe")
+shader_parameter/viewport_size = Vector2(320, 240)
+shader_parameter/bits_per_channel = 5
+shader_parameter/dither_enabled = true
+shader_parameter/dither_mode = 1
+shader_parameter/time_varying_noise = false
+shader_parameter/anti_dither_enabled = true
+shader_parameter/divot_enabled = true
+shader_parameter/vi_enabled = true
+shader_parameter/vi_x_add = 1.0
+shader_parameter/vi_x_start = 0.0
+shader_parameter/gamma = 1.3
+
+[node name="player" type="CharacterBody3D" unique_id=929229714 node_paths=PackedStringArray("camera")]
+script = ExtResource("1_72ieh")
+camera = NodePath("Camera3D")
+collision_state = false
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=74720032]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1718783885]
+cast_shadow = 0
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_r66lb")
+surface_material_override/0 = SubResource("ShaderMaterial_1txc5")

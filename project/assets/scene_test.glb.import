@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://p6deyxhoocgo"
+uid="uid://ij7vruxhafsw"
 path="res://.godot/imported/scene_test.glb-38678586aefee20ec52059c63d5647c2.scn"
 
 [deps]
@@ -24,11 +24,11 @@ nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
 meshes/generate_lods=false
 meshes/create_shadow_meshes=false
-meshes/light_baking=1
+meshes/light_baking=0
 meshes/lightmap_texel_size=0.2
 meshes/force_disable_compression=false
-skins/use_named_skins=true
-animation/import=true
+skins/use_named_skins=false
+animation/import=false
 animation/fps=30
 animation/trimming=false
 animation/remove_immutable_tracks=true

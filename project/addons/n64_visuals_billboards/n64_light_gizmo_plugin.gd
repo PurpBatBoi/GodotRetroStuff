@@ -1,8 +1,8 @@
 @tool
 extends EditorNode3DGizmoPlugin
 
-const POINT_ICON := preload("res://assets/icons/OmniLight3D.svg")
-const DIRECTIONAL_ICON := preload("res://assets/icons/DirectionalLight3D.svg")
+const POINT_ICON := preload("res://addons/n64_visuals_billboards/icons/OmniLight3D.svg")
+const DIRECTIONAL_ICON := preload("res://addons/n64_visuals_billboards/icons/DirectionalLight3D.svg")
 const POINT_MATERIAL := "n64_point_light_icon"
 const DIRECTIONAL_MATERIAL := "n64_directional_light_icon"
 const ICON_SCALE := 0.06

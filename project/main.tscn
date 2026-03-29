@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dvl3aljo57jhu"]
+
+[ext_resource type="PackedScene" uid="uid://cdm7t4uv5igoe" path="res://prefabs/player.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://7li640eftlib" path="res://prefabs/scene.tscn" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://g2h4qlgtarud" path="res://scripts/FPS.gd" id="3_h2yge"]
+
+[node name="Node3D" type="Node3D" unique_id=1153820260]
+
+[node name="Player" parent="." unique_id=929229714 instance=ExtResource("2_0xm2m")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1486467624]
+script = ExtResource("3_h2yge")
+
+[node name="Scene" parent="." unique_id=484454971 instance=ExtResource("3_1bvp3")]
