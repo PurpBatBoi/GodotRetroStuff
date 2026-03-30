@@ -1,6 +1,7 @@
 # Godot auto generated files
-*.gen.*
 .godot/
+*.gen.*
+.sconsign*.dblite
 
 # Ignore library files but not the gdextension file
 project/bin/*
@@ -17,24 +18,33 @@ project/bin/macos/*
 project/bin/windows/*
 !project/bin/windows/.gitkeep
 !project/bin/*.gdextension
-.sconsign*.dblite
 
-# Ignore custom.py
+# SCons
+.scons_cache/
 custom.py
+methods.pyc
 
-# Ignore generated compile_commands.json
+# Extension / Project Specific
 compile_commands.json
-
-# Ignore files generated for documentation
 /src/gen
+build_profile.json
 
-# Binaries
+# Build and Export
+build/
+bin/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Binaries and Temp Files
 *.o
 *.os
 *.so
 *.obj
 *.bc
-*.pyc
 *.dblite
 *.pdb
 *.lib
@@ -45,18 +55,15 @@ compile_commands.json
 *.includes
 *.idb
 *.exp
-
-# Other stuff
 *.log
 
-# VSCode
+# IDEs and OS
 .vscode/*
 !.vscode/extensions.json
+.history/
+.idea/
 .DS_Store
 
-# Jetbrains
-.idea/
-
-# Cmake
+# CMake
 cmake-build*
 CMakeUserPresets.json

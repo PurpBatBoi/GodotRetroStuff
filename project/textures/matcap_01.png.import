@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4ywk443v7wdf"
-path.s3tc="res://.godot/imported/DirectionalLight3D.svg-1949cc72f6c344e1b726a07637a57e15.s3tc.ctex"
+uid="uid://mbeohppb3b0g"
+path.s3tc="res://.godot/imported/matcap_01.png-ff53bd86361de04d4b35d36685cd58b1.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/n64_visuals_billboards/icons/DirectionalLight3D.svg"
-dest_files=["res://.godot/imported/DirectionalLight3D.svg-1949cc72f6c344e1b726a07637a57e15.s3tc.ctex"]
+source_file="res://textures/matcap_01.png"
+dest_files=["res://.godot/imported/matcap_01.png-ff53bd86361de04d4b35d36685cd58b1.s3tc.ctex"]
 
 [params]
 
@@ -39,6 +39,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

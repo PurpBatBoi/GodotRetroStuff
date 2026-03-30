@@ -30,6 +30,7 @@ collision_state = false
 [node name="Camera3D" type="Camera3D" parent="." unique_id=74720032]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1718783885]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0019747615, 7.450581e-09, -0.0035775304)
 cast_shadow = 0
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_r66lb")
