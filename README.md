@@ -1,56 +1,88 @@
-# godot-cpp template
-This repository serves as a quickstart template for GDExtension development with Godot 4.0+.
+# Godot Retro Stuff — N64 Visuals for Godot 4
 
-## Contents
-* Preconfigured source files for C++ development of the GDExtension ([src/](./src/))
-* An empty Godot project in [project/](./project), to test the GDExtension
-* godot-cpp as a submodule (`godot-cpp/`)
-* GitHub Issues template ([.github/ISSUE_TEMPLATE.yml](./.github/ISSUE_TEMPLATE.yml))
-* GitHub CI/CD workflows to publish your library packages when creating a release ([.github/workflows/builds.yml](./.github/workflows/builds.yml))
-* An SConstruct file with various functions, such as boilerplate for [Adding documentation](https://docs.godotengine.org/en/stable/tutorials/scripting/cpp/gdextension_docs_system.html)
+An N64-style rendering pipeline for Godot 4.6+, built as a GDExtension (C++) with accompanying shaders. Aims to faithfully recreate the look and feel of the Nintendo 64's graphics hardware — vertex lighting, RDP color combiner, color quantization, dithering, and VI post-processing — all running in real-time.
 
-## Usage - Template
+![N64-style rendering demo](media/photo1.png)
 
-To use this template, log in to GitHub and click the green "Use this template" button at the top of the repository page. This will let you create a copy of this repository with a clean git history.
+## Features
 
-To get started with your new GDExtension, do the following:
+- **N64 RSP Vertex Lighting** — Up to 7 directional lights + 1 ambient, calculated per-vertex just like the real hardware. Includes point light support for dynamic effects.
+- **RDP Color Combiner** — A full implementation of the N64's multi-cycle color combiner as a Godot shader include, supporting all the blending modes the original hardware offered.
+- **Post-Processing (RDP VI)** — Screen-space color quantization, ordered dithering, horizontal VI interpolation, and gamma correction to nail that distinctive N64 framebuffer look.
+- **Custom Light Nodes** — `N64DirectionalLight3D` and `N64PointLight3D` nodes that act as RSP-style light proxies, managed by a `N64VertexLightManager3D`.
+- **Editor Integration** — Custom gizmos for light visualization in the Godot editor.
+- **Metallic / Matcap Support** — Includes a metallic reflection shader using matcap textures.
 
-* clone your repository to your local computer
-* initialize the godot-cpp git submodule via `git submodule update --init`
-* change the name of the compiled library file inside the [SConstruct](./SConstruct) file by modifying the `libname` string.
-  * change the paths of the to be loaded library name inside the [project/bin/example.gdextension](./project/bin/example.gdextension) file, by replacing `EXTENSION-NAME` with the name you chose for `libname`.
-* change the `entry_symbol` string inside [project/bin/example.gdextension](./project/bin/example.gdextension) file.
-  * rename the `example_library_init` function in [src/register_types.cpp](./src/register_types.cpp) to the same name you chose for `entry_symbol`.
-* change the name of the `project/bin/example.gdextension` file
-
-Now, you can build the project with the following command:
-
-```shell
-scons
-```
-
-If the build command worked, you can test it with the [project](./project) project. Import it into Godot, open it, and launch the main scene. You should see it print the following line in the console:
+## Project Structure
 
 ```
-Type: 24
+src/                          # C++ GDExtension source
+├── n64_directional_light_3d  # RSP-style directional light node
+├── n64_point_light_3d        # Point light node
+├── n64_vertex_light_manager  # Manages light state and pushes uniforms
+├── n64_lit_mesh_instance_3d  # Mesh instance with per-vertex lighting
+├── n64_editor_plugin         # Editor plugin registration
+├── n64_light_gizmo_plugin    # Custom gizmos for light nodes
+└── register_types            # GDExtension entry point
+
+project/                      # Godot demo project
+├── shaders/
+│   ├── GenericVertexLit.gdshader       # Standard vertex-lit material
+│   ├── GenericVertexLitBlend.gdshader  # Vertex-lit with blending
+│   ├── Metallic.gdshader               # Matcap metallic shader
+│   ├── post/RDPpost.gdshader           # N64 VI post-processing
+│   └── shaderinclude/RDPcombiner.gdshaderinc  # RDP color combiner
+└── addons/
+    └── n64_visuals_billboards/         # Billboard addon
 ```
 
-### Configuring an IDE
-You can develop your own extension with any text editor and by invoking scons on the command line, but if you want to work with an IDE (Integrated Development Environment), you can use a compilation database file called `compile_commands.json`. Most IDEs should automatically identify this file, and self-configure appropriately.
-To generate the database file, you can run one of the following commands in the project root directory:
-```shell
-# Generate compile_commands.json while compiling
-scons compiledb=yes
+## Requirements
 
-# Generate compile_commands.json without compiling
-scons compiledb=yes compile_commands.json
-```
+- [Godot 4.6+](https://godotengine.org/) (GL Compatibility renderer)
+- [SCons](https://scons.org/) build system
+- C++ compiler (GCC, Clang, or MSVC)
 
-## Usage - Actions
+## Building
 
-This repository comes with continuous integration (CI) through a GitHub action that tests building the GDExtension.
-It triggers automatically for each pushed change. You can find and edit it in [builds.yml](.github/workflows/ci.yml).
+1. Clone the repository with submodules:
+   ```bash
+   git clone --recurse-submodules https://github.com/PurpBatBoi/GodotRetroStuff.git
+   cd GodotRetroStuff
+   ```
 
-There is also a workflow ([make_build.yml](.github/workflows/make_build.yml)) that builds the GDExtension for all supported platforms that you can use to create releases.
-You can trigger this workflow manually from the `Actions` tab on GitHub.
-After it is complete, you can find the file `godot-cpp-template.zip` in the `Artifacts` section of the workflow run.
+2. If you already cloned without submodules:
+   ```bash
+   git submodule update --init --recursive
+   ```
+
+3. Build the GDExtension:
+   ```bash
+   scons          # debug build
+   scons target=template_release  # release build
+   ```
+
+4. Open the `project/` folder in Godot.
+
+## Usage
+
+### Shaders Only (No C++ Required)
+
+If you just want the N64 visual style without the custom lighting nodes, copy the following into your Godot project:
+
+- `project/shaders/` — All shader files
+- `project/shaders/post/RDPpost.gdshader` — Apply to a full-screen quad for the N64 post-processing look
+
+### Full Pipeline (With GDExtension)
+
+For the complete experience including RSP-style vertex lighting:
+
+1. Build the extension (see above)
+2. Copy `project/bin/` into your Godot project
+3. Copy the shader files from `project/shaders/`
+4. Add `N64VertexLightManager3D` to your scene
+5. Add `N64DirectionalLight3D` or `N64PointLight3D` nodes for lighting
+6. Use `N64LitMeshInstance3D` for meshes that should receive vertex lighting
+
+## License
+
+[MIT](LICENSE.md)
