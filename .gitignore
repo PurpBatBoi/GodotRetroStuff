@@ -31,7 +31,7 @@ build_profile.json
 
 # Build and Export
 build/
-bin/
+/bin/
 
 # Python
 __pycache__/
