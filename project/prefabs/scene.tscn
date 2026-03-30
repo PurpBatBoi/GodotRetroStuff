@@ -10,7 +10,7 @@ glow_intensity = 3.29
 glow_bloom = 0.12
 fog_enabled = true
 fog_mode = 1
-fog_light_color = Color(0, 0, 0, 1)
+fog_light_color = Color(0, 0.026897028, 0.28135103, 1)
 fog_light_energy = 0.07
 fog_density = 1.0
 fog_sky_affect = 0.0
@@ -46,9 +46,10 @@ _data = {
 environment = SubResource("Environment_blflt")
 
 [node name="N64PointLight3D" type="N64PointLight3D" parent="." unique_id=2108063898]
-color = Color(0, 0.79459184, 0.83175045, 1)
-energy = 1.15
-range = 19.08
+color = Color(0.5281804, 0.48271698, 0, 1)
+energy = 1.85
+range = 11.43
+attenuation = 0.65
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9624264, 3.2787287, -2.6486273)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1270911904]
@@ -80,8 +81,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33, 0, 33)
 
 [node name="Clones9" parent="." unique_id=1182998476 instance=ExtResource("1_w6el8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 0, 33)
-
-[node name="N64PointLight3D2" type="N64PointLight3D" parent="." unique_id=209405014]
-range = 6.3
-attenuation = 0.01
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.301016, 4.033648, 11.4003725)

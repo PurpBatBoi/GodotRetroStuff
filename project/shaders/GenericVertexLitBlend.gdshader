@@ -15,7 +15,7 @@ render_mode unshaded, cull_back;
 // compile-time constant, letting the GPU unroll it completely.
 // Valid range: 1–8. Default 4 covers most N64-style scenes.
 #ifndef N64_MAX_LIGHTS
-#define N64_MAX_LIGHTS 1
+#define N64_MAX_LIGHTS 4
 #endif
 
 // ── Varyings ───────────────────────────────────────────────────────────────────
