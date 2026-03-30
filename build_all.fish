@@ -17,12 +17,23 @@ end
 
 set jobs (nproc)
 
-echo "Building Linux template_debug..."
-scons platform=linux target=template_debug -j$jobs
-or exit $status
+# Linux builds
+for target in template_debug template_release
+    echo "Building Linux $target..."
+    scons platform=linux target=$target -j$jobs
+    or exit $status
+end
 
-echo "Building Linux template_release..."
-scons platform=linux target=template_release -j$jobs
-or exit $status
+echo "Linux builds completed."
 
-echo "All Linux builds completed."
+# Web builds (must keep Emscripten stdlib symbols available for side modules)
+set -x EMCC_FORCE_STDLIBS 1
+set -x EMCC_FORCE_STDLIBS_ALWAYS 1
+
+for target in template_debug template_release
+    echo "Building Web $target..."
+    scons platform=web target=$target -j$jobs
+    or exit $status
+end
+
+echo "Web builds completed."

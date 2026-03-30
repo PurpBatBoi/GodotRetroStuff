@@ -6,8 +6,8 @@
 #include <godot_cpp/variant/packed_vector4_array.hpp>
 #include <godot_cpp/variant/vector4.hpp>
 
-#include <unordered_set>
-#include <vector>
+#include <godot_cpp/templates/hash_set.hpp>
+#include <godot_cpp/templates/vector.hpp>
 
 namespace godot {
 
@@ -25,14 +25,14 @@ class N64VertexLightManager3D : public Node3D {
 	int32_t max_lights = MAX_SUPPORTED_LIGHTS;
 	bool lights_dirty = true;
 
-	std::vector<N64PointLight3D *> point_lights;
-	std::vector<N64DirectionalLight3D *> directional_lights;
-	std::vector<N64LitMeshInstance3D *> lit_meshes;
-	std::unordered_set<N64LitMeshInstance3D *> dirty_meshes;
+	Vector<N64PointLight3D *> point_lights;
+	Vector<N64DirectionalLight3D *> directional_lights;
+	Vector<N64LitMeshInstance3D *> lit_meshes;
+	HashSet<N64LitMeshInstance3D *> dirty_meshes;
 
-	static bool _remove_point_light(std::vector<N64PointLight3D *> &p_lights, N64PointLight3D *p_light);
-	static bool _remove_directional_light(std::vector<N64DirectionalLight3D *> &p_lights, N64DirectionalLight3D *p_light);
-	static bool _remove_lit_mesh(std::vector<N64LitMeshInstance3D *> &p_meshes, N64LitMeshInstance3D *p_mesh);
+	static bool _remove_point_light(Vector<N64PointLight3D *> &p_lights, N64PointLight3D *p_light);
+	static bool _remove_directional_light(Vector<N64DirectionalLight3D *> &p_lights, N64DirectionalLight3D *p_light);
+	static bool _remove_lit_mesh(Vector<N64LitMeshInstance3D *> &p_meshes, N64LitMeshInstance3D *p_mesh);
 
 	void _rebuild_all_meshes();
 	void _rebuild_dirty_meshes();

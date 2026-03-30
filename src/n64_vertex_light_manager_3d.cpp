@@ -7,6 +7,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/math.hpp>
 
+#include <godot_cpp/templates/local_vector.hpp>
 #include <algorithm>
 #include <array>
 
@@ -15,12 +16,12 @@ using namespace godot;
 namespace {
 
 template <typename T>
-bool remove_from_vector(std::vector<T *> &p_values, T *p_value) {
-	const auto it = std::find(p_values.begin(), p_values.end(), p_value);
-	if (it == p_values.end()) {
+bool remove_from_vector(Vector<T *> &p_values, T *p_value) {
+	int64_t idx = p_values.find(p_value);
+	if (idx == -1) {
 		return false;
 	}
-	p_values.erase(it);
+	p_values.remove_at(idx);
 	return true;
 }
 
@@ -107,7 +108,7 @@ int32_t N64VertexLightManager3D::get_max_lights() const {
 }
 
 void N64VertexLightManager3D::register_point_light(N64PointLight3D *p_light) {
-	if (p_light == nullptr || std::find(point_lights.begin(), point_lights.end(), p_light) != point_lights.end()) {
+	if (p_light == nullptr || point_lights.find(p_light) != -1) {
 		return;
 	}
 	point_lights.push_back(p_light);
@@ -121,7 +122,7 @@ void N64VertexLightManager3D::unregister_point_light(N64PointLight3D *p_light) {
 }
 
 void N64VertexLightManager3D::register_directional_light(N64DirectionalLight3D *p_light) {
-	if (p_light == nullptr || std::find(directional_lights.begin(), directional_lights.end(), p_light) != directional_lights.end()) {
+	if (p_light == nullptr || directional_lights.find(p_light) != -1) {
 		return;
 	}
 	directional_lights.push_back(p_light);
@@ -135,7 +136,7 @@ void N64VertexLightManager3D::unregister_directional_light(N64DirectionalLight3D
 }
 
 void N64VertexLightManager3D::register_lit_mesh(N64LitMeshInstance3D *p_mesh) {
-	if (p_mesh == nullptr || std::find(lit_meshes.begin(), lit_meshes.end(), p_mesh) != lit_meshes.end()) {
+	if (p_mesh == nullptr || lit_meshes.find(p_mesh) != -1) {
 		return;
 	}
 	lit_meshes.push_back(p_mesh);
@@ -159,15 +160,15 @@ void N64VertexLightManager3D::notify_mesh_changed(N64LitMeshInstance3D *p_mesh) 
 	dirty_meshes.insert(p_mesh);
 }
 
-bool N64VertexLightManager3D::_remove_point_light(std::vector<N64PointLight3D *> &p_lights, N64PointLight3D *p_light) {
+bool N64VertexLightManager3D::_remove_point_light(Vector<N64PointLight3D *> &p_lights, N64PointLight3D *p_light) {
 	return remove_from_vector(p_lights, p_light);
 }
 
-bool N64VertexLightManager3D::_remove_directional_light(std::vector<N64DirectionalLight3D *> &p_lights, N64DirectionalLight3D *p_light) {
+bool N64VertexLightManager3D::_remove_directional_light(Vector<N64DirectionalLight3D *> &p_lights, N64DirectionalLight3D *p_light) {
 	return remove_from_vector(p_lights, p_light);
 }
 
-bool N64VertexLightManager3D::_remove_lit_mesh(std::vector<N64LitMeshInstance3D *> &p_meshes, N64LitMeshInstance3D *p_mesh) {
+bool N64VertexLightManager3D::_remove_lit_mesh(Vector<N64LitMeshInstance3D *> &p_meshes, N64LitMeshInstance3D *p_mesh) {
 	return remove_from_vector(p_meshes, p_mesh);
 }
 
@@ -186,12 +187,11 @@ void N64VertexLightManager3D::_rebuild_all_meshes() {
 }
 
 void N64VertexLightManager3D::_rebuild_dirty_meshes() {
-	if (dirty_meshes.empty()) {
+	if (dirty_meshes.is_empty()) {
 		return;
 	}
 
-	std::vector<N64LitMeshInstance3D *> pending_meshes;
-	pending_meshes.reserve(dirty_meshes.size());
+	Vector<N64LitMeshInstance3D *> pending_meshes;
 	for (N64LitMeshInstance3D *mesh : dirty_meshes) {
 		pending_meshes.push_back(mesh);
 	}
@@ -207,8 +207,8 @@ void N64VertexLightManager3D::_rebuild_dirty_meshes() {
 
 void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh) {
 	Ref<ShaderMaterial> material = p_mesh->get_runtime_shader_material();
-	const std::vector<Ref<ShaderMaterial>> &surface_materials = p_mesh->get_runtime_surface_shader_materials();
-	if (material.is_null() && surface_materials.empty()) {
+	const Vector<Ref<ShaderMaterial>> &surface_materials = p_mesh->get_runtime_surface_shader_materials();
+	if (material.is_null() && surface_materials.is_empty()) {
 		return;
 	}
 
@@ -245,10 +245,12 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 	}
 
 	if (light_count < max_lights) {
-		std::vector<PointLightCandidate> point_candidates;
-		point_candidates.reserve(point_lights.size());
+		const int max_candidates = point_lights.size();
+		PointLightCandidate point_candidates[64]; // enough for reasonable light counts
+		int candidate_count = 0;
 
-		for (N64PointLight3D *light : point_lights) {
+		for (int32_t i = 0; i < point_lights.size(); i++) {
+			N64PointLight3D *light = point_lights[i];
 			if (light == nullptr || !light->is_enabled()) {
 				continue;
 			}
@@ -256,18 +258,28 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 			PointLightCandidate candidate;
 			candidate.light = light;
 			candidate.distance_squared = mesh_origin.distance_squared_to(light->get_global_transform().origin);
-			point_candidates.push_back(candidate);
+
+			if (candidate_count < 64) {
+				point_candidates[candidate_count++] = candidate;
+			}
 		}
 
-		std::sort(point_candidates.begin(), point_candidates.end(), [](const PointLightCandidate &p_a, const PointLightCandidate &p_b) {
-			return p_a.distance_squared < p_b.distance_squared;
-		});
-
-		for (const PointLightCandidate &candidate : point_candidates) {
-			if (light_count >= max_lights) {
-				break;
+		for (int i = 0; i < candidate_count - 1; i++) {
+			int best = i;
+			for (int j = i + 1; j < candidate_count; j++) {
+				if (point_candidates[j].distance_squared < point_candidates[best].distance_squared) {
+					best = j;
+				}
 			}
+			if (best != i) {
+				PointLightCandidate tmp = point_candidates[i];
+				point_candidates[i] = point_candidates[best];
+				point_candidates[best] = tmp;
+			}
+		}
 
+		for (int i = 0; i < candidate_count && light_count < max_lights; i++) {
+			const PointLightCandidate &candidate = point_candidates[i];
 			N64PointLight3D *light = candidate.light;
 			const Vector3 position = light->get_global_transform().origin;
 			const Color color = light->get_color();

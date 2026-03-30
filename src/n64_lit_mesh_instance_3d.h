@@ -6,7 +6,7 @@
 #include <godot_cpp/variant/packed_vector4_array.hpp>
 #include <godot_cpp/variant/vector4.hpp>
 
-#include <vector>
+#include <godot_cpp/templates/vector.hpp>
 
 namespace godot {
 
@@ -17,9 +17,9 @@ class N64LitMeshInstance3D : public MeshInstance3D {
 
 	N64VertexLightManager3D *manager = nullptr;
 	Ref<ShaderMaterial> runtime_shader_material;
-	std::vector<Ref<ShaderMaterial>> runtime_surface_shader_materials;
+	Vector<Ref<ShaderMaterial>> runtime_surface_shader_materials;
 	uint64_t last_material_instance_id = 0;
-	std::vector<uint64_t> last_surface_material_instance_ids;
+	Vector<uint64_t> last_surface_material_instance_ids;
 
 	int32_t cached_light_count = -1;
 	PackedVector4Array cached_light_vector_type;
@@ -41,7 +41,7 @@ public:
 	~N64LitMeshInstance3D() override = default;
 
 	Ref<ShaderMaterial> get_runtime_shader_material() const;
-	const std::vector<Ref<ShaderMaterial>> &get_runtime_surface_shader_materials() const;
+	const Vector<Ref<ShaderMaterial>> &get_runtime_surface_shader_materials() const;
 	bool update_cached_light_state(int32_t p_light_count, const PackedVector4Array &p_light_vector_type, const PackedVector4Array &p_light_color_energy, const PackedFloat32Array &p_light_range, const PackedFloat32Array &p_light_attenuation, const Vector4 &p_global_ambient);
 	void clear_cached_light_state();
 	void notify_runtime_material_changed();

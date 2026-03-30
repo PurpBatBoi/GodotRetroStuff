@@ -50,3 +50,8 @@ android.arm64.single.debug = "./android/libn64visuals.android.template_debug.arm
 android.arm64.double.debug = "./android/libn64visuals.android.template_debug.arm64.double.so"
 android.arm64.single.release = "./android/libn64visuals.android.template_release.arm64.so"
 android.arm64.double.release = "./android/libn64visuals.android.template_release.arm64.double.so"
+
+web.wasm32.single.debug = "./web/libn64visuals.web.template_debug.wasm32.wasm"
+web.wasm32.single.release = "./web/libn64visuals.web.template_release.wasm32.wasm"
+web.wasm32.nothreads.single.debug = "./web/libn64visuals.web.template_debug.wasm32.nothreads.wasm"
+web.wasm32.nothreads.single.release = "./web/libn64visuals.web.template_release.wasm32.nothreads.wasm"

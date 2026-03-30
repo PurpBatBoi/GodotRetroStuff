@@ -79,7 +79,7 @@ Ref<ShaderMaterial> N64LitMeshInstance3D::get_runtime_shader_material() const {
 	return runtime_shader_material;
 }
 
-const std::vector<Ref<ShaderMaterial>> &N64LitMeshInstance3D::get_runtime_surface_shader_materials() const {
+const Vector<Ref<ShaderMaterial>> &N64LitMeshInstance3D::get_runtime_surface_shader_materials() const {
 	return runtime_surface_shader_materials;
 }
 
@@ -177,12 +177,12 @@ bool N64LitMeshInstance3D::_sync_runtime_shader_material() {
 
 bool N64LitMeshInstance3D::_sync_surface_shader_materials() {
 	const int32_t surface_count = get_surface_override_material_count();
-	std::vector<uint64_t> current_surface_material_ids;
-	current_surface_material_ids.reserve(surface_count);
+	Vector<uint64_t> current_surface_material_ids;
+	current_surface_material_ids.resize(surface_count);
 
 	for (int32_t i = 0; i < surface_count; i++) {
 		Ref<Material> material = get_surface_override_material(i);
-		current_surface_material_ids.push_back(material.is_valid() ? material->get_instance_id() : 0);
+		current_surface_material_ids.set(i, material.is_valid() ? material->get_instance_id() : 0);
 	}
 
 	if (current_surface_material_ids == last_surface_material_instance_ids) {
@@ -213,7 +213,7 @@ bool N64LitMeshInstance3D::_sync_surface_shader_materials() {
 
 		set_surface_override_material(i, unique_material);
 		runtime_surface_shader_materials.push_back(unique_material);
-		last_surface_material_instance_ids[i] = unique_material->get_instance_id();
+		last_surface_material_instance_ids.set(i, unique_material->get_instance_id());
 	}
 
 	return true;
