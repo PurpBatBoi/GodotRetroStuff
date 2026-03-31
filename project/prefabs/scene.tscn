@@ -79,7 +79,7 @@ shader_parameter/use_vertex_color = true
 shader_parameter/use_vertex_alpha = true
 shader_parameter/shade_color = Color(1, 1, 1, 1)
 
-[node name="Scene" type="N64VertexLightManager3D" unique_id=474665587]
+[node name="Scene" type="RLS_VertexLightManager3D" unique_id=474665587]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=181942259]
 environment = SubResource("Environment_blflt")
@@ -114,14 +114,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33, 0, 33)
 [node name="Clones9" parent="." unique_id=1182998476 instance=ExtResource("1_w6el8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 0, 33)
 
-[node name="N64PointLight3D" type="N64PointLight3D" parent="." unique_id=1070815038]
+[node name="RLS_PointLight3D" type="RLS_PointLight3D" parent="." unique_id=1070815038]
 color = Color(1, 0.3777947, 0.18478355, 1)
 energy = 5.85
 range = 5.8885927
 fake_point_light = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2261238, 3.3018246, -2.9531791)
 
-[node name="MeshInstance3D" type="N64LitMeshInstance3D" parent="." unique_id=1596180450]
+[node name="MeshInstance3D" type="RLS_LitMeshInstance3D" parent="." unique_id=1596180450]
 transform = Transform3D(1.765, 0, 0, 0, 1.765, 0, 0, 0, 1.765, 1.7822144, 6.233038, -1.7988108)
 mesh = SubResource("SphereMesh_ksc5k")
 surface_material_override/0 = SubResource("ShaderMaterial_f7iwt")

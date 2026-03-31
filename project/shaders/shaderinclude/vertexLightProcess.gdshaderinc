@@ -1,11 +1,11 @@
 // vertexLightProcess.gdshaderinc
-// Shared N64-style vertex lighting uniforms and helpers.
+// Shared retro-style vertex lighting uniforms and helpers.
 
 // Keep a fallback here so Godot can validate this include on its own.
-// Main shaders can still override it by defining N64_MAX_LIGHTS first.
+// Main shaders can still override it by defining RLS_MAX_LIGHTS first.
 // Default to the full supported array size, then let materials opt down.
-#ifndef N64_MAX_LIGHTS
-#define N64_MAX_LIGHTS 8
+#ifndef RLS_MAX_LIGHTS
+#define RLS_MAX_LIGHTS 8
 #endif
 
 group_uniforms Lighting;
@@ -14,16 +14,16 @@ group_uniforms Lighting;
 	uniform vec4 material_ambient : source_color = vec4(0.12, 0.12, 0.16, 1.0);
 	uniform vec4 global_ambient   : source_color = vec4(0.12, 0.12, 0.16, 1.0);
 
-	/** 0 = direct light fully multiplied into shade (classic N64).
+	/** 0 = direct light fully multiplied into shade (classic retro).
 	 *  1 = direct light fully additive on top of combiner output. */
 	uniform float direct_light_additive_mix : hint_range(0.0, 1.0) = 0.0;
 	/** Treat fake local lights as normal lights for this material/mesh. */
 	uniform bool ignore_fake_lights = false;
 
 	// Light arrays are always declared at max size (8) to satisfy GLSL's
-	// requirement for fixed array sizes. Only the first N64_MAX_LIGHTS
+	// requirement for fixed array sizes. Only the first RLS_MAX_LIGHTS
 	// entries are read at runtime.
-	/** Number of active lights (capped to N64_MAX_LIGHTS at runtime). */
+	/** Number of active lights (capped to RLS_MAX_LIGHTS at runtime). */
 	uniform int  light_count = 0;
 	/** xyz = direction (directional/fake point) or world position (point/spot). w: 0 = point, 1 = directional, 2 = spotlight. */
 	uniform vec4 light_vector_type[8];
@@ -39,18 +39,18 @@ group_uniforms Lighting;
 	uniform float light_spot_outer_cos[8];
 group_uniforms;
 
-vec3 n64_compute_ambient()
+vec3 rls_compute_ambient()
 {
 	vec4 a = use_material_ambient ? material_ambient : global_ambient;
 	return a.rgb * a.a;
 }
 
-vec3 n64_compute_direct(vec3 world_pos, vec3 world_normal)
+vec3 rls_compute_direct(vec3 world_pos, vec3 world_normal)
 {
 	vec3  acc        = vec3(0.0);
-	int   count      = min(light_count, N64_MAX_LIGHTS);
+	int   count      = min(light_count, RLS_MAX_LIGHTS);
 
-	for (int i = 0; i < N64_MAX_LIGHTS; i++) {
+	for (int i = 0; i < RLS_MAX_LIGHTS; i++) {
 		if (i >= count) break;
 
 		vec4  info        = light_vector_type[i];
@@ -94,10 +94,10 @@ vec3 n64_compute_direct(vec3 world_pos, vec3 world_normal)
 	return acc;
 }
 
-void n64_vertex_light_process(vec3 world_pos, vec3 world_normal, vec4 base_shade, out vec4 shaded_input, out vec3 additive_light_out)
+void rls_vertex_light_process(vec3 world_pos, vec3 world_normal, vec4 base_shade, out vec4 shaded_input, out vec3 additive_light_out)
 {
-	vec3  ambient      = n64_compute_ambient();
-	vec3  direct       = n64_compute_direct(world_pos, world_normal);
+	vec3  ambient      = rls_compute_ambient();
+	vec3  direct       = rls_compute_direct(world_pos, world_normal);
 	float add_mix      = clamp(direct_light_additive_mix, 0.0, 1.0);
 	vec3  shaded_light = ambient + direct * (1.0 - add_mix);
 

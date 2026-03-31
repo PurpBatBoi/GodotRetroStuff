@@ -1,18 +1,18 @@
-# N64 Lighting Authoring
+# RLS Lighting Authoring
 
-This project packs custom light data per `N64LitMeshInstance3D` and applies it in the vertex-light shader path.
+This project packs custom light data per `RLS_LitMeshInstance3D` and applies it in the vertex-light shader path.
 
 ## Light Types
 
-- `N64DirectionalLight3D`
+- `RLS_DirectionalLight3D`
   - Infinite directional contribution.
   - Always uses the light node's forward direction.
-- `N64PointLight3D`
+- `RLS_PointLight3D`
   - Normal point light with position, range, and attenuation.
-- `N64PointLight3D` with `fake_point_light = true`
+- `RLS_PointLight3D` with `fake_point_light = true`
   - Per-mesh directional light aimed from the mesh origin toward the point light.
   - Still fades by range and attenuation based on mesh-origin distance to the light.
-- `N64SpotLight3D`
+- `RLS_SpotLight3D`
   - Point light with cone direction, `spot_angle`, and `spot_blend`.
 
 ## Material Controls
@@ -24,15 +24,15 @@ The shared lighting include, `vertexLightProcess.gdshaderinc`, exposes:
   - When enabled, fake point lights are treated as normal point lights for that mesh.
   - Useful for scenery that should respect point-light radius instead of receiving a directional-style fake point light.
 
-## `N64_MAX_LIGHTS`
+## `RLS_MAX_LIGHTS`
 
-- The lighting include has a fallback `N64_MAX_LIGHTS` value of `8`.
+- The lighting include has a fallback `RLS_MAX_LIGHTS` value of `8`.
 - Individual shaders can override it before including `vertexLightProcess.gdshaderinc`.
 - Use lower values on cheaper materials if you want to reduce per-vertex light work.
 
 ## Material Authoring Paths
 
-Lighting supports the common Godot authoring paths for `N64LitMeshInstance3D`:
+Lighting supports the common Godot authoring paths for `RLS_LitMeshInstance3D`:
 
 - `material_override`
 - `surface_override_material`
@@ -47,7 +47,7 @@ This means:
 
 ## Mesh-Wide Light Packing
 
-Light selection is packed once per `N64LitMeshInstance3D`, not separately per surface.
+Light selection is packed once per `RLS_LitMeshInstance3D`, not separately per surface.
 
 As a result:
 

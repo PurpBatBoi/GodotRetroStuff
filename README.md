@@ -1,15 +1,15 @@
-# Godot Retro Stuff — N64 Visuals for Godot 4
+# Godot Retro Stuff — RLS Visuals for Godot 4
 
-An N64-style rendering pipeline for Godot 4.6+, built as a GDExtension (C++) with accompanying shaders. Aims to faithfully recreate the look and feel of the Nintendo 64's graphics hardware — vertex lighting, RDP color combiner, color quantization, dithering, and VI post-processing — all running in real-time.
+An RLS rendering pipeline for Godot 4.6+, built as a GDExtension (C++) with accompanying shaders. Aims to faithfully recreate the look and feel of the retro fixed-function graphics hardware — vertex lighting, RDP color combiner, color quantization, dithering, and VI post-processing — all running in real-time.
 
-![N64-style rendering demo](media/photo1.png)
+![RLS rendering demo](media/photo1.png)
 
 ## Features
 
-- **N64 RSP Vertex Lighting** — Up to 7 directional lights + 1 ambient, calculated per-vertex just like the real hardware. Includes point light support for dynamic effects.
-- **RDP Color Combiner** — A full implementation of the N64's multi-cycle color combiner as a Godot shader include, supporting all the blending modes the original hardware offered.
-- **Post-Processing (RDP VI)** — Screen-space color quantization, ordered dithering, horizontal VI interpolation, and gamma correction to nail that distinctive N64 framebuffer look.
-- **Custom Light Nodes** — `N64DirectionalLight3D` and `N64PointLight3D` nodes that act as RSP-style light proxies, managed by a `N64VertexLightManager3D`.
+- **RLS RSP Vertex Lighting** — Up to 7 directional lights + 1 ambient, calculated per-vertex just like the real hardware. Includes point light support for dynamic effects.
+- **RDP Color Combiner** — A full implementation of the retro multi-cycle color combiner as a Godot shader include, supporting all the blending modes the original hardware offered.
+- **Post-Processing (RDP VI)** — Screen-space color quantization, ordered dithering, horizontal VI interpolation, and gamma correction to nail that distinctive retro framebuffer look.
+- **Custom Light Nodes** — `RLS_DirectionalLight3D` and `RLS_PointLight3D` nodes that act as RSP-style light proxies, managed by a `RLS_VertexLightManager3D`.
 - **Editor Integration** — Custom gizmos for light visualization in the Godot editor.
 - **Metallic / Matcap Support** — Includes a metallic reflection shader using matcap textures.
 
@@ -17,12 +17,12 @@ An N64-style rendering pipeline for Godot 4.6+, built as a GDExtension (C++) wit
 
 ```
 src/                          # C++ GDExtension source
-├── n64_directional_light_3d  # RSP-style directional light node
-├── n64_point_light_3d        # Point light node
-├── n64_vertex_light_manager  # Manages light state and pushes uniforms
-├── n64_lit_mesh_instance_3d  # Mesh instance with per-vertex lighting
-├── n64_editor_plugin         # Editor plugin registration
-├── n64_light_gizmo_plugin    # Custom gizmos for light nodes
+├── rls_directional_light_3d  # RSP-style directional light node
+├── rls_point_light_3d        # Point light node
+├── rls_vertex_light_manager  # Manages light state and pushes uniforms
+├── rls_lit_mesh_instance_3d  # Mesh instance with per-vertex lighting
+├── rls_editor_plugin         # Editor plugin registration
+├── rls_light_gizmo_plugin    # Custom gizmos for light nodes
 └── register_types            # GDExtension entry point
 
 project/                      # Godot demo project
@@ -30,10 +30,10 @@ project/                      # Godot demo project
 │   ├── GenericVertexLit.gdshader       # Standard vertex-lit material
 │   ├── GenericVertexLitBlend.gdshader  # Vertex-lit with blending
 │   ├── Metallic.gdshader               # Matcap metallic shader
-│   ├── post/RDPpost.gdshader           # N64 VI post-processing
+│   ├── post/RDPpost.gdshader           # RLS VI post-processing
 │   └── shaderinclude/RDPcombiner.gdshaderinc  # RDP color combiner
 └── addons/
-    └── n64_visuals_billboards/         # Billboard addon
+    └── rls_visuals_billboards/         # Billboard addon
 ```
 
 ## Requirements
@@ -67,10 +67,10 @@ project/                      # Godot demo project
 
 ### Shaders Only (No C++ Required)
 
-If you just want the N64 visual style without the custom lighting nodes, copy the following into your Godot project:
+If you just want the RLS look without the custom lighting nodes, copy the following into your Godot project:
 
 - `project/shaders/` — All shader files
-- `project/shaders/post/RDPpost.gdshader` — Apply to a full-screen quad for the N64 post-processing look
+- `project/shaders/post/RDPpost.gdshader` — Apply to a full-screen quad for the retro post-processing look
 
 ### Full Pipeline (With GDExtension)
 
@@ -79,9 +79,9 @@ For the complete experience including RSP-style vertex lighting:
 1. Build the extension (see above)
 2. Copy `project/bin/` into your Godot project
 3. Copy the shader files from `project/shaders/`
-4. Add `N64VertexLightManager3D` to your scene
-5. Add `N64DirectionalLight3D` or `N64PointLight3D` nodes for lighting
-6. Use `N64LitMeshInstance3D` for meshes that should receive vertex lighting
+4. Add `RLS_VertexLightManager3D` to your scene
+5. Add `RLS_DirectionalLight3D` or `RLS_PointLight3D` nodes for lighting
+6. Use `RLS_LitMeshInstance3D` for meshes that should receive vertex lighting
 
 ## License
 

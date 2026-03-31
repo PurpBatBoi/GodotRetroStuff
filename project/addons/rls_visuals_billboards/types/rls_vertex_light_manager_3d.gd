@@ -1,0 +1,2 @@
+@tool
+extends RLS_VertexLightManager3D

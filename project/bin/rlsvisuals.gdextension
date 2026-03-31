@@ -1,0 +1,17 @@
+[configuration]
+
+; Kept on the legacy symbol until the checked-in binaries are rebuilt with the new export name.
+entry_symbol = "n64visuals_library_init"
+compatibility_minimum = "4.1"
+reloadable = false
+
+[libraries]
+; Keep the library keys in the standard Godot order so the editor/runtime can resolve them.
+linux.debug.x86_64 = "./linux/librlsvisuals.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "./linux/librlsvisuals.linux.template_release.x86_64.so"
+windows.debug.x86_64 = "./windows/librlsvisuals.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "./windows/librlsvisuals.windows.template_release.x86_64.dll"
+web.debug.threads.wasm32 = "./web/librlsvisuals.web.template_debug.wasm32.wasm"
+web.release.threads.wasm32 = "./web/librlsvisuals.web.template_release.wasm32.wasm"
+web.debug.wasm32 = "./web/librlsvisuals.web.template_debug.wasm32.nothreads.wasm"
+web.release.wasm32 = "./web/librlsvisuals.web.template_release.wasm32.nothreads.wasm"

@@ -4,11 +4,15 @@ set script_dir (cd (dirname (status --current-filename)); and pwd)
 cd $script_dir
 
 set package_root "$script_dir/packaged/RetroLightingSystem"
-set source_addon "$script_dir/project/addons/n64_visuals_billboards"
+set source_addon "$script_dir/project/addons/rls_visuals_billboards"
 set source_shaders "$script_dir/project/shaders"
 set source_bin "$script_dir/project/bin"
 set source_docs "$script_dir/docs"
 set source_manual "$script_dir/RETRO_LIGHTING_SYSTEM_MANUAL.md"
+set source_cpp "$script_dir/src"
+set source_sconstruct "$script_dir/SConstruct"
+set source_cmake "$script_dir/CMakeLists.txt"
+set source_license "$script_dir/LICENSE.md"
 
 mkdir -p \
     "$package_root/bin/linux" \
@@ -18,7 +22,8 @@ mkdir -p \
     "$package_root/types" \
     "$package_root/shaders/shaderinclude" \
     "$package_root/shaders/post" \
-    "$package_root/docs"
+    "$package_root/docs" \
+    "$package_root/source/src"
 
 function copy_if_exists
     set source_path $argv[1]
@@ -30,7 +35,7 @@ end
 
 # Copy addon assets.
 cp "$source_addon/plugin.cfg" "$package_root/plugin.cfg"
-cp "$source_addon/n64_light_gizmo_plugin.gd" "$package_root/n64_light_gizmo_plugin.gd"
+cp "$source_addon/rls_light_gizmo_plugin.gd" "$package_root/rls_light_gizmo_plugin.gd"
 cp "$source_addon/types/"*.gd "$package_root/types/"
 copy_if_exists "$source_addon/icons/OmniLight3D.png" "$package_root/icons/OmniLight3D.png"
 copy_if_exists "$source_addon/icons/DirectionalLight3D.png" "$package_root/icons/DirectionalLight3D.png"
@@ -45,8 +50,8 @@ copy_if_exists "$source_addon/icons/WorldEnvironment.svg" "$package_root/icons/W
 cp "$source_addon/plugin.gd" "$package_root/plugin.gd"
 
 sed \
-    -e 's#name="N64 Visuals Lights"#name="RetroLightingSystem"#g' \
-    -e 's#description="Adds interactive gizmos for custom N64 light nodes."#description="Reusable retro vertex lighting nodes, shaders, and gizmos."#g' \
+    -e 's#name="RLS Visuals Lights"#name="RetroLightingSystem"#g' \
+    -e 's#description="Adds interactive gizmos for custom RLS light nodes."#description="Reusable retro vertex lighting nodes, shaders, and gizmos."#g' \
     "$source_addon/plugin.cfg" > "$package_root/plugin.cfg"
 
 # Copy shaders and retarget includes into the fixed packaged addon path.
@@ -61,37 +66,46 @@ cp "$source_shaders/shaderinclude/vertexLightProcess.gdshaderinc" "$package_root
 copy_if_exists "$source_shaders/post/RDPpost.gdshader" "$package_root/shaders/post/RDPpost.gdshader"
 copy_if_exists "$source_docs/lighting-authoring.md" "$package_root/docs/lighting-authoring.md"
 copy_if_exists "$source_manual" "$package_root/docs/RETRO_LIGHTING_SYSTEM_MANUAL.md"
+copy_if_exists "$source_sconstruct" "$package_root/source/SConstruct"
+copy_if_exists "$source_cmake" "$package_root/source/CMakeLists.txt"
+copy_if_exists "$source_license" "$package_root/source/LICENSE.md"
+cp "$source_cpp/"*.cpp "$package_root/source/src/"
+cp "$source_cpp/"*.h "$package_root/source/src/"
 
 # Package only the binaries referenced by the packaged .gdextension.
-copy_if_exists "$source_bin/linux/libn64visuals.linux.template_debug.x86_64.so" "$package_root/bin/linux/libn64visuals.linux.template_debug.x86_64.so"
-copy_if_exists "$source_bin/linux/libn64visuals.linux.template_release.x86_64.so" "$package_root/bin/linux/libn64visuals.linux.template_release.x86_64.so"
+copy_if_exists "$source_bin/linux/librlsvisuals.linux.template_debug.x86_64.so" "$package_root/bin/linux/librlsvisuals.linux.template_debug.x86_64.so"
+copy_if_exists "$source_bin/linux/librlsvisuals.linux.template_release.x86_64.so" "$package_root/bin/linux/librlsvisuals.linux.template_release.x86_64.so"
 
-copy_if_exists "$source_bin/windows/libn64visuals.windows.template_debug.x86_64.dll" "$package_root/bin/windows/libn64visuals.windows.template_debug.x86_64.dll"
-copy_if_exists "$source_bin/windows/libn64visuals.windows.template_release.x86_64.dll" "$package_root/bin/windows/libn64visuals.windows.template_release.x86_64.dll"
+copy_if_exists "$source_bin/windows/librlsvisuals.windows.template_debug.x86_64.dll" "$package_root/bin/windows/librlsvisuals.windows.template_debug.x86_64.dll"
+copy_if_exists "$source_bin/windows/librlsvisuals.windows.template_release.x86_64.dll" "$package_root/bin/windows/librlsvisuals.windows.template_release.x86_64.dll"
 
-copy_if_exists "$source_bin/web/libn64visuals.web.template_debug.wasm32.wasm" "$package_root/bin/web/libn64visuals.web.template_debug.wasm32.wasm"
-copy_if_exists "$source_bin/web/libn64visuals.web.template_release.wasm32.wasm" "$package_root/bin/web/libn64visuals.web.template_release.wasm32.wasm"
-copy_if_exists "$source_bin/web/libn64visuals.web.template_debug.wasm32.nothreads.wasm" "$package_root/bin/web/libn64visuals.web.template_debug.wasm32.nothreads.wasm"
-copy_if_exists "$source_bin/web/libn64visuals.web.template_release.wasm32.nothreads.wasm" "$package_root/bin/web/libn64visuals.web.template_release.wasm32.nothreads.wasm"
+copy_if_exists "$source_bin/web/librlsvisuals.web.template_debug.wasm32.wasm" "$package_root/bin/web/librlsvisuals.web.template_debug.wasm32.wasm"
+copy_if_exists "$source_bin/web/librlsvisuals.web.template_release.wasm32.wasm" "$package_root/bin/web/librlsvisuals.web.template_release.wasm32.wasm"
+copy_if_exists "$source_bin/web/librlsvisuals.web.template_debug.wasm32.nothreads.wasm" "$package_root/bin/web/librlsvisuals.web.template_debug.wasm32.nothreads.wasm"
+copy_if_exists "$source_bin/web/librlsvisuals.web.template_release.wasm32.nothreads.wasm" "$package_root/bin/web/librlsvisuals.web.template_release.wasm32.nothreads.wasm"
 
 # Generate a packaged .gdextension that points at the bundled binaries.
 set gdextension_lines \
     '[configuration]' \
     '' \
+    '; Kept on the legacy symbol until the checked-in binaries are rebuilt with the new export name.' \
     'entry_symbol = "n64visuals_library_init"' \
     'compatibility_minimum = "4.1"' \
     'reloadable = false' \
     '' \
     '[libraries]' \
-    'linux.x86_64.single.debug = "./bin/linux/libn64visuals.linux.template_debug.x86_64.so"' \
-    'linux.x86_64.single.release = "./bin/linux/libn64visuals.linux.template_release.x86_64.so"' \
-    'windows.x86_64.single.debug = "./bin/windows/libn64visuals.windows.template_debug.x86_64.dll"' \
-    'windows.x86_64.single.release = "./bin/windows/libn64visuals.windows.template_release.x86_64.dll"' \
-    'web.wasm32.single.debug = "./bin/web/libn64visuals.web.template_debug.wasm32.wasm"' \
-    'web.wasm32.single.release = "./bin/web/libn64visuals.web.template_release.wasm32.wasm"'
+    'linux.debug.x86_64 = "./bin/linux/librlsvisuals.linux.template_debug.x86_64.so"' \
+    'linux.release.x86_64 = "./bin/linux/librlsvisuals.linux.template_release.x86_64.so"' \
+    'windows.debug.x86_64 = "./bin/windows/librlsvisuals.windows.template_debug.x86_64.dll"' \
+    'windows.release.x86_64 = "./bin/windows/librlsvisuals.windows.template_release.x86_64.dll"' \
+    'web.debug.threads.wasm32 = "./bin/web/librlsvisuals.web.template_debug.wasm32.wasm"' \
+    'web.release.threads.wasm32 = "./bin/web/librlsvisuals.web.template_release.wasm32.wasm"'
 
-if test -f "$package_root/bin/web/libn64visuals.web.template_release.wasm32.nothreads.wasm"
-    set gdextension_lines $gdextension_lines 'web.wasm32.nothreads.single.release = "./bin/web/libn64visuals.web.template_release.wasm32.nothreads.wasm"'
+if test -f "$package_root/bin/web/librlsvisuals.web.template_debug.wasm32.nothreads.wasm"
+    set gdextension_lines $gdextension_lines 'web.debug.wasm32 = "./bin/web/librlsvisuals.web.template_debug.wasm32.nothreads.wasm"'
+end
+if test -f "$package_root/bin/web/librlsvisuals.web.template_release.wasm32.nothreads.wasm"
+    set gdextension_lines $gdextension_lines 'web.release.wasm32 = "./bin/web/librlsvisuals.web.template_release.wasm32.nothreads.wasm"'
 end
 
 printf '%s\n' $gdextension_lines > "$package_root/RetroLightingSystem.gdextension"
@@ -113,12 +127,13 @@ set readme_lines \
     '- GDExtension runtime binaries for Linux, Windows, and Web' \
     '- Light node editor plugin, gizmos, and icons' \
     '- Reusable vertex lighting shaders and shader includes' \
+    '- Original C++ GDExtension source in `source/src/` with build files in `source/`' \
     '- Documentation in `docs/RETRO_LIGHTING_SYSTEM_MANUAL.md` and `docs/lighting-authoring.md`' \
     '' \
     '## Notes' \
     '' \
     '- `ignore_fake_lights` remains a shader material uniform.' \
-    '- `N64_MAX_LIGHTS` can be overridden per shader before including `vertexLightProcess.gdshaderinc`.' \
+    '- `RLS_MAX_LIGHTS` can be overridden per shader before including `vertexLightProcess.gdshaderinc`.' \
     '- This package does not include dynamic shadows.' \
 
 printf '%s\n' $readme_lines > "$package_root/README.md"

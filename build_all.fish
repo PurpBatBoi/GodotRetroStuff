@@ -32,7 +32,7 @@ function run_web_build --argument-names target web_jobs
 end
 
 # Linux builds
-for target in template_release
+for target in template_debug template_release
     echo "Building Linux $target..."
     scons platform=linux target=$target -j$jobs
     or exit $status

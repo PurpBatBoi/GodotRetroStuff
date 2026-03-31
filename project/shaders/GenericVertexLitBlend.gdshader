@@ -1,19 +1,19 @@
 shader_type spatial;
 render_mode unshaded, cull_back;
 
-#define N64_FILTER_3POINT
-#define N64_TWO_CYCLE
-#define N64_INPUT_TEX1
-#define N64_INPUT_SHADE_ALPHA 
-#define N64_VERTEX_COLOR_GAMMA
-#define N64_ATLAS
+#define RLS_FILTER_3POINT
+#define RLS_TWO_CYCLE
+#define RLS_INPUT_TEX1
+#define RLS_INPUT_SHADE_ALPHA 
+#define RLS_VERTEX_COLOR_GAMMA
+#define RLS_ATLAS
 
 #include "res://shaders/shaderinclude/RDPcombiner.gdshaderinc"
 
 // ── Light count cap ────────────────────────────────────────────────────────────
 // Override the shared fallback (8) for this material variant.
-#ifndef N64_MAX_LIGHTS
-#define N64_MAX_LIGHTS 2
+#ifndef RLS_MAX_LIGHTS
+#define RLS_MAX_LIGHTS 2
 #endif
 
 #include "res://shaders/shaderinclude/vertexLightProcess.gdshaderinc"
@@ -44,10 +44,10 @@ void vertex()
 
 	vec4 shaded_input;
 	vec3 additive_light_value;
-	n64_vertex_light_process(world_pos, world_normal, base_shade, shaded_input, additive_light_value);
+	rls_vertex_light_process(world_pos, world_normal, base_shade, shaded_input, additive_light_value);
 	additive_light = additive_light_value;
 
-	N64CombVertexData cd = n64comb_vertex_data(
+	RLSCombVertexData cd = rlscomb_vertex_data(
 		NORMAL, shaded_input,
 		use_vertex_color ? 1.0 : 0.0,
 		UV, VIEW_MATRIX, MODEL_NORMAL_MATRIX
@@ -61,6 +61,6 @@ void vertex()
 // ── Fragment ───────────────────────────────────────────────────────────────────
 void fragment()
 {
-	vec4 result = n64comb_fragment(SCREEN_UV);
+	vec4 result = rlscomb_fragment(SCREEN_UV);
 	ALBEDO = clamp(result.rgb + additive_light, 0.0, 1.0);
 }

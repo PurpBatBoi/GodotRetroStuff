@@ -2834,14 +2834,14 @@ shader_parameter/shade_color = Color(1, 1, 1, 1)
 [node name="Node3D" type="Node3D" parent="." unique_id=1666501415]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1504393, 0)
 
-[node name="Plane_004" type="N64LitMeshInstance3D" parent="Node3D" unique_id=1556291689]
+[node name="Plane_004" type="RLS_LitMeshInstance3D" parent="Node3D" unique_id=1556291689]
 gi_mode = 0
 mesh = SubResource("ArrayMesh_hhws6")
 surface_material_override/0 = SubResource("ShaderMaterial_xi6um")
 surface_material_override/1 = SubResource("ShaderMaterial_a5hyg")
 surface_material_override/4 = SubResource("ShaderMaterial_6uq1w")
 
-[node name="Plane_005" type="N64LitMeshInstance3D" parent="Node3D" unique_id=1451599791]
+[node name="Plane_005" type="RLS_LitMeshInstance3D" parent="Node3D" unique_id=1451599791]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 0)
 gi_mode = 0
 mesh = SubResource("ArrayMesh_hhws6")
@@ -2851,7 +2851,7 @@ surface_material_override/2 = SubResource("ShaderMaterial_a1xxe")
 surface_material_override/3 = SubResource("ShaderMaterial_gjoni")
 surface_material_override/4 = SubResource("ShaderMaterial_k543e")
 
-[node name="Plane_006" type="N64LitMeshInstance3D" parent="Node3D" unique_id=1365399523]
+[node name="Plane_006" type="RLS_LitMeshInstance3D" parent="Node3D" unique_id=1365399523]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 0)
 gi_mode = 0
 mesh = SubResource("ArrayMesh_hhws6")
@@ -2864,7 +2864,7 @@ surface_material_override/4 = SubResource("ShaderMaterial_gub47")
 [node name="Node3D2" type="Node3D" parent="." unique_id=1691257384]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1504393, -11)
 
-[node name="Plane_004" type="N64LitMeshInstance3D" parent="Node3D2" unique_id=759362516]
+[node name="Plane_004" type="RLS_LitMeshInstance3D" parent="Node3D2" unique_id=759362516]
 gi_mode = 0
 mesh = SubResource("ArrayMesh_hhws6")
 surface_material_override/0 = SubResource("ShaderMaterial_227ww")
@@ -2873,7 +2873,7 @@ surface_material_override/2 = SubResource("ShaderMaterial_k13c6")
 surface_material_override/3 = SubResource("ShaderMaterial_uagpq")
 surface_material_override/4 = SubResource("ShaderMaterial_p0nt5")
 
-[node name="Plane_005" type="N64LitMeshInstance3D" parent="Node3D2" unique_id=2063711845]
+[node name="Plane_005" type="RLS_LitMeshInstance3D" parent="Node3D2" unique_id=2063711845]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 0)
 gi_mode = 0
 mesh = SubResource("ArrayMesh_hhws6")
@@ -2883,7 +2883,7 @@ surface_material_override/2 = SubResource("ShaderMaterial_4c0e2")
 surface_material_override/3 = SubResource("ShaderMaterial_rjh06")
 surface_material_override/4 = SubResource("ShaderMaterial_kagkw")
 
-[node name="Plane_006" type="N64LitMeshInstance3D" parent="Node3D2" unique_id=237333027]
+[node name="Plane_006" type="RLS_LitMeshInstance3D" parent="Node3D2" unique_id=237333027]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 0)
 gi_mode = 0
 mesh = SubResource("ArrayMesh_hhws6")
@@ -2896,7 +2896,7 @@ surface_material_override/4 = SubResource("ShaderMaterial_runjd")
 [node name="Node3D3" type="Node3D" parent="." unique_id=208795375]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1504393, 11)
 
-[node name="Plane_004" type="N64LitMeshInstance3D" parent="Node3D3" unique_id=706352773]
+[node name="Plane_004" type="RLS_LitMeshInstance3D" parent="Node3D3" unique_id=706352773]
 gi_mode = 0
 mesh = SubResource("ArrayMesh_hhws6")
 surface_material_override/0 = SubResource("ShaderMaterial_r2s6v")
@@ -2905,7 +2905,7 @@ surface_material_override/2 = SubResource("ShaderMaterial_1nqic")
 surface_material_override/3 = SubResource("ShaderMaterial_7t7lj")
 surface_material_override/4 = SubResource("ShaderMaterial_kxlr7")
 
-[node name="Plane_005" type="N64LitMeshInstance3D" parent="Node3D3" unique_id=437138033]
+[node name="Plane_005" type="RLS_LitMeshInstance3D" parent="Node3D3" unique_id=437138033]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 0)
 gi_mode = 0
 mesh = SubResource("ArrayMesh_hhws6")
@@ -2915,7 +2915,7 @@ surface_material_override/2 = SubResource("ShaderMaterial_0fnrh")
 surface_material_override/3 = SubResource("ShaderMaterial_tq25o")
 surface_material_override/4 = SubResource("ShaderMaterial_xqdof")
 
-[node name="Plane_006" type="N64LitMeshInstance3D" parent="Node3D3" unique_id=1787971997]
+[node name="Plane_006" type="RLS_LitMeshInstance3D" parent="Node3D3" unique_id=1787971997]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 0)
 gi_mode = 0
 mesh = SubResource("ArrayMesh_hhws6")
@@ -2925,12 +2925,12 @@ surface_material_override/2 = SubResource("ShaderMaterial_8uh2n")
 surface_material_override/3 = SubResource("ShaderMaterial_j3mf7")
 surface_material_override/4 = SubResource("ShaderMaterial_djkct")
 
-[node name="MeshInstance3D" type="N64LitMeshInstance3D" parent="." unique_id=274801651]
+[node name="MeshInstance3D" type="RLS_LitMeshInstance3D" parent="." unique_id=274801651]
 transform = Transform3D(1.765, 0, 0, 0, 1.765, 0, 0, 0, 1.765, 0, 4.6967635, 1.3496804)
 mesh = SubResource("SphereMesh_m7iqp")
 surface_material_override/0 = SubResource("ShaderMaterial_fec45")
 
-[node name="N64LitMeshInstance3D" type="N64LitMeshInstance3D" parent="." unique_id=45975832]
+[node name="RLS_LitMeshInstance3D" type="RLS_LitMeshInstance3D" parent="." unique_id=45975832]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.683849e-08, 4.562031, -1.6622144)
 mesh = SubResource("ArrayMesh_ut0a2")
 surface_material_override/0 = SubResource("ShaderMaterial_2httq")

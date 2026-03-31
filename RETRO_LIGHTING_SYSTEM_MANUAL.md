@@ -9,12 +9,13 @@ RetroLightingSystem is a stylized retro lighting addon for Godot 4.x. It is buil
 - shader-based vertex lighting
 - editor gizmos and icons
 - reusable shaders and shader includes
+- original C++ GDExtension source under `source/src/`
 
 ## What It Is Best At
 
 Use RetroLightingSystem when you want:
 
-- N64-era or PS1-era style lighting
+- retro-era or PS1-era style lighting
 - stable, readable character shading
 - low-cost stylized scene lighting
 - more artistic control than physical accuracy
@@ -31,9 +32,15 @@ Documentation is included in:
 - `res://addons/RetroLightingSystem/docs/RETRO_LIGHTING_SYSTEM_MANUAL.md`
 - `res://addons/RetroLightingSystem/docs/lighting-authoring.md`
 
+Bundled source files are included in:
+
+- `res://addons/RetroLightingSystem/source/src/`
+- `res://addons/RetroLightingSystem/source/SConstruct`
+- `res://addons/RetroLightingSystem/source/CMakeLists.txt`
+
 ## Main Nodes
 
-### `N64VertexLightManager3D`
+### `RLS_VertexLightManager3D`
 
 This is the central manager node. It collects custom lights, finds lit meshes under it, and sends packed light data to their materials.
 
@@ -45,7 +52,7 @@ Important properties:
 
 `max_lights` is capped at `8`.
 
-### `N64LitMeshInstance3D`
+### `RLS_LitMeshInstance3D`
 
 Use this instead of a normal `MeshInstance3D` when you want the addon to light that mesh.
 
@@ -55,11 +62,11 @@ It works with:
 - `surface_override_material`
 - shader materials assigned directly on mesh surfaces
 
-### `N64DirectionalLight3D`
+### `RLS_DirectionalLight3D`
 
 Use for broad scene lighting such as sunlight, moonlight, or large fill light.
 
-### `N64PointLight3D`
+### `RLS_PointLight3D`
 
 Use for torches, lamps, and local colored fills.
 
@@ -67,7 +74,7 @@ Extra option:
 
 - `fake_point_light`
 
-### `N64SpotLight3D`
+### `RLS_SpotLight3D`
 
 Use for flashlights, stage lights, and focused beams.
 

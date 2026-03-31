@@ -5,7 +5,7 @@ import sys
 from methods import print_error
 
 
-libname = "n64visuals"
+libname = "rlsvisuals"
 projectdir = "project"
 
 localEnv = Environment(tools=["default"], PLATFORM="")

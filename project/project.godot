@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="n64-graphics"
+config/name="rls-graphics"
 run/main_scene="uid://dvl3aljo57jhu"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 run/max_fps=60
@@ -24,7 +24,7 @@ window/stretch/mode="viewport"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/n64_visuals_billboards/plugin.cfg")
+enabled=PackedStringArray("res://addons/rls_visuals_billboards/plugin.cfg")
 
 [input]
 
