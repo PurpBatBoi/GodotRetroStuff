@@ -45,6 +45,12 @@ void N64DirectionalLight3D::_notification(int p_what) {
 		case Node::NOTIFICATION_ENTER_TREE:
 		case Node::NOTIFICATION_PARENTED:
 			_reconnect_manager();
+			if (enabled != is_visible()) {
+				enabled = is_visible();
+				if (manager != nullptr) {
+					manager->notify_light_changed();
+				}
+			}
 			break;
 		case Node::NOTIFICATION_EXIT_TREE:
 		case Node::NOTIFICATION_UNPARENTED:
@@ -59,6 +65,15 @@ void N64DirectionalLight3D::_notification(int p_what) {
 			}
 			update_gizmos();
 			break;
+		case Node3D::NOTIFICATION_VISIBILITY_CHANGED:
+			if (!syncing_visibility && enabled != is_visible()) {
+				enabled = is_visible();
+				if (manager != nullptr) {
+					manager->notify_light_changed();
+				}
+			}
+			update_gizmos();
+			break;
 		default:
 			break;
 	}
@@ -69,6 +84,11 @@ void N64DirectionalLight3D::set_enabled(bool p_enabled) {
 		return;
 	}
 	enabled = p_enabled;
+	if (is_visible() != p_enabled) {
+		syncing_visibility = true;
+		set_visible(p_enabled);
+		syncing_visibility = false;
+	}
 	if (manager != nullptr) {
 		manager->notify_light_changed();
 	}

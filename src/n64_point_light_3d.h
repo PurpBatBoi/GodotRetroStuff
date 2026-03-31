@@ -16,6 +16,7 @@ class N64PointLight3D : public Node3D {
 	float range = 5.0f;
 	float attenuation = 1.0f;
 	bool fake_point_light = false;
+	bool syncing_visibility = false;
 	N64VertexLightManager3D *manager = nullptr;
 
 	void _reconnect_manager();

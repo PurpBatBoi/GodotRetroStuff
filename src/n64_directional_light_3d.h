@@ -14,6 +14,7 @@ class N64DirectionalLight3D : public Node3D {
 	bool enabled = true;
 	Color color = Color(0.8, 0.9, 1.0, 1.0);
 	float energy = 1.0f;
+	bool syncing_visibility = false;
 	N64VertexLightManager3D *manager = nullptr;
 
 	void _reconnect_manager();

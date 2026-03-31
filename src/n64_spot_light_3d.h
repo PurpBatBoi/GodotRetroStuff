@@ -19,6 +19,7 @@ class N64SpotLight3D : public Node3D {
 	float spot_angle = 45.0f;
 	float spot_blend = 0.15f;
 	bool fake_spot_light = false;
+	bool syncing_visibility = false;
 	N64VertexLightManager3D *manager = nullptr;
 
 	void _reconnect_manager();
