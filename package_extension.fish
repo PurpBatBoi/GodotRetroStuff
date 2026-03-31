@@ -8,6 +8,7 @@ set source_addon "$script_dir/project/addons/n64_visuals_billboards"
 set source_shaders "$script_dir/project/shaders"
 set source_bin "$script_dir/project/bin"
 set source_docs "$script_dir/docs"
+set source_manual "$script_dir/RETRO_LIGHTING_SYSTEM_MANUAL.md"
 
 mkdir -p \
     "$package_root/bin/linux" \
@@ -59,6 +60,7 @@ cp "$source_shaders/shaderinclude/RDPcombiner.gdshaderinc" "$package_root/shader
 cp "$source_shaders/shaderinclude/vertexLightProcess.gdshaderinc" "$package_root/shaders/shaderinclude/vertexLightProcess.gdshaderinc"
 copy_if_exists "$source_shaders/post/RDPpost.gdshader" "$package_root/shaders/post/RDPpost.gdshader"
 copy_if_exists "$source_docs/lighting-authoring.md" "$package_root/docs/lighting-authoring.md"
+copy_if_exists "$source_manual" "$package_root/docs/RETRO_LIGHTING_SYSTEM_MANUAL.md"
 
 # Package only the binaries referenced by the packaged .gdextension.
 copy_if_exists "$source_bin/linux/libn64visuals.linux.template_debug.x86_64.so" "$package_root/bin/linux/libn64visuals.linux.template_debug.x86_64.so"
@@ -111,7 +113,7 @@ set readme_lines \
     '- GDExtension runtime binaries for Linux, Windows, and Web' \
     '- Light node editor plugin, gizmos, and icons' \
     '- Reusable vertex lighting shaders and shader includes' \
-    '- Lighting authoring notes in `docs/lighting-authoring.md`' \
+    '- Documentation in `docs/RETRO_LIGHTING_SYSTEM_MANUAL.md` and `docs/lighting-authoring.md`' \
     '' \
     '## Notes' \
     '' \
