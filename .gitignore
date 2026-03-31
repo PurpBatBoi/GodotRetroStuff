@@ -3,21 +3,30 @@
 *.gen.*
 .sconsign*.dblite
 
-# Ignore library files but not the gdextension file
+# Ignore generated extension binaries, but keep the tracked .gdextension manifest.
 project/bin/*
-!project/bin/android
+!project/bin/*.gdextension
+project/bin/*.uid
+
+!project/bin/android/
 project/bin/android/*
 !project/bin/android/.gitkeep
-project/bin/linux
+
+!project/bin/linux/
 project/bin/linux/*
 !project/bin/linux/.gitkeep
-!project/bin/macos
+
+!project/bin/macos/
 project/bin/macos/*
 !project/bin/macos/.gitkeep
-!project/bin/windows
+
+!project/bin/web/
+project/bin/web/*
+!project/bin/web/.gitkeep
+
+!project/bin/windows/
 project/bin/windows/*
 !project/bin/windows/.gitkeep
-!project/bin/*.gdextension
 
 # SCons
 .scons_cache/

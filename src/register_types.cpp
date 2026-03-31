@@ -50,14 +50,7 @@ extern "C"
 		return init_obj.init();
 	}
 
-	// New symbol for rebuilt binaries.
 	GDExtensionBool GDE_EXPORT rlsvisuals_library_init(GDExtensionInterfaceGetProcAddress p_get_proc_address, GDExtensionClassLibraryPtr p_library, GDExtensionInitialization *r_initialization)
-	{
-		return initialize_rlsvisuals_library(p_get_proc_address, p_library, r_initialization);
-	}
-
-	// Legacy symbol kept so older .gdextension files continue to load after the rename.
-	GDExtensionBool GDE_EXPORT n64visuals_library_init(GDExtensionInterfaceGetProcAddress p_get_proc_address, GDExtensionClassLibraryPtr p_library, GDExtensionInitialization *r_initialization)
 	{
 		return initialize_rlsvisuals_library(p_get_proc_address, p_library, r_initialization);
 	}

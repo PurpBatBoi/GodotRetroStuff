@@ -88,8 +88,7 @@ copy_if_exists "$source_bin/web/librlsvisuals.web.template_release.wasm32.nothre
 set gdextension_lines \
     '[configuration]' \
     '' \
-    '; Kept on the legacy symbol until the checked-in binaries are rebuilt with the new export name.' \
-    'entry_symbol = "n64visuals_library_init"' \
+    'entry_symbol = "rlsvisuals_library_init"' \
     'compatibility_minimum = "4.1"' \
     'reloadable = false' \
     '' \
