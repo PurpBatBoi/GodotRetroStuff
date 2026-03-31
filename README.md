@@ -6,9 +6,9 @@ An Retro-Style rendering pipeline for Godot 4.6+, built as a GDExtension (C++) w
 
 ## Features
 
-- **RLS RSP Vertex Lighting** — Up to 7 directional lights + 1 ambient, calculated per-vertex just like the real hardware. Includes point light support for dynamic effects.
-- **RDP Color Combiner** — A full implementation of the retro multi-cycle color combiner as a Godot shader include, supporting all the blending modes the original hardware offered.
-- **Post-Processing (RDP VI)** — Screen-space color quantization, ordered dithering, horizontal VI interpolation, and gamma correction to nail that distinctive retro framebuffer look.
+- **Custom Vertex Lighting** — Up to 7 directional lights + 1 ambient, calculated per-vertex just like the real hardware. Includes point light support for dynamic effects.
+- **N64's RDP Color Combiner** — A full implementation of the retro multi-cycle color combiner as a Godot shader include, supporting all the blending modes the original hardware offered.
+- **Post-Processing (N64's RDP VI)** — Screen-space color quantization, ordered dithering, horizontal VI interpolation, and gamma correction to nail that distinctive retro framebuffer look.
 - **Custom Light Nodes** — `RLS_DirectionalLight3D` and `RLS_PointLight3D` nodes that act as RSP-style light proxies, managed by a `RLS_VertexLightManager3D`.
 - **Editor Integration** — Custom gizmos for light visualization in the Godot editor.
 - **Metallic / Matcap Support** — Includes a metallic reflection shader using matcap textures.
