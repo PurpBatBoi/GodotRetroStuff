@@ -1,6 +1,6 @@
 # Godot Retro Stuff — RLS Visuals for Godot 4
 
-An RLS rendering pipeline for Godot 4.6+, built as a GDExtension (C++) with accompanying shaders. Aims to faithfully recreate the look and feel of the retro fixed-function graphics hardware — vertex lighting, RDP color combiner, color quantization, dithering, and VI post-processing — all running in real-time.
+An Retro-Style rendering pipeline for Godot 4.6+, built as a GDExtension (C++) with accompanying shaders. Aims to faithfully recreate the look and feel of the retro fixed-function graphics hardware — vertex lighting, RDP color combiner, color quantization, dithering, and VI post-processing — all running in real-time.
 
 ![RLS rendering demo](media/photo1.png)
 
@@ -41,6 +41,11 @@ project/                      # Godot demo project
 - [Godot 4.6+](https://godotengine.org/) (GL Compatibility renderer)
 - [SCons](https://scons.org/) build system
 - C++ compiler (GCC, Clang, or MSVC)
+- The included `godot-cpp` submodule from the official upstream repository
+
+## Submodules
+
+This project uses the official upstream [`godot-cpp`](https://github.com/godotengine/godot-cpp) repository as a Git submodule.
 
 ## Building
 
@@ -62,6 +67,14 @@ project/                      # Godot demo project
    ```
 
 4. Open the `project/` folder in Godot.
+
+### Web Builds
+
+Web export is supported for the C++ GDExtension, but this project currently targets the non-threaded web export path only.
+
+- Use `threads=false` when building the web GDExtension with SCons.
+- The checked-in web `.gdextension` entries point only to the non-threaded `.wasm` binaries.
+- This avoids the threaded web export path, which can require additional browser security headers and cross-origin isolation handling.
 
 ## Usage
 
@@ -86,3 +99,7 @@ For the complete experience including RSP-style vertex lighting:
 ## License
 
 [MIT](LICENSE.md)
+
+## AI Disclosure
+
+OpenAI's "[CODEX](https://openai.com/codex/)" was used in the creation of this.
