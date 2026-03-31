@@ -1,4 +1,4 @@
-# Godot Retro Stuff — RLS Visuals for Godot 4
+# "Retro Lighting System"
 
 An Retro-Style rendering pipeline for Godot 4.6+, built as a GDExtension (C++) with accompanying shaders. Aims to faithfully recreate the look and feel of the retro fixed-function graphics hardware — vertex lighting, RDP color combiner, color quantization, dithering, and VI post-processing — all running in real-time.
 
