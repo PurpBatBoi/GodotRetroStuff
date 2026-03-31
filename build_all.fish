@@ -16,9 +16,23 @@ if not type -q scons
 end
 
 set jobs (nproc)
+set web_jobs $jobs
+
+if test $web_jobs -gt 4
+    set web_jobs 4
+end
+
+function run_web_build --argument-names target web_jobs
+    echo "Building Web $target..."
+    scons platform=web target=$target threads=false -j$web_jobs
+    or begin
+        echo "Web $target failed on the first attempt; retrying once with -j1..."
+        scons platform=web target=$target threads=false -j1
+    end
+end
 
 # Linux builds
-for target in template_debug template_release
+for target in template_release
     echo "Building Linux $target..."
     scons platform=linux target=$target -j$jobs
     or exit $status
@@ -45,8 +59,7 @@ set -x EMCC_FORCE_STDLIBS 1
 set -x EMCC_FORCE_STDLIBS_ALWAYS 1
 
 for target in template_debug template_release
-    echo "Building Web $target..."
-    scons platform=web target=$target -j$jobs
+    run_web_build $target $web_jobs
     or exit $status
 end
 
