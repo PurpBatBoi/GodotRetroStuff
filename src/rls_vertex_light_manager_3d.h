@@ -8,6 +8,8 @@
 #include <godot_cpp/templates/hash_set.hpp>
 #include <godot_cpp/templates/vector.hpp>
 
+#include <unordered_map>
+
 namespace godot {
 
 class RLS_DirectionalLight3D;
@@ -29,6 +31,7 @@ class RLS_VertexLightManager3D : public Node3D {
 	Vector<RLS_DirectionalLight3D *> directional_lights;
 	Vector<RLS_LitGeometryInstance *> lit_geometries;
 	HashSet<RLS_LitGeometryInstance *> dirty_geometries;
+	std::unordered_map<uint64_t, uint32_t> last_camera_fade_states;
 
 	static bool _remove_point_light(Vector<RLS_PointLight3D *> &p_lights, RLS_PointLight3D *p_light);
 	static bool _remove_spot_light(Vector<RLS_SpotLight3D *> &p_lights, RLS_SpotLight3D *p_light);

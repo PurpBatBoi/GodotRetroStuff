@@ -5,8 +5,8 @@ extends Node3D
 
 func _ready() -> void:
 	var multimesh: MultiMesh = mm.multimesh
-	multimesh.instance_count = 4096
-	multimesh.visible_instance_count = 4096
+	multimesh.instance_count = 2048
+	multimesh.visible_instance_count = 2048
 
 	for i in range(multimesh.instance_count):
 		var x: int = i % 32

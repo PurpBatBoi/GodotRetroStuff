@@ -6,10 +6,11 @@ An Retro-Style rendering pipeline for Godot 4.6+, built as a GDExtension (C++) w
 
 ## Features
 
-- **Custom Vertex Lighting** — Up to 7 directional lights + 1 ambient, calculated per-vertex just like the real hardware. Includes point light support for dynamic effects.
+- **Custom Vertex Lighting** — Up to 8 lights per lit receiver, calculated per-vertex just like the real hardware. Directional, point, and spot lights are ranked per receiver so the strongest local lights win the limited slots.
+- **Camera Distance Fade for Local Lights** — Point and spot lights can smoothly fade out based on distance to the active camera, matching Godot-style light LOD and freeing slots for nearby lights.
 - **N64's RDP Color Combiner** — A full implementation of the retro multi-cycle color combiner as a Godot shader include, supporting all the blending modes the original hardware offered.
 - **Post-Processing (N64's RDP VI)** — Screen-space color quantization, ordered dithering, horizontal VI interpolation, and gamma correction to nail that distinctive retro framebuffer look.
-- **Custom Light Nodes** — `RLS_DirectionalLight3D` and `RLS_PointLight3D` nodes that act as RSP-style light proxies, managed by a `RLS_VertexLightManager3D`.
+- **Custom Light Nodes** — `RLS_DirectionalLight3D`, `RLS_PointLight3D`, and `RLS_SpotLight3D` nodes that act as RSP-style light proxies, managed by a `RLS_VertexLightManager3D`.
 - **Editor Integration** — Custom gizmos for light visualization in the Godot editor.
 - **Metallic / Matcap Support** — Includes a metallic reflection shader using matcap textures.
 
@@ -93,8 +94,10 @@ For the complete experience including RSP-style vertex lighting:
 2. Copy `project/bin/` into your Godot project
 3. Copy the shader files from `project/shaders/`
 4. Add `RLS_VertexLightManager3D` to your scene
-5. Add `RLS_DirectionalLight3D` or `RLS_PointLight3D` nodes for lighting
+5. Add `RLS_DirectionalLight3D`, `RLS_PointLight3D`, or `RLS_SpotLight3D` nodes for lighting
 6. Use `RLS_LitMeshInstance3D` for `MeshInstance3D` receivers and `RLS_LitMultiMeshInstance3D` for `MultiMeshInstance3D` receivers
+
+`RLS_VertexLightManager3D` still uploads at most 8 lights per lit receiver. Large maps can exceed 8 total point/spot lights scene-wide because the manager picks the strongest local lights for each receiver, and camera distance fade can cull far lights before they compete for those slots.
 
 ## License
 

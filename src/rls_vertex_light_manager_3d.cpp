@@ -4,12 +4,18 @@
 #include "rls_point_light_3d.h"
 #include "rls_spot_light_3d.h"
 
+#include <godot_cpp/classes/camera3d.hpp>
+#include <godot_cpp/classes/editor_interface.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/mesh.hpp>
+#include <godot_cpp/classes/sub_viewport.hpp>
+#include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/math.hpp>
 
 #include <algorithm>
 #include <array>
+#include <unordered_map>
 #include <vector>
 
 using namespace godot;
@@ -26,6 +32,11 @@ bool remove_from_vector(Vector<T *> &p_values, T *p_value) {
 	return true;
 }
 
+constexpr int32_t MAX_GEOMETRY_UPDATES_PER_FRAME = 64;
+constexpr uint32_t CAMERA_FADE_STEPS = 32;
+constexpr uint32_t CAMERA_FADE_STATE_CULLED = 0;
+constexpr uint32_t CAMERA_FADE_STATE_FULL = CAMERA_FADE_STEPS + 1;
+
 struct LocalLightCandidate {
 	enum class Type {
 		POINT,
@@ -36,6 +47,7 @@ struct LocalLightCandidate {
 	RLS_PointLight3D *point_light = nullptr;
 	RLS_SpotLight3D *spot_light = nullptr;
 	float contribution_score = 0.0f;
+	float camera_fade_factor = 1.0f;
 	float distance_squared = 0.0f;
 	Vector3 reference_position;
 };
@@ -56,6 +68,134 @@ float compute_distance_attenuation(float p_distance, float p_range, float p_expo
 	const float range = MAX(p_range, 0.0001f);
 	const float exponent = p_exponent > 0.0f ? p_exponent : 1.0f;
 	return Math::pow(1.0f - Math::smoothstep(0.0f, range, p_distance), exponent);
+}
+
+float compute_camera_distance_fade(float p_distance, bool p_enabled, float p_begin, float p_length) {
+	if (!p_enabled) {
+		return 1.0f;
+	}
+
+	const float begin = MAX(p_begin, 0.0f);
+	const float length = MAX(p_length, 0.01f);
+	const float end = begin + length;
+
+	if (p_distance <= begin) {
+		return 1.0f;
+	}
+	if (p_distance >= end) {
+		return 0.0f;
+	}
+
+	return 1.0f - Math::smoothstep(begin, end, p_distance);
+}
+
+template <typename T>
+uint32_t compute_camera_fade_state(T *p_light, Camera3D *p_camera) {
+	if (p_light == nullptr || !p_light->is_enabled() || !p_light->is_distance_fade_enabled() || p_camera == nullptr) {
+		return CAMERA_FADE_STATE_FULL;
+	}
+
+	const float camera_distance = p_camera->get_global_transform().origin.distance_to(p_light->get_global_transform().origin);
+	const float fade = compute_camera_distance_fade(camera_distance, true, p_light->get_distance_fade_begin(), p_light->get_distance_fade_length());
+
+	if (fade <= static_cast<float>(CMP_EPSILON)) {
+		return CAMERA_FADE_STATE_CULLED;
+	}
+	if (fade >= 1.0f - static_cast<float>(CMP_EPSILON)) {
+		return CAMERA_FADE_STATE_FULL;
+	}
+
+	const float scaled = fade * static_cast<float>(CAMERA_FADE_STEPS - 1);
+	const uint32_t bucket = static_cast<uint32_t>(CLAMP(Math::round(scaled), 0.0f, static_cast<float>(CAMERA_FADE_STEPS - 1)));
+	return 1 + bucket;
+}
+
+bool update_camera_fade_states(Camera3D *p_camera, const Vector<RLS_PointLight3D *> &p_point_lights, const Vector<RLS_SpotLight3D *> &p_spot_lights, std::unordered_map<uint64_t, uint32_t> &r_last_states) {
+	std::unordered_map<uint64_t, uint32_t> current_states;
+	current_states.reserve(p_point_lights.size() + p_spot_lights.size());
+
+	bool changed = false;
+
+	for (RLS_PointLight3D *light : p_point_lights) {
+		if (light == nullptr || !light->is_enabled() || !light->is_distance_fade_enabled()) {
+			continue;
+		}
+
+		const uint64_t light_id = light->get_instance_id();
+		const uint32_t state = compute_camera_fade_state(light, p_camera);
+		current_states[light_id] = state;
+
+		auto last_it = r_last_states.find(light_id);
+		if (last_it == r_last_states.end() || last_it->second != state) {
+			changed = true;
+		}
+	}
+
+	for (RLS_SpotLight3D *light : p_spot_lights) {
+		if (light == nullptr || !light->is_enabled() || !light->is_distance_fade_enabled()) {
+			continue;
+		}
+
+		const uint64_t light_id = light->get_instance_id();
+		const uint32_t state = compute_camera_fade_state(light, p_camera);
+		current_states[light_id] = state;
+
+		auto last_it = r_last_states.find(light_id);
+		if (last_it == r_last_states.end() || last_it->second != state) {
+			changed = true;
+		}
+	}
+
+	if (!changed && current_states.size() != r_last_states.size()) {
+		changed = true;
+	}
+
+	r_last_states.swap(current_states);
+	return changed;
+}
+
+bool has_camera_distance_fade_lights(const Vector<RLS_PointLight3D *> &p_point_lights, const Vector<RLS_SpotLight3D *> &p_spot_lights) {
+	for (RLS_PointLight3D *light : p_point_lights) {
+		if (light != nullptr && light->is_enabled() && light->is_distance_fade_enabled()) {
+			return true;
+		}
+	}
+
+	for (RLS_SpotLight3D *light : p_spot_lights) {
+		if (light != nullptr && light->is_enabled() && light->is_distance_fade_enabled()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+Camera3D *resolve_active_camera(Node *p_node) {
+	if (p_node != nullptr) {
+		Viewport *viewport = p_node->get_viewport();
+		if (viewport != nullptr) {
+			if (Camera3D *viewport_camera = viewport->get_camera_3d()) {
+				return viewport_camera;
+			}
+		}
+	}
+
+	Engine *engine = Engine::get_singleton();
+	if (engine == nullptr || !engine->is_editor_hint()) {
+		return nullptr;
+	}
+
+	EditorInterface *editor_interface = EditorInterface::get_singleton();
+	if (editor_interface == nullptr) {
+		return nullptr;
+	}
+
+	SubViewport *editor_viewport = editor_interface->get_editor_viewport_3d();
+	if (editor_viewport == nullptr) {
+		return nullptr;
+	}
+
+	return editor_viewport->get_camera_3d();
 }
 
 MeshInfluenceBounds build_mesh_influence_bounds(RLS_LitGeometryInstance *p_geometry) {
@@ -231,8 +371,17 @@ void RLS_VertexLightManager3D::_notification(int p_what) {
 			spot_lights.clear();
 			directional_lights.clear();
 			lit_geometries.clear();
+			last_camera_fade_states.clear();
 			break;
 		case Node::NOTIFICATION_PROCESS:
+			if (has_camera_distance_fade_lights(point_lights, spot_lights)) {
+				if (update_camera_fade_states(resolve_active_camera(this), point_lights, spot_lights, last_camera_fade_states)) {
+					lights_dirty = true;
+				}
+			} else if (!last_camera_fade_states.empty()) {
+				last_camera_fade_states.clear();
+			}
+
 			if (lights_dirty) {
 				_rebuild_all_geometries();
 			} else {
@@ -384,10 +533,18 @@ void RLS_VertexLightManager3D::_rebuild_dirty_geometries() {
 	}
 
 	Vector<RLS_LitGeometryInstance *> pending_geometries;
+	int32_t pending_count = 0;
 	for (RLS_LitGeometryInstance *geometry : dirty_geometries) {
+		if (pending_count >= MAX_GEOMETRY_UPDATES_PER_FRAME) {
+			break;
+		}
 		pending_geometries.push_back(geometry);
+		pending_count++;
 	}
-	dirty_geometries.clear();
+
+	for (RLS_LitGeometryInstance *geometry : pending_geometries) {
+		dirty_geometries.erase(geometry);
+	}
 
 	for (RLS_LitGeometryInstance *geometry : pending_geometries) {
 		const Node3D *geometry_node = geometry == nullptr ? nullptr : geometry->get_geometry_node();
@@ -404,6 +561,10 @@ void RLS_VertexLightManager3D::_apply_geometry_lighting(RLS_LitGeometryInstance 
 	if (material.is_null() && surface_materials.is_empty()) {
 		return;
 	}
+
+	Camera3D *active_camera = resolve_active_camera(this);
+	const bool has_active_camera = active_camera != nullptr;
+	const Vector3 active_camera_position = has_active_camera ? active_camera->get_global_transform().origin : Vector3();
 
 	std::array<Vector4, MAX_SUPPORTED_LIGHTS> light_vector_type;
 	std::array<Vector4, MAX_SUPPORTED_LIGHTS> light_color_energy;
@@ -422,7 +583,6 @@ void RLS_VertexLightManager3D::_apply_geometry_lighting(RLS_LitGeometryInstance 
 	}
 
 	int32_t light_count = 0;
-	const Vector3 mesh_origin = p_geometry->get_geometry_node()->get_global_transform().origin;
 
 	for (RLS_DirectionalLight3D *light : directional_lights) {
 		if (light == nullptr || !light->is_enabled()) {
@@ -459,6 +619,16 @@ void RLS_VertexLightManager3D::_apply_geometry_lighting(RLS_LitGeometryInstance 
 			if (!evaluate_point_light_candidate(light, mesh_bounds, candidate)) {
 				continue;
 			}
+
+			if (has_active_camera && light->is_distance_fade_enabled()) {
+				const float camera_distance = active_camera_position.distance_to(light->get_global_transform().origin);
+				candidate.camera_fade_factor = compute_camera_distance_fade(camera_distance, true, light->get_distance_fade_begin(), light->get_distance_fade_length());
+				candidate.contribution_score *= candidate.camera_fade_factor;
+				if (candidate.contribution_score <= static_cast<float>(CMP_EPSILON)) {
+					continue;
+				}
+			}
+
 			local_candidates.push_back(candidate);
 		}
 
@@ -473,6 +643,16 @@ void RLS_VertexLightManager3D::_apply_geometry_lighting(RLS_LitGeometryInstance 
 			if (!evaluate_spot_light_candidate(light, mesh_bounds, candidate)) {
 				continue;
 			}
+
+			if (has_active_camera && light->is_distance_fade_enabled()) {
+				const float camera_distance = active_camera_position.distance_to(light->get_global_transform().origin);
+				candidate.camera_fade_factor = compute_camera_distance_fade(camera_distance, true, light->get_distance_fade_begin(), light->get_distance_fade_length());
+				candidate.contribution_score *= candidate.camera_fade_factor;
+				if (candidate.contribution_score <= static_cast<float>(CMP_EPSILON)) {
+					continue;
+				}
+			}
+
 			local_candidates.push_back(candidate);
 		}
 
@@ -512,14 +692,14 @@ void RLS_VertexLightManager3D::_apply_geometry_lighting(RLS_LitGeometryInstance 
 
 					const Vector3 direction = to_light.normalized();
 					light_vector_type[light_count] = Vector4(direction.x, direction.y, direction.z, 1.0f);
-					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy() * attenuation);
+					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy() * attenuation * candidate.camera_fade_factor);
 					light_range[light_count] = 0.0f;
 					light_attenuation[light_count] = 1.0f;
 					light_spot_direction_inner[light_count] = Vector4();
 					light_spot_outer_cos[light_count] = -1.0f;
 				} else {
 					light_vector_type[light_count] = Vector4(position.x, position.y, position.z, 0.0f);
-					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy());
+					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy() * candidate.camera_fade_factor);
 					light_range[light_count] = light->get_range();
 					light_attenuation[light_count] = light->get_attenuation();
 					light_spot_direction_inner[light_count] = Vector4();
@@ -548,7 +728,7 @@ void RLS_VertexLightManager3D::_apply_geometry_lighting(RLS_LitGeometryInstance 
 
 					const Vector3 direction = to_light.normalized();
 					light_vector_type[light_count] = Vector4(direction.x, direction.y, direction.z, 1.0f);
-					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy() * final_attenuation);
+					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy() * final_attenuation * candidate.camera_fade_factor);
 					light_range[light_count] = 0.0f;
 					light_attenuation[light_count] = 1.0f;
 					light_spot_direction_inner[light_count] = Vector4();
@@ -561,7 +741,7 @@ void RLS_VertexLightManager3D::_apply_geometry_lighting(RLS_LitGeometryInstance 
 					const float outer_cos = Math::cos(outer_angle_radians);
 
 					light_vector_type[light_count] = Vector4(position.x, position.y, position.z, 2.0f);
-					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy());
+					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy() * candidate.camera_fade_factor);
 					light_range[light_count] = light->get_range();
 					light_attenuation[light_count] = light->get_attenuation();
 					light_spot_direction_inner[light_count] = Vector4(direction.x, direction.y, direction.z, inner_cos);

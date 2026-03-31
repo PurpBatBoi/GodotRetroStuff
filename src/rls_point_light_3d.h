@@ -15,6 +15,9 @@ class RLS_PointLight3D : public Node3D {
 	float energy = 1.0f;
 	float range = 5.0f;
 	float attenuation = 1.0f;
+	bool distance_fade_enabled = false;
+	float distance_fade_begin = 40.0f;
+	float distance_fade_length = 10.0f;
 	bool fake_point_light = false;
 	bool syncing_visibility = false;
 	RLS_VertexLightManager3D *manager = nullptr;
@@ -43,6 +46,15 @@ public:
 
 	void set_attenuation(float p_attenuation);
 	float get_attenuation() const;
+
+	void set_distance_fade_enabled(bool p_enabled);
+	bool is_distance_fade_enabled() const;
+
+	void set_distance_fade_begin(float p_distance);
+	float get_distance_fade_begin() const;
+
+	void set_distance_fade_length(float p_distance);
+	float get_distance_fade_length() const;
 
 	void set_fake_point_light(bool p_fake_point_light);
 	bool is_fake_point_light() const;

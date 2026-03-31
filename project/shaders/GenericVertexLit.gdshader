@@ -11,7 +11,7 @@ render_mode unshaded, cull_back;
 // ── Light count cap ────────────────────────────────────────────────────────────
 // Override the shared fallback (8) for this material variant.
 #ifndef RLS_MAX_LIGHTS
-#define RLS_MAX_LIGHTS 4
+#define RLS_MAX_LIGHTS 8
 #endif
 
 #include "res://shaders/shaderinclude/vertexLightProcess.gdshaderinc"

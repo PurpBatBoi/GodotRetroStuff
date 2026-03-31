@@ -16,6 +16,9 @@ class RLS_SpotLight3D : public Node3D {
 	float energy = 1.0f;
 	float range = 6.0f;
 	float attenuation = 1.0f;
+	bool distance_fade_enabled = false;
+	float distance_fade_begin = 40.0f;
+	float distance_fade_length = 10.0f;
 	float spot_angle = 45.0f;
 	float spot_blend = 0.15f;
 	bool fake_spot_light = false;
@@ -46,6 +49,15 @@ public:
 
 	void set_attenuation(float p_attenuation);
 	float get_attenuation() const;
+
+	void set_distance_fade_enabled(bool p_enabled);
+	bool is_distance_fade_enabled() const;
+
+	void set_distance_fade_begin(float p_distance);
+	float get_distance_fade_begin() const;
+
+	void set_distance_fade_length(float p_distance);
+	float get_distance_fade_length() const;
 
 	void set_spot_angle(float p_spot_angle);
 	float get_spot_angle() const;

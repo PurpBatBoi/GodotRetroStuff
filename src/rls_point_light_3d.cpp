@@ -38,6 +38,12 @@ void RLS_PointLight3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_range"), &RLS_PointLight3D::get_range);
 	ClassDB::bind_method(D_METHOD("set_attenuation", "attenuation"), &RLS_PointLight3D::set_attenuation);
 	ClassDB::bind_method(D_METHOD("get_attenuation"), &RLS_PointLight3D::get_attenuation);
+	ClassDB::bind_method(D_METHOD("set_distance_fade_enabled", "enabled"), &RLS_PointLight3D::set_distance_fade_enabled);
+	ClassDB::bind_method(D_METHOD("is_distance_fade_enabled"), &RLS_PointLight3D::is_distance_fade_enabled);
+	ClassDB::bind_method(D_METHOD("set_distance_fade_begin", "distance"), &RLS_PointLight3D::set_distance_fade_begin);
+	ClassDB::bind_method(D_METHOD("get_distance_fade_begin"), &RLS_PointLight3D::get_distance_fade_begin);
+	ClassDB::bind_method(D_METHOD("set_distance_fade_length", "distance"), &RLS_PointLight3D::set_distance_fade_length);
+	ClassDB::bind_method(D_METHOD("get_distance_fade_length"), &RLS_PointLight3D::get_distance_fade_length);
 	ClassDB::bind_method(D_METHOD("set_fake_point_light", "fake_point_light"), &RLS_PointLight3D::set_fake_point_light);
 	ClassDB::bind_method(D_METHOD("is_fake_point_light"), &RLS_PointLight3D::is_fake_point_light);
 
@@ -46,6 +52,9 @@ void RLS_PointLight3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "energy", PROPERTY_HINT_RANGE, "0.0,16.0,0.01,or_greater"), "set_energy", "get_energy");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "range", PROPERTY_HINT_RANGE, "0.01,256.0,0.01,or_greater"), "set_range", "get_range");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "attenuation", PROPERTY_HINT_RANGE, "0.01,8.0,0.01,or_greater"), "set_attenuation", "get_attenuation");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "distance_fade_enabled"), "set_distance_fade_enabled", "is_distance_fade_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "distance_fade_begin", PROPERTY_HINT_RANGE, "0.0,4096.0,0.01,or_greater"), "set_distance_fade_begin", "get_distance_fade_begin");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "distance_fade_length", PROPERTY_HINT_RANGE, "0.01,4096.0,0.01,or_greater"), "set_distance_fade_length", "get_distance_fade_length");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "fake_point_light"), "set_fake_point_light", "is_fake_point_light");
 }
 
@@ -168,6 +177,53 @@ void RLS_PointLight3D::set_attenuation(float p_attenuation) {
 
 float RLS_PointLight3D::get_attenuation() const {
 	return attenuation;
+}
+
+void RLS_PointLight3D::set_distance_fade_enabled(bool p_enabled) {
+	if (distance_fade_enabled == p_enabled) {
+		return;
+	}
+	distance_fade_enabled = p_enabled;
+	if (manager != nullptr) {
+		manager->notify_light_changed();
+	}
+	update_gizmos();
+}
+
+bool RLS_PointLight3D::is_distance_fade_enabled() const {
+	return distance_fade_enabled;
+}
+
+void RLS_PointLight3D::set_distance_fade_begin(float p_distance) {
+	const float clamped = MAX(p_distance, 0.0f);
+	if (Math::is_equal_approx(distance_fade_begin, clamped)) {
+		return;
+	}
+	distance_fade_begin = clamped;
+	if (manager != nullptr) {
+		manager->notify_light_changed();
+	}
+	update_gizmos();
+}
+
+float RLS_PointLight3D::get_distance_fade_begin() const {
+	return distance_fade_begin;
+}
+
+void RLS_PointLight3D::set_distance_fade_length(float p_distance) {
+	const float clamped = MAX(p_distance, 0.01f);
+	if (Math::is_equal_approx(distance_fade_length, clamped)) {
+		return;
+	}
+	distance_fade_length = clamped;
+	if (manager != nullptr) {
+		manager->notify_light_changed();
+	}
+	update_gizmos();
+}
+
+float RLS_PointLight3D::get_distance_fade_length() const {
+	return distance_fade_length;
 }
 
 void RLS_PointLight3D::set_fake_point_light(bool p_fake_point_light) {
