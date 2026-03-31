@@ -19,7 +19,7 @@ This project packs custom light data per `N64LitMeshInstance3D` and applies it i
 
 The shared lighting include, `vertexLightProcess.gdshaderinc`, exposes:
 
-- `ignore_fake_point_lights`
+- `ignore_fake_lights`
   - Default: `false`
   - When enabled, fake point lights are treated as normal point lights for that mesh.
   - Useful for scenery that should respect point-light radius instead of receiving a directional-style fake point light.
@@ -51,7 +51,7 @@ Light selection is packed once per `N64LitMeshInstance3D`, not separately per su
 
 As a result:
 
-- if any runtime shader material on the mesh enables `ignore_fake_point_lights`, the whole mesh uses normal point-light behavior for fake point lights
+- if any runtime shader material on the mesh enables `ignore_fake_lights`, the whole mesh uses normal point-light and fake spotlight behavior instead of the per-mesh fake-light approximation
 - local-light slot selection is based on estimated contribution at the mesh origin
 
 ## Local Light Selection

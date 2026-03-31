@@ -20,7 +20,7 @@ class N64LitMeshInstance3D : public MeshInstance3D {
 	Vector<Ref<ShaderMaterial>> runtime_surface_shader_materials;
 	uint64_t last_material_instance_id = 0;
 	Vector<uint64_t> last_surface_material_instance_ids;
-	bool cached_ignore_fake_point_lights = false;
+	bool cached_ignore_fake_lights = false;
 
 	int32_t cached_light_count = -1;
 	PackedVector4Array cached_light_vector_type;
@@ -34,7 +34,7 @@ class N64LitMeshInstance3D : public MeshInstance3D {
 	void _reconnect_manager();
 	bool _sync_runtime_shader_material();
 	bool _sync_surface_shader_materials();
-	bool _compute_ignore_fake_point_lights() const;
+	bool _compute_ignore_fake_lights() const;
 
 protected:
 	static void _bind_methods();
@@ -44,7 +44,7 @@ public:
 	N64LitMeshInstance3D();
 	~N64LitMeshInstance3D() override = default;
 
-	bool is_ignoring_fake_point_lights() const;
+	bool is_ignoring_fake_lights() const;
 
 	Ref<ShaderMaterial> get_runtime_shader_material() const;
 	const Vector<Ref<ShaderMaterial>> &get_runtime_surface_shader_materials() const;

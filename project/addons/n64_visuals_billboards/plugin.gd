@@ -1,16 +1,10 @@
 @tool
 extends EditorPlugin
 
-const N64_LIGHT_GIZMO_PLUGIN_SCRIPT = preload("res://addons/n64_visuals_billboards/n64_light_gizmo_plugin.gd")
-const POINT_SCRIPT := preload("res://addons/n64_visuals_billboards/types/n64_point_light_3d.gd")
-const DIRECTIONAL_SCRIPT := preload("res://addons/n64_visuals_billboards/types/n64_directional_light_3d.gd")
-const SPOT_SCRIPT := preload("res://addons/n64_visuals_billboards/types/n64_spot_light_3d.gd")
-const MANAGER_SCRIPT := preload("res://addons/n64_visuals_billboards/types/n64_vertex_light_manager_3d.gd")
-
-const POINT_ICON_PATH := "res://addons/n64_visuals_billboards/icons/OmniLight3D.png"
-const DIRECTIONAL_ICON_PATH := "res://addons/n64_visuals_billboards/icons/DirectionalLight3D.png"
-const SPOT_ICON_PATH := "res://addons/n64_visuals_billboards/icons/SpotLight3D.png"
-const MANAGER_ICON_PATH := "res://addons/n64_visuals_billboards/icons/WorldEnvironment.png"
+const POINT_ICON_FILE := "icons/OmniLight3D.png"
+const DIRECTIONAL_ICON_FILE := "icons/DirectionalLight3D.png"
+const SPOT_ICON_FILE := "icons/SpotLight3D.png"
+const MANAGER_ICON_FILE := "icons/WorldEnvironment.png"
 
 var light_gizmo_plugin: EditorNode3DGizmoPlugin
 var _point_icon: Texture2D
@@ -20,17 +14,27 @@ var _manager_icon: Texture2D
 
 
 func _enter_tree() -> void:
-	_point_icon = _load_png_texture(POINT_ICON_PATH)
-	_directional_icon = _load_png_texture(DIRECTIONAL_ICON_PATH)
-	_spot_icon = _load_png_texture(SPOT_ICON_PATH)
-	_manager_icon = _load_png_texture(MANAGER_ICON_PATH)
+	var point_script := _load_script("types/n64_point_light_3d.gd")
+	var directional_script := _load_script("types/n64_directional_light_3d.gd")
+	var spot_script := _load_script("types/n64_spot_light_3d.gd")
+	var manager_script := _load_script("types/n64_vertex_light_manager_3d.gd")
+	var gizmo_plugin_script := _load_script("n64_light_gizmo_plugin.gd")
 
-	add_custom_type("N64PointLight3D", "N64PointLight3D", POINT_SCRIPT, _point_icon)
-	add_custom_type("N64DirectionalLight3D", "N64DirectionalLight3D", DIRECTIONAL_SCRIPT, _directional_icon)
-	add_custom_type("N64SpotLight3D", "N64SpotLight3D", SPOT_SCRIPT, _spot_icon)
-	add_custom_type("N64VertexLightManager3D", "N64VertexLightManager3D", MANAGER_SCRIPT, _manager_icon)
+	_point_icon = _load_png_texture(_addon_path(POINT_ICON_FILE))
+	_directional_icon = _load_png_texture(_addon_path(DIRECTIONAL_ICON_FILE))
+	_spot_icon = _load_png_texture(_addon_path(SPOT_ICON_FILE))
+	_manager_icon = _load_png_texture(_addon_path(MANAGER_ICON_FILE))
 
-	light_gizmo_plugin = N64_LIGHT_GIZMO_PLUGIN_SCRIPT.new()
+	if point_script == null or directional_script == null or spot_script == null or manager_script == null or gizmo_plugin_script == null:
+		push_error("N64 Vertex Lighting failed to load one or more addon scripts.")
+		return
+
+	add_custom_type("N64PointLight3D", "N64PointLight3D", point_script, _point_icon)
+	add_custom_type("N64DirectionalLight3D", "N64DirectionalLight3D", directional_script, _directional_icon)
+	add_custom_type("N64SpotLight3D", "N64SpotLight3D", spot_script, _spot_icon)
+	add_custom_type("N64VertexLightManager3D", "N64VertexLightManager3D", manager_script, _manager_icon)
+
+	light_gizmo_plugin = gizmo_plugin_script.new()
 	if light_gizmo_plugin.has_method("set_editor_plugin"):
 		light_gizmo_plugin.set_editor_plugin(self)
 	if light_gizmo_plugin.has_method("set_icon_textures"):
@@ -51,11 +55,23 @@ func _exit_tree() -> void:
 	remove_custom_type("N64PointLight3D")
 
 
-func _load_png_texture(path: String) -> Texture2D:
-	var imported_resource := ResourceLoader.load(path)
-	if imported_resource is Texture2D:
-		return imported_resource
+func _addon_path(relative_path: String) -> String:
+	var script := get_script() as Script
+	if script == null:
+		return relative_path
+	return "%s/%s" % [script.resource_path.get_base_dir(), relative_path]
 
+
+func _load_script(relative_path: String) -> Script:
+	var resource := ResourceLoader.load(_addon_path(relative_path))
+	if resource is Script:
+		return resource
+
+	push_error("Could not load addon script: %s" % _addon_path(relative_path))
+	return null
+
+
+func _load_png_texture(path: String) -> Texture2D:
 	var bytes := FileAccess.get_file_as_bytes(path)
 	if bytes.is_empty():
 		push_warning("Could not read icon PNG: %s" % path)

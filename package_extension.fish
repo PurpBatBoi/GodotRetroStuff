@@ -3,7 +3,7 @@
 set script_dir (cd (dirname (status --current-filename)); and pwd)
 cd $script_dir
 
-set package_root "$script_dir/packaged/n64_vertex_lighting"
+set package_root "$script_dir/packaged/RetroLightingSystem"
 set source_addon "$script_dir/project/addons/n64_visuals_billboards"
 set source_shaders "$script_dir/project/shaders"
 set source_bin "$script_dir/project/bin"
@@ -40,20 +40,18 @@ copy_if_exists "$source_addon/icons/DirectionalLight3D.svg" "$package_root/icons
 copy_if_exists "$source_addon/icons/SpotLight3D.svg" "$package_root/icons/SpotLight3D.svg"
 copy_if_exists "$source_addon/icons/WorldEnvironment.svg" "$package_root/icons/WorldEnvironment.svg"
 
-# Rewrite plugin paths so the packaged addon can be dropped directly into addons/.
-sed \
-    's#res://addons/n64_visuals_billboards/#res://addons/n64_vertex_lighting/#g' \
-    "$source_addon/plugin.gd" > "$package_root/plugin.gd"
+# Copy the folder-agnostic addon entry script.
+cp "$source_addon/plugin.gd" "$package_root/plugin.gd"
 
 sed \
-    -e 's#name="N64 Visuals Lights"#name="N64 Vertex Lighting"#g' \
-    -e 's#description="Adds interactive gizmos for custom N64 light nodes."#description="Reusable N64-style vertex lighting nodes, shaders, and gizmos."#g' \
+    -e 's#name="N64 Visuals Lights"#name="RetroLightingSystem"#g' \
+    -e 's#description="Adds interactive gizmos for custom N64 light nodes."#description="Reusable retro vertex lighting nodes, shaders, and gizmos."#g' \
     "$source_addon/plugin.cfg" > "$package_root/plugin.cfg"
 
-# Copy shaders and retarget their include paths into the packaged addon.
+# Copy shaders and retarget includes into the fixed packaged addon path.
 for shader_name in GenericVertexLit.gdshader GenericVertexLitBlend.gdshader Metallic.gdshader
     sed \
-        's#res://shaders/shaderinclude/#res://addons/n64_vertex_lighting/shaders/shaderinclude/#g' \
+        's#res://shaders/shaderinclude/#res://addons/RetroLightingSystem/shaders/shaderinclude/#g' \
         "$source_shaders/$shader_name" > "$package_root/shaders/$shader_name"
 end
 
@@ -101,19 +99,19 @@ if test -f "$package_root/bin/web/libn64visuals.web.template_release.wasm32.noth
     set gdextension_lines $gdextension_lines 'web.wasm32.nothreads.single.release = "./bin/web/libn64visuals.web.template_release.wasm32.nothreads.wasm"'
 end
 
-printf '%s\n' $gdextension_lines > "$package_root/n64visuals.gdextension"
+printf '%s\n' $gdextension_lines > "$package_root/RetroLightingSystem.gdextension"
 
 set readme_lines \
-    '# N64 Vertex Lighting' \
+    '# RetroLightingSystem' \
     '' \
-    'Reusable Godot addon package for the custom N64-style vertex lighting system.' \
+    'Reusable Godot addon package for the retro vertex lighting system.' \
     '' \
     '## Install' \
     '' \
-    '1. Copy this `n64_vertex_lighting` folder into your target project'"'"'s `addons/` directory.' \
+    '1. Copy this `RetroLightingSystem` folder into your target project'"'"'s `addons/` directory.' \
     '2. Open the project in Godot.' \
-    '3. Enable `N64 Vertex Lighting` in `Project Settings > Plugins`.' \
-    '4. Use the bundled shaders from `res://addons/n64_vertex_lighting/shaders/`.' \
+    '3. Enable `RetroLightingSystem` in `Project Settings > Plugins`.' \
+    '4. Use the bundled shaders from `res://addons/RetroLightingSystem/shaders/`.' \
     '' \
     '## Included' \
     '' \
@@ -124,7 +122,7 @@ set readme_lines \
     '' \
     '## Notes' \
     '' \
-    '- `ignore_fake_point_lights` remains a shader material uniform.' \
+    '- `ignore_fake_lights` remains a shader material uniform.' \
     '- `N64_MAX_LIGHTS` can be overridden per shader before including `vertexLightProcess.gdshaderinc`.' \
     '- This package does not include dynamic shadows.' \
 

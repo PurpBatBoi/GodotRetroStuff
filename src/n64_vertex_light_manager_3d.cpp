@@ -5,6 +5,7 @@
 #include "n64_point_light_3d.h"
 #include "n64_spot_light_3d.h"
 
+#include <godot_cpp/classes/mesh.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/math.hpp>
 
@@ -37,6 +38,15 @@ struct LocalLightCandidate {
 	N64SpotLight3D *spot_light = nullptr;
 	float contribution_score = 0.0f;
 	float distance_squared = 0.0f;
+	Vector3 reference_position;
+};
+
+struct MeshInfluenceBounds {
+	Transform3D global_transform;
+	Transform3D inverse_global_transform;
+	AABB local_aabb;
+	Vector3 world_origin;
+	Vector3 world_center;
 };
 
 float compute_light_color_intensity(const Color &p_color) {
@@ -47,6 +57,142 @@ float compute_distance_attenuation(float p_distance, float p_range, float p_expo
 	const float range = MAX(p_range, 0.0001f);
 	const float exponent = p_exponent > 0.0f ? p_exponent : 1.0f;
 	return Math::pow(1.0f - Math::smoothstep(0.0f, range, p_distance), exponent);
+}
+
+MeshInfluenceBounds build_mesh_influence_bounds(N64LitMeshInstance3D *p_mesh) {
+	MeshInfluenceBounds bounds;
+	if (p_mesh == nullptr) {
+		return bounds;
+	}
+
+	bounds.global_transform = p_mesh->get_global_transform();
+	bounds.inverse_global_transform = bounds.global_transform.affine_inverse();
+	bounds.local_aabb = p_mesh->get_aabb();
+	bounds.world_origin = bounds.global_transform.origin;
+	bounds.world_center = bounds.global_transform.xform(bounds.local_aabb.position + (bounds.local_aabb.size * 0.5f));
+	return bounds;
+}
+
+Vector3 get_closest_world_point_on_mesh_bounds(const MeshInfluenceBounds &p_bounds, const Vector3 &p_world_position) {
+	const Vector3 local_position = p_bounds.inverse_global_transform.xform(p_world_position);
+	const Vector3 aabb_min = p_bounds.local_aabb.position;
+	const Vector3 aabb_max = p_bounds.local_aabb.position + p_bounds.local_aabb.size;
+	const Vector3 clamped_local_position(
+			CLAMP(local_position.x, aabb_min.x, aabb_max.x),
+			CLAMP(local_position.y, aabb_min.y, aabb_max.y),
+			CLAMP(local_position.z, aabb_min.z, aabb_max.z));
+	return p_bounds.global_transform.xform(clamped_local_position);
+}
+
+bool evaluate_point_light_candidate(N64PointLight3D *p_light, const MeshInfluenceBounds &p_bounds, LocalLightCandidate &r_candidate) {
+	const float color_intensity = compute_light_color_intensity(p_light->get_color()) * p_light->get_energy();
+	const Vector3 light_position = p_light->get_global_transform().origin;
+	const Vector3 closest_point = get_closest_world_point_on_mesh_bounds(p_bounds, light_position);
+	const float closest_distance_squared = closest_point.distance_squared_to(light_position);
+	const float closest_distance = Math::sqrt(closest_distance_squared);
+	const float closest_score = color_intensity * compute_distance_attenuation(closest_distance, p_light->get_range(), p_light->get_attenuation());
+
+	const float center_distance_squared = p_bounds.world_center.distance_squared_to(light_position);
+	const float center_distance = Math::sqrt(center_distance_squared);
+	const float center_score = color_intensity * compute_distance_attenuation(center_distance, p_light->get_range(), p_light->get_attenuation());
+
+	const bool use_center = center_score > closest_score;
+	const float best_score = use_center ? center_score : closest_score;
+	const float best_distance_squared = use_center ? center_distance_squared : closest_distance_squared;
+	const Vector3 best_position = use_center ? p_bounds.world_center : closest_point;
+
+	if (best_score <= static_cast<float>(CMP_EPSILON)) {
+		return false;
+	}
+
+	r_candidate.contribution_score = best_score;
+	r_candidate.distance_squared = best_distance_squared;
+	r_candidate.reference_position = best_position;
+	return true;
+}
+
+bool evaluate_spot_light_candidate(N64SpotLight3D *p_light, const MeshInfluenceBounds &p_bounds, LocalLightCandidate &r_candidate) {
+	const float color_intensity = compute_light_color_intensity(p_light->get_color()) * p_light->get_energy();
+	const Vector3 light_origin = p_light->get_global_transform().origin;
+	const Vector3 spot_dir = p_light->get_light_direction().normalized();
+	const float outer_angle_radians = Math::deg_to_rad(p_light->get_spot_angle());
+	const float inner_angle_radians = outer_angle_radians * (1.0f - p_light->get_spot_blend());
+	const float inner_cos = Math::cos(inner_angle_radians);
+	const float outer_cos = Math::cos(outer_angle_radians);
+
+	float best_score = 0.0f;
+	float best_distance_squared = 0.0f;
+	Vector3 best_position;
+
+	const Vector3 sample_positions[] = {
+		get_closest_world_point_on_mesh_bounds(p_bounds, light_origin),
+		p_bounds.world_center,
+		p_bounds.world_origin
+	};
+
+	for (const Vector3 &sample_position : sample_positions) {
+		const Vector3 to_light = light_origin - sample_position;
+		const float distance_squared = to_light.length_squared();
+		if (distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
+			continue;
+		}
+
+		const float distance = Math::sqrt(distance_squared);
+		const float attenuation = compute_distance_attenuation(distance, p_light->get_range(), p_light->get_attenuation());
+		if (attenuation <= static_cast<float>(CMP_EPSILON)) {
+			continue;
+		}
+
+		const Vector3 light_dir = to_light / distance;
+		const float cone_dot = spot_dir.dot(-light_dir);
+
+		float cone_attenuation = 0.0f;
+		if (inner_cos <= outer_cos + 0.0001f) {
+			cone_attenuation = cone_dot >= outer_cos ? 1.0f : 0.0f;
+		} else {
+			cone_attenuation = Math::smoothstep(outer_cos, inner_cos, cone_dot);
+		}
+
+		const float score = color_intensity * attenuation * cone_attenuation;
+		if (score <= best_score) {
+			continue;
+		}
+
+		best_score = score;
+		best_distance_squared = distance_squared;
+		best_position = sample_position;
+	}
+
+	if (best_score <= static_cast<float>(CMP_EPSILON)) {
+		return false;
+	}
+
+	r_candidate.contribution_score = best_score;
+	r_candidate.distance_squared = best_distance_squared;
+	r_candidate.reference_position = best_position;
+	return true;
+}
+
+float compute_spot_cone_attenuation(N64SpotLight3D *p_light, const Vector3 &p_sample_position) {
+	const Vector3 light_origin = p_light->get_global_transform().origin;
+	const Vector3 to_light = light_origin - p_sample_position;
+	const float distance_squared = to_light.length_squared();
+	if (distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
+		return 0.0f;
+	}
+
+	const Vector3 light_dir = to_light / Math::sqrt(distance_squared);
+	const Vector3 spot_dir = p_light->get_light_direction().normalized();
+	const float outer_angle_radians = Math::deg_to_rad(p_light->get_spot_angle());
+	const float inner_angle_radians = outer_angle_radians * (1.0f - p_light->get_spot_blend());
+	const float inner_cos = Math::cos(inner_angle_radians);
+	const float outer_cos = Math::cos(outer_angle_radians);
+	const float cone_dot = spot_dir.dot(-light_dir);
+
+	if (inner_cos <= outer_cos + 0.0001f) {
+		return cone_dot >= outer_cos ? 1.0f : 0.0f;
+	}
+	return Math::smoothstep(outer_cos, inner_cos, cone_dot);
 }
 
 } // namespace
@@ -291,6 +437,7 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 	if (light_count < max_lights) {
 		std::vector<LocalLightCandidate> local_candidates;
 		local_candidates.reserve(point_lights.size() + spot_lights.size());
+		const MeshInfluenceBounds mesh_bounds = build_mesh_influence_bounds(p_mesh);
 
 		for (N64PointLight3D *light : point_lights) {
 			if (light == nullptr || !light->is_enabled()) {
@@ -300,11 +447,7 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 			LocalLightCandidate candidate;
 			candidate.type = LocalLightCandidate::Type::POINT;
 			candidate.point_light = light;
-			candidate.distance_squared = mesh_origin.distance_squared_to(light->get_global_transform().origin);
-			const float distance = Math::sqrt(candidate.distance_squared);
-			const float attenuation = compute_distance_attenuation(distance, light->get_range(), light->get_attenuation());
-			candidate.contribution_score = compute_light_color_intensity(light->get_color()) * light->get_energy() * attenuation;
-			if (candidate.contribution_score <= static_cast<float>(CMP_EPSILON)) {
+			if (!evaluate_point_light_candidate(light, mesh_bounds, candidate)) {
 				continue;
 			}
 			local_candidates.push_back(candidate);
@@ -318,41 +461,13 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 			LocalLightCandidate candidate;
 			candidate.type = LocalLightCandidate::Type::SPOT;
 			candidate.spot_light = light;
-			candidate.distance_squared = mesh_origin.distance_squared_to(light->get_global_transform().origin);
-			const float distance = Math::sqrt(candidate.distance_squared);
-			const float attenuation = compute_distance_attenuation(distance, light->get_range(), light->get_attenuation());
-			if (attenuation <= static_cast<float>(CMP_EPSILON)) {
-				continue;
-			}
-
-			const Vector3 to_light = light->get_global_transform().origin - mesh_origin;
-			if (to_light.length_squared() <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
-				continue;
-			}
-
-			const Vector3 light_dir = to_light.normalized();
-			const Vector3 spot_dir = light->get_light_direction().normalized();
-			const float outer_angle_radians = Math::deg_to_rad(light->get_spot_angle());
-			const float inner_angle_radians = outer_angle_radians * (1.0f - light->get_spot_blend());
-			const float inner_cos = Math::cos(inner_angle_radians);
-			const float outer_cos = Math::cos(outer_angle_radians);
-			const float cone_dot = spot_dir.dot(-light_dir);
-
-			float cone_attenuation = 0.0f;
-			if (inner_cos <= outer_cos + 0.0001f) {
-				cone_attenuation = cone_dot >= outer_cos ? 1.0f : 0.0f;
-			} else {
-				cone_attenuation = Math::smoothstep(outer_cos, inner_cos, cone_dot);
-			}
-
-			candidate.contribution_score = compute_light_color_intensity(light->get_color()) * light->get_energy() * attenuation * cone_attenuation;
-			if (candidate.contribution_score <= static_cast<float>(CMP_EPSILON)) {
+			if (!evaluate_spot_light_candidate(light, mesh_bounds, candidate)) {
 				continue;
 			}
 			local_candidates.push_back(candidate);
 		}
 
-		// Rank by estimated influence at the mesh origin so closer but fully
+		// Rank by estimated influence at the mesh bounds so closer but fully
 		// culled lights do not steal one of the limited local-light slots.
 		std::sort(local_candidates.begin(), local_candidates.end(), [](const LocalLightCandidate &p_a, const LocalLightCandidate &p_b) {
 			if (!Math::is_equal_approx(p_a.contribution_score, p_b.contribution_score)) {
@@ -371,8 +486,8 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 				const Vector3 position = light->get_global_transform().origin;
 				const Color color = light->get_color();
 
-				if (light->is_fake_point_light() && !p_mesh->is_ignoring_fake_point_lights()) {
-					const Vector3 to_light = position - mesh_origin;
+				if (light->is_fake_point_light() && !p_mesh->is_ignoring_fake_lights()) {
+					const Vector3 to_light = position - candidate.reference_position;
 					const float distance_squared = to_light.length_squared();
 					if (distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
 						continue;
@@ -404,19 +519,45 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 			} else {
 				N64SpotLight3D *light = candidate.spot_light;
 				const Vector3 position = light->get_global_transform().origin;
-				const Vector3 direction = light->get_light_direction();
 				const Color color = light->get_color();
-				const float outer_angle_radians = Math::deg_to_rad(light->get_spot_angle());
-				const float inner_angle_radians = outer_angle_radians * (1.0f - light->get_spot_blend());
-				const float inner_cos = Math::cos(inner_angle_radians);
-				const float outer_cos = Math::cos(outer_angle_radians);
+				if (light->is_fake_spot_light() && !p_mesh->is_ignoring_fake_lights()) {
+					const Vector3 to_light = position - candidate.reference_position;
+					const float distance_squared = to_light.length_squared();
+					if (distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
+						continue;
+					}
 
-				light_vector_type[light_count] = Vector4(position.x, position.y, position.z, 2.0f);
-				light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy());
-				light_range[light_count] = light->get_range();
-				light_attenuation[light_count] = light->get_attenuation();
-				light_spot_direction_inner[light_count] = Vector4(direction.x, direction.y, direction.z, inner_cos);
-				light_spot_outer_cos[light_count] = outer_cos;
+					const float distance = Math::sqrt(distance_squared);
+					const float range = MAX(light->get_range(), 0.0001f);
+					const float exponent = light->get_attenuation() > 0.0f ? light->get_attenuation() : 1.0f;
+					const float distance_attenuation = Math::pow(1.0f - Math::smoothstep(0.0f, range, distance), exponent);
+					const float cone_attenuation = compute_spot_cone_attenuation(light, candidate.reference_position);
+					const float final_attenuation = distance_attenuation * cone_attenuation;
+					if (final_attenuation <= static_cast<float>(CMP_EPSILON)) {
+						continue;
+					}
+
+					const Vector3 direction = to_light.normalized();
+					light_vector_type[light_count] = Vector4(direction.x, direction.y, direction.z, 1.0f);
+					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy() * final_attenuation);
+					light_range[light_count] = 0.0f;
+					light_attenuation[light_count] = 1.0f;
+					light_spot_direction_inner[light_count] = Vector4();
+					light_spot_outer_cos[light_count] = -1.0f;
+				} else {
+					const Vector3 direction = light->get_light_direction();
+					const float outer_angle_radians = Math::deg_to_rad(light->get_spot_angle());
+					const float inner_angle_radians = outer_angle_radians * (1.0f - light->get_spot_blend());
+					const float inner_cos = Math::cos(inner_angle_radians);
+					const float outer_cos = Math::cos(outer_angle_radians);
+
+					light_vector_type[light_count] = Vector4(position.x, position.y, position.z, 2.0f);
+					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy());
+					light_range[light_count] = light->get_range();
+					light_attenuation[light_count] = light->get_attenuation();
+					light_spot_direction_inner[light_count] = Vector4(direction.x, direction.y, direction.z, inner_cos);
+					light_spot_outer_cos[light_count] = outer_cos;
+				}
 			}
 
 			light_count++;

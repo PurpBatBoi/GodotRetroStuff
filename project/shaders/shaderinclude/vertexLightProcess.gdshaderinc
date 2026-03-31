@@ -17,8 +17,8 @@ group_uniforms Lighting;
 	/** 0 = direct light fully multiplied into shade (classic N64).
 	 *  1 = direct light fully additive on top of combiner output. */
 	uniform float direct_light_additive_mix : hint_range(0.0, 1.0) = 0.0;
-	/** Treat fake point lights as normal point lights for this material/mesh. */
-	uniform bool ignore_fake_point_lights = false;
+	/** Treat fake local lights as normal lights for this material/mesh. */
+	uniform bool ignore_fake_lights = false;
 
 	// Light arrays are always declared at max size (8) to satisfy GLSL's
 	// requirement for fixed array sizes. Only the first N64_MAX_LIGHTS

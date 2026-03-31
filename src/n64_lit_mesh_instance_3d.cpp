@@ -37,7 +37,7 @@ void N64LitMeshInstance3D::_notification(int p_what) {
 		case Node::NOTIFICATION_ENTER_TREE:
 			set_process_internal(true);
 			_sync_runtime_shader_material();
-			cached_ignore_fake_point_lights = _compute_ignore_fake_point_lights();
+			cached_ignore_fake_lights = _compute_ignore_fake_lights();
 			_reconnect_manager();
 			notify_runtime_material_changed();
 			break;
@@ -51,7 +51,7 @@ void N64LitMeshInstance3D::_notification(int p_what) {
 			runtime_surface_shader_materials.clear();
 			last_material_instance_id = 0;
 			last_surface_material_instance_ids.clear();
-			cached_ignore_fake_point_lights = false;
+			cached_ignore_fake_lights = false;
 			clear_cached_light_state();
 			break;
 		case Node::NOTIFICATION_PARENTED:
@@ -65,12 +65,12 @@ void N64LitMeshInstance3D::_notification(int p_what) {
 			break;
 		case Node::NOTIFICATION_INTERNAL_PROCESS:
 			if (_sync_runtime_shader_material()) {
-				cached_ignore_fake_point_lights = _compute_ignore_fake_point_lights();
+				cached_ignore_fake_lights = _compute_ignore_fake_lights();
 				notify_runtime_material_changed();
 			} else {
-				const bool ignore_fake_point_lights = _compute_ignore_fake_point_lights();
-				if (ignore_fake_point_lights != cached_ignore_fake_point_lights) {
-					cached_ignore_fake_point_lights = ignore_fake_point_lights;
+				const bool ignore_fake_lights = _compute_ignore_fake_lights();
+				if (ignore_fake_lights != cached_ignore_fake_lights) {
+					cached_ignore_fake_lights = ignore_fake_lights;
 					notify_runtime_material_changed();
 				}
 			}
@@ -93,8 +93,8 @@ const Vector<Ref<ShaderMaterial>> &N64LitMeshInstance3D::get_runtime_surface_sha
 	return runtime_surface_shader_materials;
 }
 
-bool N64LitMeshInstance3D::is_ignoring_fake_point_lights() const {
-	return cached_ignore_fake_point_lights;
+bool N64LitMeshInstance3D::is_ignoring_fake_lights() const {
+	return cached_ignore_fake_lights;
 }
 
 bool N64LitMeshInstance3D::update_cached_light_state(int32_t p_light_count, const PackedVector4Array &p_light_vector_type, const PackedVector4Array &p_light_color_energy, const PackedVector4Array &p_light_spot_direction_inner, const PackedFloat32Array &p_light_range, const PackedFloat32Array &p_light_attenuation, const PackedFloat32Array &p_light_spot_outer_cos, const Vector4 &p_global_ambient) {
@@ -265,11 +265,11 @@ bool N64LitMeshInstance3D::_sync_surface_shader_materials() {
 	return true;
 }
 
-bool N64LitMeshInstance3D::_compute_ignore_fake_point_lights() const {
-	static const StringName IGNORE_FAKE_POINT_LIGHTS = StringName("ignore_fake_point_lights");
+bool N64LitMeshInstance3D::_compute_ignore_fake_lights() const {
+	static const StringName IGNORE_FAKE_LIGHTS = StringName("ignore_fake_lights");
 
 	if (runtime_shader_material.is_valid()) {
-		const Variant value = runtime_shader_material->get_shader_parameter(IGNORE_FAKE_POINT_LIGHTS);
+		const Variant value = runtime_shader_material->get_shader_parameter(IGNORE_FAKE_LIGHTS);
 		if (value.get_type() == Variant::BOOL && static_cast<bool>(value)) {
 			return true;
 		}
@@ -280,7 +280,7 @@ bool N64LitMeshInstance3D::_compute_ignore_fake_point_lights() const {
 			continue;
 		}
 
-		const Variant value = material->get_shader_parameter(IGNORE_FAKE_POINT_LIGHTS);
+		const Variant value = material->get_shader_parameter(IGNORE_FAKE_LIGHTS);
 		if (value.get_type() == Variant::BOOL && static_cast<bool>(value)) {
 			return true;
 		}

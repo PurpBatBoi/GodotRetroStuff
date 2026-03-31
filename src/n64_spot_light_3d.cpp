@@ -42,6 +42,8 @@ void N64SpotLight3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_spot_angle"), &N64SpotLight3D::get_spot_angle);
 	ClassDB::bind_method(D_METHOD("set_spot_blend", "spot_blend"), &N64SpotLight3D::set_spot_blend);
 	ClassDB::bind_method(D_METHOD("get_spot_blend"), &N64SpotLight3D::get_spot_blend);
+	ClassDB::bind_method(D_METHOD("set_fake_spot_light", "fake_spot_light"), &N64SpotLight3D::set_fake_spot_light);
+	ClassDB::bind_method(D_METHOD("is_fake_spot_light"), &N64SpotLight3D::is_fake_spot_light);
 
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "color"), "set_color", "get_color");
@@ -50,6 +52,7 @@ void N64SpotLight3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "attenuation", PROPERTY_HINT_RANGE, "0.01,8.0,0.01,or_greater"), "set_attenuation", "get_attenuation");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "spot_angle", PROPERTY_HINT_RANGE, "1.0,89.0,0.1"), "set_spot_angle", "get_spot_angle");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "spot_blend", PROPERTY_HINT_RANGE, "0.0,0.99,0.01"), "set_spot_blend", "get_spot_blend");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "fake_spot_light"), "set_fake_spot_light", "is_fake_spot_light");
 }
 
 void N64SpotLight3D::_notification(int p_what) {
@@ -183,6 +186,21 @@ void N64SpotLight3D::set_spot_blend(float p_spot_blend) {
 
 float N64SpotLight3D::get_spot_blend() const {
 	return spot_blend;
+}
+
+void N64SpotLight3D::set_fake_spot_light(bool p_fake_spot_light) {
+	if (fake_spot_light == p_fake_spot_light) {
+		return;
+	}
+	fake_spot_light = p_fake_spot_light;
+	if (manager != nullptr) {
+		manager->notify_light_changed();
+	}
+	update_gizmos();
+}
+
+bool N64SpotLight3D::is_fake_spot_light() const {
+	return fake_spot_light;
 }
 
 Vector3 N64SpotLight3D::get_light_direction() const {

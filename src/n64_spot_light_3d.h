@@ -18,6 +18,7 @@ class N64SpotLight3D : public Node3D {
 	float attenuation = 1.0f;
 	float spot_angle = 45.0f;
 	float spot_blend = 0.15f;
+	bool fake_spot_light = false;
 	N64VertexLightManager3D *manager = nullptr;
 
 	void _reconnect_manager();
@@ -50,6 +51,9 @@ public:
 
 	void set_spot_blend(float p_spot_blend);
 	float get_spot_blend() const;
+
+	void set_fake_spot_light(bool p_fake_spot_light);
+	bool is_fake_spot_light() const;
 
 	Vector3 get_light_direction() const;
 };
