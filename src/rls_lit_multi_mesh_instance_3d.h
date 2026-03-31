@@ -2,29 +2,34 @@
 
 #include "rls_lit_geometry_instance.h"
 
-#include <godot_cpp/classes/mesh_instance3d.hpp>
+#include <godot_cpp/classes/multi_mesh_instance3d.hpp>
 #include <godot_cpp/classes/shader_material.hpp>
 
 #include <godot_cpp/templates/vector.hpp>
 
 namespace godot {
 
-class RLS_LitMeshInstance3D : public MeshInstance3D, public RLS_LitGeometryInstance {
-	GDCLASS(RLS_LitMeshInstance3D, MeshInstance3D)
+class RLS_LitMultiMeshInstance3D : public MultiMeshInstance3D, public RLS_LitGeometryInstance {
+	GDCLASS(RLS_LitMultiMeshInstance3D, MultiMeshInstance3D)
 
 	Ref<ShaderMaterial> runtime_shader_material;
 	Vector<Ref<ShaderMaterial>> runtime_surface_shader_materials;
 	uint64_t last_material_instance_id = 0;
+	uint64_t last_multimesh_instance_id = 0;
+	uint64_t last_mesh_instance_id = 0;
 	Vector<uint64_t> last_surface_material_instance_ids;
-	bool _sync_surface_shader_materials();
+	AABB last_local_aabb;
+	bool has_last_local_aabb = false;
+
+	bool _sync_multimesh_surface_shader_materials();
 
 protected:
 	static void _bind_methods();
 	void _notification(int p_what);
 
 public:
-	RLS_LitMeshInstance3D();
-	~RLS_LitMeshInstance3D() override = default;
+	RLS_LitMultiMeshInstance3D();
+	~RLS_LitMultiMeshInstance3D() override = default;
 
 	Node3D *get_geometry_node() override;
 	const Node3D *get_geometry_node() const override;

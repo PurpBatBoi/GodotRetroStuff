@@ -10,6 +10,7 @@
 #include "rls_directional_light_3d.h"
 #include "rls_light_gizmo_plugin.h"
 #include "rls_lit_mesh_instance_3d.h"
+#include "rls_lit_multi_mesh_instance_3d.h"
 #include "rls_point_light_3d.h"
 #include "rls_spot_light_3d.h"
 #include "rls_vertex_light_manager_3d.h"
@@ -24,6 +25,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 		GDREGISTER_CLASS(RLS_DirectionalLight3D);
 		GDREGISTER_CLASS(RLS_SpotLight3D);
 		GDREGISTER_CLASS(RLS_LitMeshInstance3D);
+		GDREGISTER_CLASS(RLS_LitMultiMeshInstance3D);
 		return;
 	}
 

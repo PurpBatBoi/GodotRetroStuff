@@ -1,7 +1,6 @@
 #include "rls_vertex_light_manager_3d.h"
 
 #include "rls_directional_light_3d.h"
-#include "rls_lit_mesh_instance_3d.h"
 #include "rls_point_light_3d.h"
 #include "rls_spot_light_3d.h"
 
@@ -59,15 +58,15 @@ float compute_distance_attenuation(float p_distance, float p_range, float p_expo
 	return Math::pow(1.0f - Math::smoothstep(0.0f, range, p_distance), exponent);
 }
 
-MeshInfluenceBounds build_mesh_influence_bounds(RLS_LitMeshInstance3D *p_mesh) {
+MeshInfluenceBounds build_mesh_influence_bounds(RLS_LitGeometryInstance *p_geometry) {
 	MeshInfluenceBounds bounds;
-	if (p_mesh == nullptr) {
+	if (p_geometry == nullptr) {
 		return bounds;
 	}
 
-	bounds.global_transform = p_mesh->get_global_transform();
+	bounds.global_transform = p_geometry->get_geometry_node()->get_global_transform();
 	bounds.inverse_global_transform = bounds.global_transform.affine_inverse();
-	bounds.local_aabb = p_mesh->get_aabb();
+	bounds.local_aabb = p_geometry->get_geometry_local_aabb();
 	bounds.world_origin = bounds.global_transform.origin;
 	bounds.world_center = bounds.global_transform.xform(bounds.local_aabb.position + (bounds.local_aabb.size * 0.5f));
 	return bounds;
@@ -227,17 +226,17 @@ void RLS_VertexLightManager3D::_notification(int p_what) {
 			break;
 		case Node::NOTIFICATION_EXIT_TREE:
 			set_process(false);
-			dirty_meshes.clear();
+			dirty_geometries.clear();
 			point_lights.clear();
 			spot_lights.clear();
 			directional_lights.clear();
-			lit_meshes.clear();
+			lit_geometries.clear();
 			break;
 		case Node::NOTIFICATION_PROCESS:
 			if (lights_dirty) {
-				_rebuild_all_meshes();
+				_rebuild_all_geometries();
 			} else {
-				_rebuild_dirty_meshes();
+				_rebuild_dirty_geometries();
 			}
 			break;
 		default:
@@ -324,17 +323,17 @@ void RLS_VertexLightManager3D::unregister_directional_light(RLS_DirectionalLight
 	}
 }
 
-void RLS_VertexLightManager3D::register_lit_mesh(RLS_LitMeshInstance3D *p_mesh) {
-	if (p_mesh == nullptr || lit_meshes.find(p_mesh) != -1) {
+void RLS_VertexLightManager3D::register_lit_geometry(RLS_LitGeometryInstance *p_geometry) {
+	if (p_geometry == nullptr || lit_geometries.find(p_geometry) != -1) {
 		return;
 	}
-	lit_meshes.push_back(p_mesh);
-	dirty_meshes.insert(p_mesh);
+	lit_geometries.push_back(p_geometry);
+	dirty_geometries.insert(p_geometry);
 }
 
-void RLS_VertexLightManager3D::unregister_lit_mesh(RLS_LitMeshInstance3D *p_mesh) {
-	if (_remove_lit_mesh(lit_meshes, p_mesh)) {
-		dirty_meshes.erase(p_mesh);
+void RLS_VertexLightManager3D::unregister_lit_geometry(RLS_LitGeometryInstance *p_geometry) {
+	if (_remove_lit_geometry(lit_geometries, p_geometry)) {
+		dirty_geometries.erase(p_geometry);
 	}
 }
 
@@ -342,11 +341,11 @@ void RLS_VertexLightManager3D::notify_light_changed() {
 	lights_dirty = true;
 }
 
-void RLS_VertexLightManager3D::notify_mesh_changed(RLS_LitMeshInstance3D *p_mesh) {
-	if (p_mesh == nullptr) {
+void RLS_VertexLightManager3D::notify_geometry_changed(RLS_LitGeometryInstance *p_geometry) {
+	if (p_geometry == nullptr) {
 		return;
 	}
-	dirty_meshes.insert(p_mesh);
+	dirty_geometries.insert(p_geometry);
 }
 
 bool RLS_VertexLightManager3D::_remove_point_light(Vector<RLS_PointLight3D *> &p_lights, RLS_PointLight3D *p_light) {
@@ -361,46 +360,47 @@ bool RLS_VertexLightManager3D::_remove_directional_light(Vector<RLS_DirectionalL
 	return remove_from_vector(p_lights, p_light);
 }
 
-bool RLS_VertexLightManager3D::_remove_lit_mesh(Vector<RLS_LitMeshInstance3D *> &p_meshes, RLS_LitMeshInstance3D *p_mesh) {
-	return remove_from_vector(p_meshes, p_mesh);
+bool RLS_VertexLightManager3D::_remove_lit_geometry(Vector<RLS_LitGeometryInstance *> &p_geometries, RLS_LitGeometryInstance *p_geometry) {
+	return remove_from_vector(p_geometries, p_geometry);
 }
 
-void RLS_VertexLightManager3D::_mark_all_meshes_dirty() {
-	for (RLS_LitMeshInstance3D *mesh : lit_meshes) {
-		if (mesh != nullptr) {
-			dirty_meshes.insert(mesh);
+void RLS_VertexLightManager3D::_mark_all_geometries_dirty() {
+	for (RLS_LitGeometryInstance *geometry : lit_geometries) {
+		if (geometry != nullptr) {
+			dirty_geometries.insert(geometry);
 		}
 	}
 }
 
-void RLS_VertexLightManager3D::_rebuild_all_meshes() {
-	_mark_all_meshes_dirty();
+void RLS_VertexLightManager3D::_rebuild_all_geometries() {
+	_mark_all_geometries_dirty();
 	lights_dirty = false;
-	_rebuild_dirty_meshes();
+	_rebuild_dirty_geometries();
 }
 
-void RLS_VertexLightManager3D::_rebuild_dirty_meshes() {
-	if (dirty_meshes.is_empty()) {
+void RLS_VertexLightManager3D::_rebuild_dirty_geometries() {
+	if (dirty_geometries.is_empty()) {
 		return;
 	}
 
-	Vector<RLS_LitMeshInstance3D *> pending_meshes;
-	for (RLS_LitMeshInstance3D *mesh : dirty_meshes) {
-		pending_meshes.push_back(mesh);
+	Vector<RLS_LitGeometryInstance *> pending_geometries;
+	for (RLS_LitGeometryInstance *geometry : dirty_geometries) {
+		pending_geometries.push_back(geometry);
 	}
-	dirty_meshes.clear();
+	dirty_geometries.clear();
 
-	for (RLS_LitMeshInstance3D *mesh : pending_meshes) {
-		if (mesh == nullptr || !mesh->is_inside_tree()) {
+	for (RLS_LitGeometryInstance *geometry : pending_geometries) {
+		const Node3D *geometry_node = geometry == nullptr ? nullptr : geometry->get_geometry_node();
+		if (geometry_node == nullptr || !geometry_node->is_inside_tree()) {
 			continue;
 		}
-		_apply_mesh_lighting(mesh);
+		_apply_geometry_lighting(geometry);
 	}
 }
 
-void RLS_VertexLightManager3D::_apply_mesh_lighting(RLS_LitMeshInstance3D *p_mesh) {
-	Ref<ShaderMaterial> material = p_mesh->get_runtime_shader_material();
-	const Vector<Ref<ShaderMaterial>> &surface_materials = p_mesh->get_runtime_surface_shader_materials();
+void RLS_VertexLightManager3D::_apply_geometry_lighting(RLS_LitGeometryInstance *p_geometry) {
+	Ref<ShaderMaterial> material = p_geometry->get_runtime_shader_material();
+	const Vector<Ref<ShaderMaterial>> &surface_materials = p_geometry->get_runtime_surface_shader_materials();
 	if (material.is_null() && surface_materials.is_empty()) {
 		return;
 	}
@@ -422,7 +422,7 @@ void RLS_VertexLightManager3D::_apply_mesh_lighting(RLS_LitMeshInstance3D *p_mes
 	}
 
 	int32_t light_count = 0;
-	const Vector3 mesh_origin = p_mesh->get_global_transform().origin;
+	const Vector3 mesh_origin = p_geometry->get_geometry_node()->get_global_transform().origin;
 
 	for (RLS_DirectionalLight3D *light : directional_lights) {
 		if (light == nullptr || !light->is_enabled()) {
@@ -446,7 +446,7 @@ void RLS_VertexLightManager3D::_apply_mesh_lighting(RLS_LitMeshInstance3D *p_mes
 	if (light_count < max_lights) {
 		std::vector<LocalLightCandidate> local_candidates;
 		local_candidates.reserve(point_lights.size() + spot_lights.size());
-		const MeshInfluenceBounds mesh_bounds = build_mesh_influence_bounds(p_mesh);
+		const MeshInfluenceBounds mesh_bounds = build_mesh_influence_bounds(p_geometry);
 
 		for (RLS_PointLight3D *light : point_lights) {
 			if (light == nullptr || !light->is_enabled()) {
@@ -495,7 +495,7 @@ void RLS_VertexLightManager3D::_apply_mesh_lighting(RLS_LitMeshInstance3D *p_mes
 				const Vector3 position = light->get_global_transform().origin;
 				const Color color = light->get_color();
 
-				if (light->is_fake_point_light() && !p_mesh->is_ignoring_fake_lights()) {
+				if (light->is_fake_point_light() && !p_geometry->is_ignoring_fake_lights()) {
 					const Vector3 to_light = get_fake_light_direction_vector(position, mesh_bounds, candidate);
 					const float direction_distance_squared = to_light.length_squared();
 					if (direction_distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
@@ -529,7 +529,7 @@ void RLS_VertexLightManager3D::_apply_mesh_lighting(RLS_LitMeshInstance3D *p_mes
 				RLS_SpotLight3D *light = candidate.spot_light;
 				const Vector3 position = light->get_global_transform().origin;
 				const Color color = light->get_color();
-				if (light->is_fake_spot_light() && !p_mesh->is_ignoring_fake_lights()) {
+				if (light->is_fake_spot_light() && !p_geometry->is_ignoring_fake_lights()) {
 					const Vector3 to_light = get_fake_light_direction_vector(position, mesh_bounds, candidate);
 					const float direction_distance_squared = to_light.length_squared();
 					if (direction_distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
@@ -596,7 +596,7 @@ void RLS_VertexLightManager3D::_apply_mesh_lighting(RLS_LitMeshInstance3D *p_mes
 	}
 
 	const Vector4 global_ambient(ambient_color.r, ambient_color.g, ambient_color.b, ambient_energy);
-	if (!p_mesh->update_cached_light_state(light_count, packed_vector_type, packed_color_energy, packed_spot_direction_inner, packed_range, packed_attenuation, packed_spot_outer_cos, global_ambient)) {
+	if (!p_geometry->update_cached_light_state(light_count, packed_vector_type, packed_color_energy, packed_spot_direction_inner, packed_range, packed_attenuation, packed_spot_outer_cos, global_ambient)) {
 		return;
 	}
 

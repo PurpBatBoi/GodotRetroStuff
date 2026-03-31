@@ -1,0 +1,2 @@
+@tool
+extends RLS_LitMultiMeshInstance3D

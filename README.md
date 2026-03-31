@@ -94,7 +94,7 @@ For the complete experience including RSP-style vertex lighting:
 3. Copy the shader files from `project/shaders/`
 4. Add `RLS_VertexLightManager3D` to your scene
 5. Add `RLS_DirectionalLight3D` or `RLS_PointLight3D` nodes for lighting
-6. Use `RLS_LitMeshInstance3D` for meshes that should receive vertex lighting
+6. Use `RLS_LitMeshInstance3D` for `MeshInstance3D` receivers and `RLS_LitMultiMeshInstance3D` for `MultiMeshInstance3D` receivers
 
 ## License
 

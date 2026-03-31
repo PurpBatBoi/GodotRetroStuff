@@ -62,6 +62,15 @@ It works with:
 - `surface_override_material`
 - shader materials assigned directly on mesh surfaces
 
+### `RLS_LitMultiMeshInstance3D`
+
+Use this instead of a normal `MultiMeshInstance3D` when you want the addon to light that geometry.
+
+It works with:
+
+- `material_override`
+- shader materials assigned on the `MultiMesh`'s source mesh surfaces
+
 ### `RLS_DirectionalLight3D`
 
 Use for broad scene lighting such as sunlight, moonlight, or large fill light.

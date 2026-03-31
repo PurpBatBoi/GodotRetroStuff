@@ -19,6 +19,7 @@ func _enter_tree() -> void:
 	var spot_script := _load_script("types/rls_spot_light_3d.gd")
 	var manager_script := _load_script("types/rls_vertex_light_manager_3d.gd")
 	var lit_mesh_script := _load_script("types/rls_lit_mesh_instance_3d.gd")
+	var lit_multimesh_script := _load_script("types/rls_lit_multi_mesh_instance_3d.gd")
 	var gizmo_plugin_script := _load_script("rls_light_gizmo_plugin.gd")
 
 	_point_icon = _load_png_texture(_addon_path(POINT_ICON_FILE))
@@ -26,7 +27,7 @@ func _enter_tree() -> void:
 	_spot_icon = _load_png_texture(_addon_path(SPOT_ICON_FILE))
 	_manager_icon = _load_png_texture(_addon_path(MANAGER_ICON_FILE))
 
-	if point_script == null or directional_script == null or spot_script == null or manager_script == null or lit_mesh_script == null or gizmo_plugin_script == null:
+	if point_script == null or directional_script == null or spot_script == null or manager_script == null or lit_mesh_script == null or lit_multimesh_script == null or gizmo_plugin_script == null:
 		push_error("RLS Vertex Lighting failed to load one or more addon scripts.")
 		return
 
@@ -35,6 +36,7 @@ func _enter_tree() -> void:
 	add_custom_type("RLS_SpotLight3D", "RLS_SpotLight3D", spot_script, _spot_icon)
 	add_custom_type("RLS_VertexLightManager3D", "RLS_VertexLightManager3D", manager_script, _manager_icon)
 	add_custom_type("RLS_LitMeshInstance3D", "RLS_LitMeshInstance3D", lit_mesh_script, null)
+	add_custom_type("RLS_LitMultiMeshInstance3D", "RLS_LitMultiMeshInstance3D", lit_multimesh_script, null)
 
 	light_gizmo_plugin = gizmo_plugin_script.new()
 	if light_gizmo_plugin.has_method("set_editor_plugin"):
@@ -52,6 +54,7 @@ func _exit_tree() -> void:
 		light_gizmo_plugin = null
 
 	remove_custom_type("RLS_LitMeshInstance3D")
+	remove_custom_type("RLS_LitMultiMeshInstance3D")
 	remove_custom_type("RLS_VertexLightManager3D")
 	remove_custom_type("RLS_SpotLight3D")
 	remove_custom_type("RLS_DirectionalLight3D")

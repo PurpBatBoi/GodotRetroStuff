@@ -1,10 +1,9 @@
 #pragma once
 
+#include "rls_lit_geometry_instance.h"
+
 #include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/variant/color.hpp>
-#include <godot_cpp/variant/packed_float32_array.hpp>
-#include <godot_cpp/variant/packed_vector4_array.hpp>
-#include <godot_cpp/variant/vector4.hpp>
 
 #include <godot_cpp/templates/hash_set.hpp>
 #include <godot_cpp/templates/vector.hpp>
@@ -12,7 +11,6 @@
 namespace godot {
 
 class RLS_DirectionalLight3D;
-class RLS_LitMeshInstance3D;
 class RLS_PointLight3D;
 class RLS_SpotLight3D;
 
@@ -29,18 +27,18 @@ class RLS_VertexLightManager3D : public Node3D {
 	Vector<RLS_PointLight3D *> point_lights;
 	Vector<RLS_SpotLight3D *> spot_lights;
 	Vector<RLS_DirectionalLight3D *> directional_lights;
-	Vector<RLS_LitMeshInstance3D *> lit_meshes;
-	HashSet<RLS_LitMeshInstance3D *> dirty_meshes;
+	Vector<RLS_LitGeometryInstance *> lit_geometries;
+	HashSet<RLS_LitGeometryInstance *> dirty_geometries;
 
 	static bool _remove_point_light(Vector<RLS_PointLight3D *> &p_lights, RLS_PointLight3D *p_light);
 	static bool _remove_spot_light(Vector<RLS_SpotLight3D *> &p_lights, RLS_SpotLight3D *p_light);
 	static bool _remove_directional_light(Vector<RLS_DirectionalLight3D *> &p_lights, RLS_DirectionalLight3D *p_light);
-	static bool _remove_lit_mesh(Vector<RLS_LitMeshInstance3D *> &p_meshes, RLS_LitMeshInstance3D *p_mesh);
+	static bool _remove_lit_geometry(Vector<RLS_LitGeometryInstance *> &p_geometries, RLS_LitGeometryInstance *p_geometry);
 
-	void _rebuild_all_meshes();
-	void _rebuild_dirty_meshes();
-	void _apply_mesh_lighting(RLS_LitMeshInstance3D *p_mesh);
-	void _mark_all_meshes_dirty();
+	void _rebuild_all_geometries();
+	void _rebuild_dirty_geometries();
+	void _apply_geometry_lighting(RLS_LitGeometryInstance *p_geometry);
+	void _mark_all_geometries_dirty();
 
 protected:
 	static void _bind_methods();
@@ -65,11 +63,11 @@ public:
 	void unregister_spot_light(RLS_SpotLight3D *p_light);
 	void register_directional_light(RLS_DirectionalLight3D *p_light);
 	void unregister_directional_light(RLS_DirectionalLight3D *p_light);
-	void register_lit_mesh(RLS_LitMeshInstance3D *p_mesh);
-	void unregister_lit_mesh(RLS_LitMeshInstance3D *p_mesh);
+	void register_lit_geometry(RLS_LitGeometryInstance *p_geometry);
+	void unregister_lit_geometry(RLS_LitGeometryInstance *p_geometry);
 
 	void notify_light_changed();
-	void notify_mesh_changed(RLS_LitMeshInstance3D *p_mesh);
+	void notify_geometry_changed(RLS_LitGeometryInstance *p_geometry);
 };
 
 } // namespace godot
