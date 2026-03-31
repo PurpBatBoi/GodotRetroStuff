@@ -84,6 +84,15 @@ Vector3 get_closest_world_point_on_mesh_bounds(const MeshInfluenceBounds &p_boun
 	return p_bounds.global_transform.xform(clamped_local_position);
 }
 
+Vector3 get_fake_light_direction_vector(const Vector3 &p_light_position, const MeshInfluenceBounds &p_bounds, const LocalLightCandidate &p_candidate) {
+	Vector3 to_light = p_light_position - p_bounds.world_center;
+	if (to_light.length_squared() <= static_cast<float>(CMP_EPSILON * CMP_EPSILON) &&
+			p_candidate.reference_position != p_bounds.world_center) {
+		to_light = p_light_position - p_candidate.reference_position;
+	}
+	return to_light;
+}
+
 bool evaluate_point_light_candidate(RLS_PointLight3D *p_light, const MeshInfluenceBounds &p_bounds, LocalLightCandidate &r_candidate) {
 	const float color_intensity = compute_light_color_intensity(p_light->get_color()) * p_light->get_energy();
 	const Vector3 light_position = p_light->get_global_transform().origin;
@@ -487,13 +496,13 @@ void RLS_VertexLightManager3D::_apply_mesh_lighting(RLS_LitMeshInstance3D *p_mes
 				const Color color = light->get_color();
 
 				if (light->is_fake_point_light() && !p_mesh->is_ignoring_fake_lights()) {
-					const Vector3 to_light = position - candidate.reference_position;
-					const float distance_squared = to_light.length_squared();
-					if (distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
+					const Vector3 to_light = get_fake_light_direction_vector(position, mesh_bounds, candidate);
+					const float direction_distance_squared = to_light.length_squared();
+					if (direction_distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
 						continue;
 					}
 
-					const float distance = Math::sqrt(distance_squared);
+					const float distance = Math::sqrt(candidate.distance_squared);
 					const float range = MAX(light->get_range(), 0.0001f);
 					const float exponent = light->get_attenuation() > 0.0f ? light->get_attenuation() : 1.0f;
 					const float attenuation = Math::pow(1.0f - Math::smoothstep(0.0f, range, distance), exponent);
@@ -521,13 +530,13 @@ void RLS_VertexLightManager3D::_apply_mesh_lighting(RLS_LitMeshInstance3D *p_mes
 				const Vector3 position = light->get_global_transform().origin;
 				const Color color = light->get_color();
 				if (light->is_fake_spot_light() && !p_mesh->is_ignoring_fake_lights()) {
-					const Vector3 to_light = position - candidate.reference_position;
-					const float distance_squared = to_light.length_squared();
-					if (distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
+					const Vector3 to_light = get_fake_light_direction_vector(position, mesh_bounds, candidate);
+					const float direction_distance_squared = to_light.length_squared();
+					if (direction_distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
 						continue;
 					}
 
-					const float distance = Math::sqrt(distance_squared);
+					const float distance = Math::sqrt(candidate.distance_squared);
 					const float range = MAX(light->get_range(), 0.0001f);
 					const float exponent = light->get_attenuation() > 0.0f ? light->get_attenuation() : 1.0f;
 					const float distance_attenuation = Math::pow(1.0f - Math::smoothstep(0.0f, range, distance), exponent);

@@ -1,0 +1,116 @@
+[gd_scene format=4 uid="uid://capholwcf4565"]
+
+[ext_resource type="Shader" uid="uid://bapiqrnpiqk4o" path="res://addons/RetroLightingSystem/shaders/GenericVertexLit.gdshader" id="1_ulcgi"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_nxogm"]
+size = Vector2(5.875, 9.31)
+subdivide_width = 32
+subdivide_depth = 32
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ulcgi"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_ulcgi")
+shader_parameter/Texture0_Mask = Vector2(0, 0)
+shader_parameter/Texture0_Scale = Vector2(0, 0)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = false
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/cc0_color_a = 1
+shader_parameter/cc0_color_b = 7
+shader_parameter/cc0_color_c = 4
+shader_parameter/cc0_color_d = 7
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/alpha_clip = 0.0
+shader_parameter/atlas_region_0 = Vector2i(0, 0)
+shader_parameter/atlas_offset_0 = Vector2i(0, 0)
+shader_parameter/atlas_seam_hiding = 0
+shader_parameter/atlas_seam_zoom = 0.0
+shader_parameter/use_material_ambient = false
+shader_parameter/material_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/direct_light_additive_mix = 0.0
+shader_parameter/ignore_fake_lights = true
+shader_parameter/light_count = 1
+shader_parameter/light_vector_type = PackedVector4Array(-0.3900392, 0.9289173, 1.5448532, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(1, 0.95, 0.8, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_spot_direction_inner = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(5, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1)
+shader_parameter/light_spot_outer_cos = PackedFloat32Array(-1, -1, -1, -1, -1, -1, -1, -1)
+shader_parameter/use_vertex_color = false
+shader_parameter/use_vertex_alpha = false
+shader_parameter/shade_color = Color(1, 1, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_u3cyc"]
+radial_segments = 16
+rings = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nxogm"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_ulcgi")
+shader_parameter/Texture0_Mask = Vector2(0, 0)
+shader_parameter/Texture0_Scale = Vector2(0, 0)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = false
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/cc0_color_a = 1
+shader_parameter/cc0_color_b = 7
+shader_parameter/cc0_color_c = 4
+shader_parameter/cc0_color_d = 7
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/alpha_clip = 0.0
+shader_parameter/atlas_region_0 = Vector2i(0, 0)
+shader_parameter/atlas_offset_0 = Vector2i(0, 0)
+shader_parameter/atlas_seam_hiding = 0
+shader_parameter/atlas_seam_zoom = 0.0
+shader_parameter/use_material_ambient = false
+shader_parameter/material_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/direct_light_additive_mix = 0.0
+shader_parameter/ignore_fake_lights = false
+shader_parameter/light_count = 1
+shader_parameter/light_vector_type = PackedVector4Array(0, 0.3854865, 0.9227135, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(1, 0.95, 0.8, 0.8693605, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_spot_direction_inner = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1)
+shader_parameter/light_spot_outer_cos = PackedFloat32Array(-1, -1, -1, -1, -1, -1, -1, -1)
+shader_parameter/use_vertex_color = false
+shader_parameter/use_vertex_alpha = false
+shader_parameter/shade_color = Color(1, 1, 1, 1)
+
+[node name="RLS_VertexLightManager3D" type="RLS_VertexLightManager3D" unique_id=1248254670]
+
+[node name="RLS_LitMeshInstance3D" type="RLS_LitMeshInstance3D" parent="." unique_id=749120408]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_nxogm")
+surface_material_override/0 = SubResource("ShaderMaterial_ulcgi")
+
+[node name="RLS_LitMeshInstance3D2" type="RLS_LitMeshInstance3D" parent="." unique_id=797558139]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("SphereMesh_u3cyc")
+surface_material_override/0 = SubResource("ShaderMaterial_nxogm")
+
+[node name="RLS_PointLight3D" type="RLS_PointLight3D" parent="." unique_id=1916484268]
+fake_point_light = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3900392, 0.9289173, 1.5448532)
