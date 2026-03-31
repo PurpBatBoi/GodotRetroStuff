@@ -60,24 +60,17 @@ cp "$source_shaders/shaderinclude/vertexLightProcess.gdshaderinc" "$package_root
 copy_if_exists "$source_shaders/post/RDPpost.gdshader" "$package_root/shaders/post/RDPpost.gdshader"
 copy_if_exists "$source_docs/lighting-authoring.md" "$package_root/docs/lighting-authoring.md"
 
-# Package the binaries that are currently available.
-for binary in "$source_bin/linux/"*.so
-    if test -f "$binary"
-        cp "$binary" "$package_root/bin/linux/"
-    end
-end
+# Package only the binaries referenced by the packaged .gdextension.
+copy_if_exists "$source_bin/linux/libn64visuals.linux.template_debug.x86_64.so" "$package_root/bin/linux/libn64visuals.linux.template_debug.x86_64.so"
+copy_if_exists "$source_bin/linux/libn64visuals.linux.template_release.x86_64.so" "$package_root/bin/linux/libn64visuals.linux.template_release.x86_64.so"
 
-for binary in "$source_bin/windows/"*.dll
-    if test -f "$binary"
-        cp "$binary" "$package_root/bin/windows/"
-    end
-end
+copy_if_exists "$source_bin/windows/libn64visuals.windows.template_debug.x86_64.dll" "$package_root/bin/windows/libn64visuals.windows.template_debug.x86_64.dll"
+copy_if_exists "$source_bin/windows/libn64visuals.windows.template_release.x86_64.dll" "$package_root/bin/windows/libn64visuals.windows.template_release.x86_64.dll"
 
-for binary in "$source_bin/web/"*.wasm
-    if test -f "$binary"
-        cp "$binary" "$package_root/bin/web/"
-    end
-end
+copy_if_exists "$source_bin/web/libn64visuals.web.template_debug.wasm32.wasm" "$package_root/bin/web/libn64visuals.web.template_debug.wasm32.wasm"
+copy_if_exists "$source_bin/web/libn64visuals.web.template_release.wasm32.wasm" "$package_root/bin/web/libn64visuals.web.template_release.wasm32.wasm"
+copy_if_exists "$source_bin/web/libn64visuals.web.template_debug.wasm32.nothreads.wasm" "$package_root/bin/web/libn64visuals.web.template_debug.wasm32.nothreads.wasm"
+copy_if_exists "$source_bin/web/libn64visuals.web.template_release.wasm32.nothreads.wasm" "$package_root/bin/web/libn64visuals.web.template_release.wasm32.nothreads.wasm"
 
 # Generate a packaged .gdextension that points at the bundled binaries.
 set gdextension_lines \
