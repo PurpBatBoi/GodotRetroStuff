@@ -4,11 +4,11 @@
    height="16"
    version="1.1"
    id="svg1"
-   sodipodi:docname="DirectionalLight3D.svg"
-   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
-   inkscape:export-filename="DirectionalLight3D.png"
+   sodipodi:docname="SpotLight3D.svg"
+   inkscape:export-filename="SpotLight3D.png"
    inkscape:export-xdpi="288"
    inkscape:export-ydpi="288"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@
      inkscape:current-layer="svg1" />
   <path
      fill="#fc7f7f"
-     d="M7 1v3h2V1zM4.465 3.05 3.05 4.466 4.464 5.88l1.414-1.414zm7.07 0-1.414 1.415 1.414 1.414 1.414-1.414zM8 5a2 2 0 0 0 0 6 2 2 0 0 0 0-6zM1 7v2h3V7zm11 0v2h3V7zm-7.535 3.121L3.05 11.535l1.414 1.414 1.414-1.414zm7.07 0-1.414 1.414 1.414 1.414 1.414-1.414zM7 12v3h2v-3z"
+     d="M6 1a1 1 0 0 0-1 1v3.693A5 5 0 0 0 2 10h4a2 2 0 0 0 4 0h4a5 5 0 0 0-3-4.307V2a1 1 0 0 0-1-1zm-1.098 9.635-1.732 1 1 1.73 1.732-1zm6.196 0-1 1.73 1.732 1 1-1.73zM7 13v2h2v-2z"
      id="path1"
      style="fill:#ffffff;fill-opacity:1" />
 </svg>

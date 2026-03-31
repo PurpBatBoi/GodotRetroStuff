@@ -38,12 +38,15 @@ void N64PointLight3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_range"), &N64PointLight3D::get_range);
 	ClassDB::bind_method(D_METHOD("set_attenuation", "attenuation"), &N64PointLight3D::set_attenuation);
 	ClassDB::bind_method(D_METHOD("get_attenuation"), &N64PointLight3D::get_attenuation);
+	ClassDB::bind_method(D_METHOD("set_fake_point_light", "fake_point_light"), &N64PointLight3D::set_fake_point_light);
+	ClassDB::bind_method(D_METHOD("is_fake_point_light"), &N64PointLight3D::is_fake_point_light);
 
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "color"), "set_color", "get_color");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "energy", PROPERTY_HINT_RANGE, "0.0,16.0,0.01,or_greater"), "set_energy", "get_energy");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "range", PROPERTY_HINT_RANGE, "0.01,256.0,0.01,or_greater"), "set_range", "get_range");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "attenuation", PROPERTY_HINT_RANGE, "0.01,8.0,0.01,or_greater"), "set_attenuation", "get_attenuation");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "fake_point_light"), "set_fake_point_light", "is_fake_point_light");
 }
 
 void N64PointLight3D::_notification(int p_what) {
@@ -63,6 +66,7 @@ void N64PointLight3D::_notification(int p_what) {
 			if (manager != nullptr) {
 				manager->notify_light_changed();
 			}
+			update_gizmos();
 			break;
 		default:
 			break;
@@ -77,6 +81,7 @@ void N64PointLight3D::set_enabled(bool p_enabled) {
 	if (manager != nullptr) {
 		manager->notify_light_changed();
 	}
+	update_gizmos();
 }
 
 bool N64PointLight3D::is_enabled() const {
@@ -91,6 +96,7 @@ void N64PointLight3D::set_color(const Color &p_color) {
 	if (manager != nullptr) {
 		manager->notify_light_changed();
 	}
+	update_gizmos();
 }
 
 Color N64PointLight3D::get_color() const {
@@ -105,6 +111,7 @@ void N64PointLight3D::set_energy(float p_energy) {
 	if (manager != nullptr) {
 		manager->notify_light_changed();
 	}
+	update_gizmos();
 }
 
 float N64PointLight3D::get_energy() const {
@@ -120,6 +127,7 @@ void N64PointLight3D::set_range(float p_range) {
 	if (manager != nullptr) {
 		manager->notify_light_changed();
 	}
+	update_gizmos();
 }
 
 float N64PointLight3D::get_range() const {
@@ -135,10 +143,26 @@ void N64PointLight3D::set_attenuation(float p_attenuation) {
 	if (manager != nullptr) {
 		manager->notify_light_changed();
 	}
+	update_gizmos();
 }
 
 float N64PointLight3D::get_attenuation() const {
 	return attenuation;
+}
+
+void N64PointLight3D::set_fake_point_light(bool p_fake_point_light) {
+	if (fake_point_light == p_fake_point_light) {
+		return;
+	}
+	fake_point_light = p_fake_point_light;
+	if (manager != nullptr) {
+		manager->notify_light_changed();
+	}
+	update_gizmos();
+}
+
+bool N64PointLight3D::is_fake_point_light() const {
+	return fake_point_light;
 }
 
 void N64PointLight3D::_reconnect_manager() {

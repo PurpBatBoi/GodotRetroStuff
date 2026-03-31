@@ -1,6 +1,8 @@
-[gd_scene format=3 uid="uid://7li640eftlib"]
+[gd_scene format=4 uid="uid://7li640eftlib"]
 
 [ext_resource type="PackedScene" uid="uid://cnoxc0hco4qus" path="res://prefabs/clones.tscn" id="1_w6el8"]
+[ext_resource type="Shader" uid="uid://bihhnk32p8x3" path="res://shaders/Metallic.gdshader" id="2_f7iwt"]
+[ext_resource type="Texture2D" uid="uid://mbeohppb3b0g" path="res://textures/matcap_01.png" id="3_s5cwo"]
 
 [sub_resource type="Environment" id="Environment_blflt"]
 background_mode = 1
@@ -22,35 +24,65 @@ fog_depth_end = 50.0
 resource_name = "Anim"
 length = 5.0
 loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("N64PointLight3D:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.74, 2.6333334, 3.44),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(-2.9624264, 3.2787287, -2.6486273), Vector3(-2.9624264, 3.2787287, 2.3442383), Vector3(2.012319, 3.2787285, 1.830909), Vector3(2.913823, 3.2787282, -3.0115964)]
-}
+
+[sub_resource type="Animation" id="Animation_blflt"]
+length = 0.001
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_blflt"]
 _data = {
-&"Anim": SubResource("Animation_w6el8")
+&"Anim": SubResource("Animation_w6el8"),
+&"RESET": SubResource("Animation_blflt")
 }
+
+[sub_resource type="SphereMesh" id="SphereMesh_ksc5k"]
+radial_segments = 16
+rings = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f7iwt"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_f7iwt")
+shader_parameter/Texture0 = ExtResource("3_s5cwo")
+shader_parameter/Texture0_Mask = Vector2(32, 64)
+shader_parameter/Texture0_Scale = Vector2(2, -1)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = true
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/cc0_color_a = 1
+shader_parameter/cc0_color_b = 7
+shader_parameter/cc0_color_c = 4
+shader_parameter/cc0_color_d = 7
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/alpha_clip = 0.0
+shader_parameter/use_material_ambient = true
+shader_parameter/material_ambient = Color(1, 1, 1, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/direct_light_additive_mix = 0.50000002375
+shader_parameter/ignore_fake_point_lights = false
+shader_parameter/light_count = 1
+shader_parameter/light_vector_type = PackedVector4Array(0.67181253, -0.3878547, -0.63105994, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(1, 0.3, 0, 1.3342155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_spot_direction_inner = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1)
+shader_parameter/light_spot_outer_cos = PackedFloat32Array(-1, -1, -1, -1, -1, -1, -1, -1)
+shader_parameter/use_vertex_color = true
+shader_parameter/use_vertex_alpha = true
+shader_parameter/shade_color = Color(1, 1, 1, 1)
 
 [node name="Scene" type="N64VertexLightManager3D" unique_id=474665587]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=181942259]
 environment = SubResource("Environment_blflt")
-
-[node name="N64PointLight3D" type="N64PointLight3D" parent="." unique_id=2108063898]
-color = Color(0.5281804, 0.48271698, 0, 1)
-energy = 1.85
-range = 11.43
-attenuation = 0.65
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9624264, 3.2787287, -2.6486273)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1270911904]
 libraries/ = SubResource("AnimationLibrary_blflt")
@@ -81,3 +113,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33, 0, 33)
 
 [node name="Clones9" parent="." unique_id=1182998476 instance=ExtResource("1_w6el8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 0, 33)
+
+[node name="N64PointLight3D" type="N64PointLight3D" parent="." unique_id=1070815038]
+color = Color(1, 0.3, 0, 1)
+energy = 9.15
+range = 6.8654137
+fake_point_light = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2847447, 3.8569922, -5.0888753)
+
+[node name="MeshInstance3D" type="N64LitMeshInstance3D" parent="." unique_id=1596180450]
+transform = Transform3D(1.765, 0, 0, 0, 1.765, 0, 0, 0, 1.765, 1.7822144, 5.879093, -1.7988108)
+mesh = SubResource("SphereMesh_ksc5k")
+surface_material_override/0 = SubResource("ShaderMaterial_f7iwt")

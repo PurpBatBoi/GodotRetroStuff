@@ -8,12 +8,12 @@ render_mode unshaded, cull_back;
 #include "res://shaders/shaderinclude/RDPcombiner.gdshaderinc"
 
 // ── Light count cap ────────────────────────────────────────────────────────────
-// Set to however many lights this material needs. The loop bound becomes a
-// compile-time constant, letting the GPU unroll it completely.
-// Valid range: 1–8. Default 4 covers most N64-style scenes.
+// Override the shared fallback (8) for this material variant.
 #ifndef N64_MAX_LIGHTS
-#define N64_MAX_LIGHTS 1
+#define N64_MAX_LIGHTS 2
 #endif
+
+#include "res://shaders/shaderinclude/vertexLightProcess.gdshaderinc"
 
 // ── Varyings ───────────────────────────────────────────────────────────────────
 varying vec3 additive_light;
@@ -28,76 +28,6 @@ group_uniforms Material;
 	uniform vec4 shade_color : source_color = vec4(1.0);
 group_uniforms;
 
-// ── Lighting ───────────────────────────────────────────────────────────────────
-group_uniforms Lighting;
-	/** Use material_ambient instead of global_ambient. */
-	uniform bool use_material_ambient = false;
-	uniform vec4 material_ambient : source_color = vec4(0.12, 0.12, 0.16, 1.0);
-	uniform vec4 global_ambient   : source_color = vec4(0.12, 0.12, 0.16, 1.0);
-
-	/** 0 = direct light fully multiplied into shade (classic N64).
-	 *  1 = direct light fully additive on top of combiner output. */
-	uniform float direct_light_additive_mix : hint_range(0.0, 1.0) = 0.0;
-
-	// Light arrays are always declared at max size (8) to satisfy GLSL's
-	// requirement for fixed array sizes. Only the first N64_MAX_LIGHTS
-	// entries are read at runtime.
-	/** Number of active lights (capped to N64_MAX_LIGHTS at runtime). */
-	uniform int  light_count = 0;
-	/** xyz = direction (directional) or world position (point). w > 0.5 = directional. */
-	uniform vec4 light_vector_type[8];
-	/** rgb = color, a = energy. */
-	uniform vec4 light_color_energy[8];
-	/** Attenuation range for point lights (ignored for directional). */
-	uniform float light_range[8];
-	/** Attenuation falloff exponent for point lights. */
-	uniform float light_attenuation[8];
-group_uniforms;
-
-// ── Lighting helpers ───────────────────────────────────────────────────────────
-vec3 compute_ambient()
-{
-	vec4 a = use_material_ambient ? material_ambient : global_ambient;
-	return a.rgb * a.a;
-}
-
-vec3 compute_direct(vec3 world_pos, vec3 world_normal)
-{
-	vec3  acc        = vec3(0.0);
-	// Clamp at runtime too — guards against light_count > N64_MAX_LIGHTS in data.
-	int   count      = min(light_count, N64_MAX_LIGHTS);
-
-	// N64_MAX_LIGHTS is a compile-time constant, so this loop can be fully
-	// unrolled by the driver. The inner `if (i >= count) break` becomes a
-	// series of predicated instructions rather than a real branch.
-	for (int i = 0; i < N64_MAX_LIGHTS; i++) {
-		if (i >= count) break;
-
-		vec4  info       = light_vector_type[i];
-		vec4  data       = light_color_energy[i];
-		vec3  light_dir;
-		float attenuation = 1.0;
-
-		if (info.w > 0.5) {
-			// Directional light
-			light_dir = normalize(info.xyz);
-		} else {
-			// Point light
-			vec3  to_light = info.xyz - world_pos;
-			float dist     = length(to_light);
-			if (dist <= 0.0001) continue;
-			float range    = max(light_range[i], 0.0001);
-			float exponent = light_attenuation[i] > 0.0 ? light_attenuation[i] : 1.0;
-			light_dir      = to_light / dist;
-			attenuation    = pow(1.0 - smoothstep(0.0, range, dist), exponent);
-		}
-
-		float diffuse = max(dot(world_normal, light_dir), 0.0);
-		acc += data.rgb * data.a * diffuse * attenuation;
-	}
-	return acc;
-}
-
 // ── Vertex ─────────────────────────────────────────────────────────────────────
 void vertex()
 {
@@ -109,13 +39,10 @@ void vertex()
 		(use_vertex_color || use_vertex_alpha) ? COLOR.a : shade_color.a
 	);
 
-	vec3  ambient      = compute_ambient();
-	vec3  direct       = compute_direct(world_pos, world_normal);
-	float add_mix      = clamp(direct_light_additive_mix, 0.0, 1.0);
-	vec3  shaded_light = ambient + direct * (1.0 - add_mix);
-
-	vec4 shaded_input = vec4(base_shade.rgb * shaded_light, base_shade.a);
-	additive_light    = direct * add_mix;
+	vec4 shaded_input;
+	vec3 additive_light_value;
+	n64_vertex_light_process(world_pos, world_normal, base_shade, shaded_input, additive_light_value);
+	additive_light = additive_light_value;
 
 	N64CombVertexData cd = n64comb_vertex_data(
 		NORMAL, shaded_input,

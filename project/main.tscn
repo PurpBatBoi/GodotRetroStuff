@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cdm7t4uv5igoe" path="res://prefabs/player.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://7li640eftlib" path="res://prefabs/scene.tscn" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://g2h4qlgtarud" path="res://scripts/FPS.gd" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://ekvlq53jhan5" path="res://prefabs/toast-scene.tscn" id="4_1bvp3"]
 
 [node name="Node3D" type="Node3D" unique_id=1153820260]
 
@@ -12,3 +13,6 @@
 script = ExtResource("3_h2yge")
 
 [node name="Scene" parent="." unique_id=484454971 instance=ExtResource("3_1bvp3")]
+
+[node name="Node3D" parent="." unique_id=1190463607 instance=ExtResource("4_1bvp3")]
+visible = false

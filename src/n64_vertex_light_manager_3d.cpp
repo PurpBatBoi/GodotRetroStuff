@@ -3,13 +3,14 @@
 #include "n64_directional_light_3d.h"
 #include "n64_lit_mesh_instance_3d.h"
 #include "n64_point_light_3d.h"
+#include "n64_spot_light_3d.h"
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/math.hpp>
 
-#include <godot_cpp/templates/local_vector.hpp>
 #include <algorithm>
 #include <array>
+#include <vector>
 
 using namespace godot;
 
@@ -25,8 +26,15 @@ bool remove_from_vector(Vector<T *> &p_values, T *p_value) {
 	return true;
 }
 
-struct PointLightCandidate {
-	N64PointLight3D *light = nullptr;
+struct LocalLightCandidate {
+	enum class Type {
+		POINT,
+		SPOT
+	};
+
+	Type type = Type::POINT;
+	N64PointLight3D *point_light = nullptr;
+	N64SpotLight3D *spot_light = nullptr;
 	float distance_squared = 0.0f;
 };
 
@@ -55,6 +63,7 @@ void N64VertexLightManager3D::_notification(int p_what) {
 			set_process(false);
 			dirty_meshes.clear();
 			point_lights.clear();
+			spot_lights.clear();
 			directional_lights.clear();
 			lit_meshes.clear();
 			break;
@@ -121,6 +130,20 @@ void N64VertexLightManager3D::unregister_point_light(N64PointLight3D *p_light) {
 	}
 }
 
+void N64VertexLightManager3D::register_spot_light(N64SpotLight3D *p_light) {
+	if (p_light == nullptr || spot_lights.find(p_light) != -1) {
+		return;
+	}
+	spot_lights.push_back(p_light);
+	notify_light_changed();
+}
+
+void N64VertexLightManager3D::unregister_spot_light(N64SpotLight3D *p_light) {
+	if (_remove_spot_light(spot_lights, p_light)) {
+		notify_light_changed();
+	}
+}
+
 void N64VertexLightManager3D::register_directional_light(N64DirectionalLight3D *p_light) {
 	if (p_light == nullptr || directional_lights.find(p_light) != -1) {
 		return;
@@ -161,6 +184,10 @@ void N64VertexLightManager3D::notify_mesh_changed(N64LitMeshInstance3D *p_mesh) 
 }
 
 bool N64VertexLightManager3D::_remove_point_light(Vector<N64PointLight3D *> &p_lights, N64PointLight3D *p_light) {
+	return remove_from_vector(p_lights, p_light);
+}
+
+bool N64VertexLightManager3D::_remove_spot_light(Vector<N64SpotLight3D *> &p_lights, N64SpotLight3D *p_light) {
 	return remove_from_vector(p_lights, p_light);
 }
 
@@ -214,14 +241,18 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 
 	std::array<Vector4, MAX_SUPPORTED_LIGHTS> light_vector_type;
 	std::array<Vector4, MAX_SUPPORTED_LIGHTS> light_color_energy;
+	std::array<Vector4, MAX_SUPPORTED_LIGHTS> light_spot_direction_inner;
 	std::array<float, MAX_SUPPORTED_LIGHTS> light_range;
 	std::array<float, MAX_SUPPORTED_LIGHTS> light_attenuation;
+	std::array<float, MAX_SUPPORTED_LIGHTS> light_spot_outer_cos;
 
 	for (int32_t i = 0; i < MAX_SUPPORTED_LIGHTS; i++) {
 		light_vector_type[i] = Vector4();
 		light_color_energy[i] = Vector4();
+		light_spot_direction_inner[i] = Vector4();
 		light_range[i] = 0.0f;
 		light_attenuation[i] = 1.0f;
+		light_spot_outer_cos[i] = -1.0f;
 	}
 
 	int32_t light_count = 0;
@@ -241,74 +272,129 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 		light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy());
 		light_range[light_count] = 0.0f;
 		light_attenuation[light_count] = 1.0f;
+		light_spot_direction_inner[light_count] = Vector4();
+		light_spot_outer_cos[light_count] = -1.0f;
 		light_count++;
 	}
 
 	if (light_count < max_lights) {
-		const int max_candidates = point_lights.size();
-		PointLightCandidate point_candidates[64]; // enough for reasonable light counts
-		int candidate_count = 0;
+		std::vector<LocalLightCandidate> local_candidates;
+		local_candidates.reserve(point_lights.size() + spot_lights.size());
 
-		for (int32_t i = 0; i < point_lights.size(); i++) {
-			N64PointLight3D *light = point_lights[i];
+		for (N64PointLight3D *light : point_lights) {
 			if (light == nullptr || !light->is_enabled()) {
 				continue;
 			}
 
-			PointLightCandidate candidate;
-			candidate.light = light;
+			LocalLightCandidate candidate;
+			candidate.type = LocalLightCandidate::Type::POINT;
+			candidate.point_light = light;
 			candidate.distance_squared = mesh_origin.distance_squared_to(light->get_global_transform().origin);
-
-			if (candidate_count < 64) {
-				point_candidates[candidate_count++] = candidate;
-			}
+			local_candidates.push_back(candidate);
 		}
 
-		for (int i = 0; i < candidate_count - 1; i++) {
-			int best = i;
-			for (int j = i + 1; j < candidate_count; j++) {
-				if (point_candidates[j].distance_squared < point_candidates[best].distance_squared) {
-					best = j;
+		for (N64SpotLight3D *light : spot_lights) {
+			if (light == nullptr || !light->is_enabled()) {
+				continue;
+			}
+
+			LocalLightCandidate candidate;
+			candidate.type = LocalLightCandidate::Type::SPOT;
+			candidate.spot_light = light;
+			candidate.distance_squared = mesh_origin.distance_squared_to(light->get_global_transform().origin);
+			local_candidates.push_back(candidate);
+		}
+
+		std::sort(local_candidates.begin(), local_candidates.end(), [](const LocalLightCandidate &p_a, const LocalLightCandidate &p_b) {
+			return p_a.distance_squared < p_b.distance_squared;
+		});
+
+		for (const LocalLightCandidate &candidate : local_candidates) {
+			if (light_count >= max_lights) {
+				break;
+			}
+
+			if (candidate.type == LocalLightCandidate::Type::POINT) {
+				N64PointLight3D *light = candidate.point_light;
+				const Vector3 position = light->get_global_transform().origin;
+				const Color color = light->get_color();
+
+				if (light->is_fake_point_light() && !p_mesh->is_ignoring_fake_point_lights()) {
+					const Vector3 to_light = position - mesh_origin;
+					const float distance_squared = to_light.length_squared();
+					if (distance_squared <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
+						continue;
+					}
+
+					const float distance = Math::sqrt(distance_squared);
+					const float range = MAX(light->get_range(), 0.0001f);
+					const float exponent = light->get_attenuation() > 0.0f ? light->get_attenuation() : 1.0f;
+					const float attenuation = Math::pow(1.0f - Math::smoothstep(0.0f, range, distance), exponent);
+					if (attenuation <= static_cast<float>(CMP_EPSILON)) {
+						continue;
+					}
+
+					const Vector3 direction = to_light.normalized();
+					light_vector_type[light_count] = Vector4(direction.x, direction.y, direction.z, 1.0f);
+					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy() * attenuation);
+					light_range[light_count] = 0.0f;
+					light_attenuation[light_count] = 1.0f;
+					light_spot_direction_inner[light_count] = Vector4();
+					light_spot_outer_cos[light_count] = -1.0f;
+				} else {
+					light_vector_type[light_count] = Vector4(position.x, position.y, position.z, 0.0f);
+					light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy());
+					light_range[light_count] = light->get_range();
+					light_attenuation[light_count] = light->get_attenuation();
+					light_spot_direction_inner[light_count] = Vector4();
+					light_spot_outer_cos[light_count] = -1.0f;
 				}
-			}
-			if (best != i) {
-				PointLightCandidate tmp = point_candidates[i];
-				point_candidates[i] = point_candidates[best];
-				point_candidates[best] = tmp;
-			}
-		}
+			} else {
+				N64SpotLight3D *light = candidate.spot_light;
+				const Vector3 position = light->get_global_transform().origin;
+				const Vector3 direction = light->get_light_direction();
+				const Color color = light->get_color();
+				const float outer_angle_radians = Math::deg_to_rad(light->get_spot_angle());
+				const float inner_angle_radians = outer_angle_radians * (1.0f - light->get_spot_blend());
+				const float inner_cos = Math::cos(inner_angle_radians);
+				const float outer_cos = Math::cos(outer_angle_radians);
 
-		for (int i = 0; i < candidate_count && light_count < max_lights; i++) {
-			const PointLightCandidate &candidate = point_candidates[i];
-			N64PointLight3D *light = candidate.light;
-			const Vector3 position = light->get_global_transform().origin;
-			const Color color = light->get_color();
-			light_vector_type[light_count] = Vector4(position.x, position.y, position.z, 0.0f);
-			light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy());
-			light_range[light_count] = light->get_range();
-			light_attenuation[light_count] = light->get_attenuation();
+				light_vector_type[light_count] = Vector4(position.x, position.y, position.z, 2.0f);
+				light_color_energy[light_count] = Vector4(color.r, color.g, color.b, light->get_energy());
+				light_range[light_count] = light->get_range();
+				light_attenuation[light_count] = light->get_attenuation();
+				light_spot_direction_inner[light_count] = Vector4(direction.x, direction.y, direction.z, inner_cos);
+				light_spot_outer_cos[light_count] = outer_cos;
+			}
+
 			light_count++;
 		}
 	}
 
 	PackedVector4Array packed_vector_type;
 	PackedVector4Array packed_color_energy;
+	PackedVector4Array packed_spot_direction_inner;
 	PackedFloat32Array packed_range;
 	PackedFloat32Array packed_attenuation;
+	PackedFloat32Array packed_spot_outer_cos;
 	packed_vector_type.resize(MAX_SUPPORTED_LIGHTS);
 	packed_color_energy.resize(MAX_SUPPORTED_LIGHTS);
+	packed_spot_direction_inner.resize(MAX_SUPPORTED_LIGHTS);
 	packed_range.resize(MAX_SUPPORTED_LIGHTS);
 	packed_attenuation.resize(MAX_SUPPORTED_LIGHTS);
+	packed_spot_outer_cos.resize(MAX_SUPPORTED_LIGHTS);
 
 	for (int32_t i = 0; i < MAX_SUPPORTED_LIGHTS; i++) {
 		packed_vector_type.set(i, light_vector_type[i]);
 		packed_color_energy.set(i, light_color_energy[i]);
+		packed_spot_direction_inner.set(i, light_spot_direction_inner[i]);
 		packed_range.set(i, light_range[i]);
 		packed_attenuation.set(i, light_attenuation[i]);
+		packed_spot_outer_cos.set(i, light_spot_outer_cos[i]);
 	}
 
 	const Vector4 global_ambient(ambient_color.r, ambient_color.g, ambient_color.b, ambient_energy);
-	if (!p_mesh->update_cached_light_state(light_count, packed_vector_type, packed_color_energy, packed_range, packed_attenuation, global_ambient)) {
+	if (!p_mesh->update_cached_light_state(light_count, packed_vector_type, packed_color_energy, packed_spot_direction_inner, packed_range, packed_attenuation, packed_spot_outer_cos, global_ambient)) {
 		return;
 	}
 
@@ -316,8 +402,10 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 		material->set_shader_parameter(StringName("light_count"), light_count);
 		material->set_shader_parameter(StringName("light_vector_type"), packed_vector_type);
 		material->set_shader_parameter(StringName("light_color_energy"), packed_color_energy);
+		material->set_shader_parameter(StringName("light_spot_direction_inner"), packed_spot_direction_inner);
 		material->set_shader_parameter(StringName("light_range"), packed_range);
 		material->set_shader_parameter(StringName("light_attenuation"), packed_attenuation);
+		material->set_shader_parameter(StringName("light_spot_outer_cos"), packed_spot_outer_cos);
 		material->set_shader_parameter(StringName("global_ambient"), global_ambient);
 	}
 
@@ -328,8 +416,10 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 		surface_material->set_shader_parameter(StringName("light_count"), light_count);
 		surface_material->set_shader_parameter(StringName("light_vector_type"), packed_vector_type);
 		surface_material->set_shader_parameter(StringName("light_color_energy"), packed_color_energy);
+		surface_material->set_shader_parameter(StringName("light_spot_direction_inner"), packed_spot_direction_inner);
 		surface_material->set_shader_parameter(StringName("light_range"), packed_range);
 		surface_material->set_shader_parameter(StringName("light_attenuation"), packed_attenuation);
+		surface_material->set_shader_parameter(StringName("light_spot_outer_cos"), packed_spot_outer_cos);
 		surface_material->set_shader_parameter(StringName("global_ambient"), global_ambient);
 	}
 }

@@ -57,6 +57,7 @@ void N64DirectionalLight3D::_notification(int p_what) {
 			if (manager != nullptr) {
 				manager->notify_light_changed();
 			}
+			update_gizmos();
 			break;
 		default:
 			break;
@@ -71,6 +72,7 @@ void N64DirectionalLight3D::set_enabled(bool p_enabled) {
 	if (manager != nullptr) {
 		manager->notify_light_changed();
 	}
+	update_gizmos();
 }
 
 bool N64DirectionalLight3D::is_enabled() const {
@@ -85,6 +87,7 @@ void N64DirectionalLight3D::set_color(const Color &p_color) {
 	if (manager != nullptr) {
 		manager->notify_light_changed();
 	}
+	update_gizmos();
 }
 
 Color N64DirectionalLight3D::get_color() const {
@@ -99,6 +102,7 @@ void N64DirectionalLight3D::set_energy(float p_energy) {
 	if (manager != nullptr) {
 		manager->notify_light_changed();
 	}
+	update_gizmos();
 }
 
 float N64DirectionalLight3D::get_energy() const {

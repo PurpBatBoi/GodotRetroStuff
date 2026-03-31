@@ -31,11 +31,13 @@ void N64EditorPlugin::_enable_plugin() {
 		light_gizmo_plugin.instantiate();
 	}
 
+	light_gizmo_plugin->set_editor_plugin(this);
 	add_node_3d_gizmo_plugin(light_gizmo_plugin);
 }
 
 void N64EditorPlugin::_disable_plugin() {
 	if (light_gizmo_plugin.is_valid()) {
+		light_gizmo_plugin->set_editor_plugin(nullptr);
 		remove_node_3d_gizmo_plugin(light_gizmo_plugin);
 		light_gizmo_plugin.unref();
 	}

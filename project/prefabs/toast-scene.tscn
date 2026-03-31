@@ -1,0 +1,180 @@
+[gd_scene format=4 uid="uid://ekvlq53jhan5"]
+
+[ext_resource type="Shader" uid="uid://bx4fd6nmkvhy1" path="res://shaders/GenericVertexLit.gdshader" id="1_ux0w8"]
+[ext_resource type="Texture2D" uid="uid://1lbyowsaeqsm" path="res://assets/toast.png" id="2_gpqy8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wo38n"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kwd4c"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_k62av"]
+resource_name = "toast_Plane"
+_surfaces = [{
+"aabb": AABB(-0.9840304, -0.1774082, -1.1714056, 1.9580197, 0.1774082, 2.1276548),
+"attribute_data": PackedByteArray("nY2b3PyKj4LhgjbDpcLQf7eLlYLH+3mC4/t5giL8xcdO/IHc97///8P8tPC+/HT/6KDm/7KCW/G+gmT/o4onhUzEgIJcgqTF+4xR3Pz81sfy/B6FkP3G3Jy/p////yD/RJ6t/7WApP+6gGLx//+zg5D9+Kj//yCQ"),
+"format": 34896613399,
+"index_count": 66,
+"index_data": PackedByteArray("AAABAAIAAwAEAAAAAwAAAAUABgAAAAcABwAAAAgACAAAAAkACAAJAAoACgAJAAsACQAAAAwADAAAAA0ADQAOAAwADwAQABEAEQAQABIAEwAQABQAEwASABAAFQASABMAEgAVABYAFgAVABcAGAASABYAGQASABgAEgAZABoAGwAcAB0A"),
+"material": SubResource("StandardMaterial3D_wo38n"),
+"primitive": 3,
+"uv_scale": Vector4(2, 1.8025099, 0, 0),
+"vertex_count": 30,
+"vertex_data": PackedByteArray("1if//x9Z6T+5Df//lfqXTD8D///bhk07QXz//4n/w1C5Df//lfqhTJLw///G+tZMkvD//8b61Ez2+///u34hPKjv//8bWQE/nYT//wAAZy4A/f//GzSeO5r3//+yGcIvCUr//5MJmi/wBP//OzDfO6wO//+RFjQuAAsAAB77NLR7fwAA//+XrwAAAACQhCDGsSYAAJ1azMCc/QAAh4Cuw2jyAAAv+72z5/AAALVZPcHogwAADAAR0N/7AADlGsPSh0UAAEUKhc9pDQAAoBY40XIDAABiMaPB3/sAAOUaCjDn8AAAtVkZP///AADzL605MvqBku7sRqEw77Ojkf+0gJDsMKFv4IJtauCWbbDbY26E4jd0lP5Of3PYN3a35It+afpCcF3xC6ul/UecVCiblwEABIDyKFmTMhPrho8S8FknFH1dGQyBYUcAPH/YBhJZKRL1eHsfZoZaLjiZlxCCVoUObWFZF2ZO")
+}, {
+"aabb": AABB(-1.018826, -0.1774082, -1.222038, 2.018826, 0.1774082, 2.222038),
+"attribute_data": PackedByteArray("H3w7xsoG8K7mATvG8Hj1ruYBs+fIeRf5dQYX+R98s+eCoBf5gqA7xqR69quCoIKygqCz5/XFF/k0xDvGrMaCstjlO8bd4YKyNMSz59jls+d44Rf5d8E7xoHegrJr4jvGZcOCsmvis+eCoDvGgqCCsnfBs+cTxRf5udwX+YKgF/mCoLPnGnwX+R98O8aQfYKy5gE7xooGgrIffLPn5gGz50kGF/kkv8/CtfrMren7z8Ikv8yt6ft25geDz8IJg8ytcgvPwq4OzK0kv3bmB4N25nILduZyC/z4tYP8+HTB/Pjp+/z4voEt5130MfxE+y3n+X8x/ET7gsM5CC3nhw6d/L6BgsM5CILDtwv7sL6B+7Ay9vuw"),
+"format": 34896613399,
+"index_count": 234,
+"index_data": PackedByteArray("AAABAAIAAAADAAEAAAACAAQABQAEAAYABQAHAAQAAAAEAAcABwAFAAgACQAAAAcACgAAAAkACgAJAAsABwAIAAwACQAHAAwADQAMAAgADgALAAkADgAJAAwADgAPAAsAEAAPAA4AEAARAA8ADgAMABIAEAAOABIADQASAAwAEAASABMAFAASAA0AFAATABIAFQAWABcAFQAYABYAFQAXABkAGgAYABUAGgAbABgAFQAZABwAGgAVABwAHQAcABkAHQAZAB4AHwAcAB0AHwAgABwAGgAcACAAIQAgAB8AIgAbABoAIgAaACAAIgAjABsAJAAjACIAJAAlACMAIgAgACYAJAAiACYAIQAmACAAJAAmACcAKAAmACEAKAAnACYAKQAqACsAKQAsACoAKQArAC0ALgAsACkALgAvACwAMAAvAC4AMAAxAC8ALgApADIAKQAtADIAMAAuADMALgAyADMAMAAzADQANQA0ADMANQAzADYANgAzADIANgAyADcANwAyAC0ANwAtADgAOQA6ADsAOQA8ADoAOQA7AD0APgA8ADkAPgA/ADwAPgA5AEAAOQA9AEAAPgBAAEEAQgBBAEAAQgBAAEMAQwBAAD0AQwA9AEQA"),
+"material": SubResource("StandardMaterial3D_kwd4c"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 69,
+"vertex_data": PackedByteArray("AAB1uF6ALQ65Ef//xvVAJnoLdbgt+zkSjwf///WGjx16CxA/Lfs0EWkEAADEhA4iFA8AAEn2USMAABA/XoCfDPApAACZXJMoNCJ1uM5byhKPB///9YZhLg0r//8rW6clNCIQP85b4hDBBwAAHjXZGiUDdbjwN1sJMwn//wM0CxwFEHW4IxaECqQS//9xG7MgJQMQP/A3kwgFEBA/IxaoCmwRAACAGx8g//91uLE6Hr6O9P//cB5i2S35dbiUGT7ey/n//7o3Jsst+RA/lBkI4ODzdbjOW87B2uz//ydb4s3//xA/sTp1vLL8AAC/M53KsvgAAJYf79QP7gAAu1sIzuDzED/OW13BYvoAAOeAP8///3W4XoBgxcn4//8uf3fQovR1uC37AKi97f//9PUWxP//ED9egI/FovQQPy37YqeE7wAAWfaCw/FKdbhoCdD3pBL//3EbQe4FEHW4Ixak5DhM//8ADw35BRAQPyMWJuU7hXW4AAC//giF///VBez+Lfl1uJQZsOGO9P//cB7U7vFKED9oCfr3O4UQPwAAm/4t+RA/lBkK47L4AACWHxLoWIQAAOEFTP/YRwAAqw/I+GwRAACAG/jsDoB1uP//eXC97f//9PUMTaL0dbgt+39c7Hz//4T6w1Ci9BA/LfsGXXoLdbgt+/NcuRH//8b13kwOgBA///8ocHoLED8t+/JdFA8AAEn2GUwOgAAA9PpnUITvAABZ9n9M8PUHRcDgACfd9Noj0t1kL5xcqnXsR4tlulfIYlk66HYlULRbe+6nN6Lt+0Rk2YsrkkhMb3JQc2K28yY0e+F9L33yIVI14xM/RkvQdMEtJXLmQD1koqRAE9TCQyJnoBMTg8dGJCxtSx+yqGsU1MwTJ/pthSHgYFY/s2FxPKdZJUwLbJ4nqF5bRvqjNxHHxigh8rtdFd/S4yS/b0oi9mqNO3Nbg1Ehghnpu36EzKB97ecIhenJD5jC/eWUUgBsssYA5mRpA4VLygDfZ8/9kX92FsSC3hhehRY2a3+NM/dIpvoTtN79u/5XfgLhKWsZsFA/Qf4NgbtBXi+cvlbQJOqhoAAA/39YUhHE7SflmQAA/396Fv1d")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ux0w8"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_ux0w8")
+shader_parameter/Texture0 = ExtResource("2_gpqy8")
+shader_parameter/Texture0_Mask = Vector2(64, 64)
+shader_parameter/Texture0_Scale = Vector2(1, 1)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = false
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/cc0_color_a = 1
+shader_parameter/cc0_color_b = 7
+shader_parameter/cc0_color_c = 4
+shader_parameter/cc0_color_d = 7
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/alpha_clip = 0.0
+shader_parameter/atlas_region_0 = Vector2i(64, 64)
+shader_parameter/atlas_offset_0 = Vector2i(1, 6)
+shader_parameter/atlas_seam_hiding = 0
+shader_parameter/atlas_seam_zoom = 0.0
+shader_parameter/use_vertex_color = false
+shader_parameter/use_vertex_alpha = false
+shader_parameter/shade_color = Color(1, 1, 1, 1)
+shader_parameter/use_material_ambient = true
+shader_parameter/material_ambient = Color(0.044485524, 0.014938198, 0.0044290246, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/direct_light_additive_mix = 0.1150000054625
+shader_parameter/light_count = 1
+shader_parameter/light_vector_type = PackedVector4Array(0.9080706, 0, -0.4188171, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(0.8, 0.9, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_spot_direction_inner = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1)
+shader_parameter/light_spot_outer_cos = PackedFloat32Array(-1, -1, -1, -1, -1, -1, -1, -1)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_l225u"]
+load_path = "res://.godot/imported/toast.png-1c2cc9ad787a293348c4c1d260114dff.s3tc.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gpqy8"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_ux0w8")
+shader_parameter/Texture0 = SubResource("CompressedTexture2D_l225u")
+shader_parameter/Texture0_Mask = Vector2(96, 32)
+shader_parameter/Texture0_Scale = Vector2(1, 2)
+shader_parameter/Texture0_Offset = Vector2(0, 0)
+shader_parameter/Texture0_ClampX = false
+shader_parameter/Texture0_ClampY = false
+shader_parameter/Texture0_MirrorX = true
+shader_parameter/Texture0_MirrorY = false
+shader_parameter/cc0_color_a = 1
+shader_parameter/cc0_color_b = 7
+shader_parameter/cc0_color_c = 4
+shader_parameter/cc0_color_d = 7
+shader_parameter/cc0_alpha_a = 7
+shader_parameter/cc0_alpha_b = 7
+shader_parameter/cc0_alpha_c = 8
+shader_parameter/cc0_alpha_d = 5
+shader_parameter/material_prim_r = 1.0
+shader_parameter/material_prim_g = 1.0
+shader_parameter/material_prim_b = 1.0
+shader_parameter/material_prim_a = 1.0
+shader_parameter/alpha_clip = 0.0
+shader_parameter/atlas_region_0 = Vector2i(96, 32)
+shader_parameter/atlas_offset_0 = Vector2i(0, 64)
+shader_parameter/atlas_seam_hiding = 0
+shader_parameter/atlas_seam_zoom = 0.0
+shader_parameter/use_vertex_color = false
+shader_parameter/use_vertex_alpha = false
+shader_parameter/shade_color = Color(1, 1, 1, 1)
+shader_parameter/use_material_ambient = true
+shader_parameter/material_ambient = Color(0, 0, 0, 1)
+shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
+shader_parameter/direct_light_additive_mix = 0.1150000054625
+shader_parameter/light_count = 1
+shader_parameter/light_vector_type = PackedVector4Array(0.9080706, 0, -0.4188171, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(0.8, 0.9, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_spot_direction_inner = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_range = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_attenuation = PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1)
+shader_parameter/light_spot_outer_cos = PackedFloat32Array(-1, -1, -1, -1, -1, -1, -1, -1)
+
+[sub_resource type="Animation" id="Animation_5wc1p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("N64DirectionalLight3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.49309048, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_w61c3"]
+resource_name = "light"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("N64DirectionalLight3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0.49309048, 0), Vector3(0, 5.503023, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_c43wa"]
+_data = {
+&"RESET": SubResource("Animation_5wc1p"),
+&"light": SubResource("Animation_w61c3")
+}
+
+[node name="Node3D" type="N64VertexLightManager3D" unique_id=1190463607]
+
+[node name="Toast" type="N64LitMeshInstance3D" parent="." unique_id=434678788]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+gi_mode = 0
+mesh = SubResource("ArrayMesh_k62av")
+surface_material_override/0 = SubResource("ShaderMaterial_ux0w8")
+surface_material_override/1 = SubResource("ShaderMaterial_gpqy8")
+
+[node name="N64DirectionalLight3D" type="N64DirectionalLight3D" parent="." unique_id=1467221968]
+transform = Transform3D(0.8808742, 0, 0.47335047, 0, 1, 0, -0.47335047, 0, 0.8808742, 0, 0, 0.6171721)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=848295101]
+libraries/ = SubResource("AnimationLibrary_c43wa")
+autoplay = &"light"

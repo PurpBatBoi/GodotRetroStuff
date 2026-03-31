@@ -12,6 +12,7 @@
 #include "n64_light_gizmo_plugin.h"
 #include "n64_lit_mesh_instance_3d.h"
 #include "n64_point_light_3d.h"
+#include "n64_spot_light_3d.h"
 #include "n64_vertex_light_manager_3d.h"
 
 using namespace godot;
@@ -23,6 +24,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 		GDREGISTER_CLASS(N64VertexLightManager3D);
 		GDREGISTER_CLASS(N64PointLight3D);
 		GDREGISTER_CLASS(N64DirectionalLight3D);
+		GDREGISTER_CLASS(N64SpotLight3D);
 		GDREGISTER_CLASS(N64LitMeshInstance3D);
 		return;
 	}
@@ -30,13 +32,11 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
 		GDREGISTER_CLASS(N64LightGizmoPlugin);
 		GDREGISTER_CLASS(N64EditorPlugin);
-		EditorPlugins::add_by_type<N64EditorPlugin>();
 	}
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {
 	if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
-		EditorPlugins::remove_by_type<N64EditorPlugin>();
 	}
 }
 

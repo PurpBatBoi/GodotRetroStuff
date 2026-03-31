@@ -14,6 +14,7 @@ namespace godot {
 class N64DirectionalLight3D;
 class N64LitMeshInstance3D;
 class N64PointLight3D;
+class N64SpotLight3D;
 
 class N64VertexLightManager3D : public Node3D {
 	GDCLASS(N64VertexLightManager3D, Node3D)
@@ -26,11 +27,13 @@ class N64VertexLightManager3D : public Node3D {
 	bool lights_dirty = true;
 
 	Vector<N64PointLight3D *> point_lights;
+	Vector<N64SpotLight3D *> spot_lights;
 	Vector<N64DirectionalLight3D *> directional_lights;
 	Vector<N64LitMeshInstance3D *> lit_meshes;
 	HashSet<N64LitMeshInstance3D *> dirty_meshes;
 
 	static bool _remove_point_light(Vector<N64PointLight3D *> &p_lights, N64PointLight3D *p_light);
+	static bool _remove_spot_light(Vector<N64SpotLight3D *> &p_lights, N64SpotLight3D *p_light);
 	static bool _remove_directional_light(Vector<N64DirectionalLight3D *> &p_lights, N64DirectionalLight3D *p_light);
 	static bool _remove_lit_mesh(Vector<N64LitMeshInstance3D *> &p_meshes, N64LitMeshInstance3D *p_mesh);
 
@@ -58,6 +61,8 @@ public:
 
 	void register_point_light(N64PointLight3D *p_light);
 	void unregister_point_light(N64PointLight3D *p_light);
+	void register_spot_light(N64SpotLight3D *p_light);
+	void unregister_spot_light(N64SpotLight3D *p_light);
 	void register_directional_light(N64DirectionalLight3D *p_light);
 	void unregister_directional_light(N64DirectionalLight3D *p_light);
 	void register_lit_mesh(N64LitMeshInstance3D *p_mesh);

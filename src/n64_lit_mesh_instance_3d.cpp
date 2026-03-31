@@ -29,6 +29,7 @@ N64LitMeshInstance3D::N64LitMeshInstance3D() {
 }
 
 void N64LitMeshInstance3D::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("is_ignoring_fake_point_lights"), &N64LitMeshInstance3D::is_ignoring_fake_point_lights);
 }
 
 void N64LitMeshInstance3D::_notification(int p_what) {
@@ -36,6 +37,7 @@ void N64LitMeshInstance3D::_notification(int p_what) {
 		case Node::NOTIFICATION_ENTER_TREE:
 			set_process_internal(true);
 			_sync_runtime_shader_material();
+			cached_ignore_fake_point_lights = _compute_ignore_fake_point_lights();
 			_reconnect_manager();
 			notify_runtime_material_changed();
 			break;
@@ -49,6 +51,7 @@ void N64LitMeshInstance3D::_notification(int p_what) {
 			runtime_surface_shader_materials.clear();
 			last_material_instance_id = 0;
 			last_surface_material_instance_ids.clear();
+			cached_ignore_fake_point_lights = false;
 			clear_cached_light_state();
 			break;
 		case Node::NOTIFICATION_PARENTED:
@@ -62,7 +65,14 @@ void N64LitMeshInstance3D::_notification(int p_what) {
 			break;
 		case Node::NOTIFICATION_INTERNAL_PROCESS:
 			if (_sync_runtime_shader_material()) {
+				cached_ignore_fake_point_lights = _compute_ignore_fake_point_lights();
 				notify_runtime_material_changed();
+			} else {
+				const bool ignore_fake_point_lights = _compute_ignore_fake_point_lights();
+				if (ignore_fake_point_lights != cached_ignore_fake_point_lights) {
+					cached_ignore_fake_point_lights = ignore_fake_point_lights;
+					notify_runtime_material_changed();
+				}
 			}
 			break;
 		case Node3D::NOTIFICATION_TRANSFORM_CHANGED:
@@ -83,12 +93,18 @@ const Vector<Ref<ShaderMaterial>> &N64LitMeshInstance3D::get_runtime_surface_sha
 	return runtime_surface_shader_materials;
 }
 
-bool N64LitMeshInstance3D::update_cached_light_state(int32_t p_light_count, const PackedVector4Array &p_light_vector_type, const PackedVector4Array &p_light_color_energy, const PackedFloat32Array &p_light_range, const PackedFloat32Array &p_light_attenuation, const Vector4 &p_global_ambient) {
+bool N64LitMeshInstance3D::is_ignoring_fake_point_lights() const {
+	return cached_ignore_fake_point_lights;
+}
+
+bool N64LitMeshInstance3D::update_cached_light_state(int32_t p_light_count, const PackedVector4Array &p_light_vector_type, const PackedVector4Array &p_light_color_energy, const PackedVector4Array &p_light_spot_direction_inner, const PackedFloat32Array &p_light_range, const PackedFloat32Array &p_light_attenuation, const PackedFloat32Array &p_light_spot_outer_cos, const Vector4 &p_global_ambient) {
 	if (cached_light_count == p_light_count &&
 			cached_light_vector_type == p_light_vector_type &&
 			cached_light_color_energy == p_light_color_energy &&
+			cached_light_spot_direction_inner == p_light_spot_direction_inner &&
 			cached_light_range == p_light_range &&
 			cached_light_attenuation == p_light_attenuation &&
+			cached_light_spot_outer_cos == p_light_spot_outer_cos &&
 			cached_global_ambient == p_global_ambient) {
 		return false;
 	}
@@ -96,8 +112,10 @@ bool N64LitMeshInstance3D::update_cached_light_state(int32_t p_light_count, cons
 	cached_light_count = p_light_count;
 	cached_light_vector_type = p_light_vector_type;
 	cached_light_color_energy = p_light_color_energy;
+	cached_light_spot_direction_inner = p_light_spot_direction_inner;
 	cached_light_range = p_light_range;
 	cached_light_attenuation = p_light_attenuation;
+	cached_light_spot_outer_cos = p_light_spot_outer_cos;
 	cached_global_ambient = p_global_ambient;
 	return true;
 }
@@ -106,8 +124,10 @@ void N64LitMeshInstance3D::clear_cached_light_state() {
 	cached_light_count = -1;
 	cached_light_vector_type.clear();
 	cached_light_color_energy.clear();
+	cached_light_spot_direction_inner.clear();
 	cached_light_range.clear();
 	cached_light_attenuation.clear();
+	cached_light_spot_outer_cos.clear();
 	cached_global_ambient = Vector4();
 }
 
@@ -217,4 +237,28 @@ bool N64LitMeshInstance3D::_sync_surface_shader_materials() {
 	}
 
 	return true;
+}
+
+bool N64LitMeshInstance3D::_compute_ignore_fake_point_lights() const {
+	static const StringName IGNORE_FAKE_POINT_LIGHTS = StringName("ignore_fake_point_lights");
+
+	if (runtime_shader_material.is_valid()) {
+		const Variant value = runtime_shader_material->get_shader_parameter(IGNORE_FAKE_POINT_LIGHTS);
+		if (value.get_type() == Variant::BOOL && static_cast<bool>(value)) {
+			return true;
+		}
+	}
+
+	for (const Ref<ShaderMaterial> &material : runtime_surface_shader_materials) {
+		if (material.is_null()) {
+			continue;
+		}
+
+		const Variant value = material->get_shader_parameter(IGNORE_FAKE_POINT_LIGHTS);
+		if (value.get_type() == Variant::BOOL && static_cast<bool>(value)) {
+			return true;
+		}
+	}
+
+	return false;
 }
