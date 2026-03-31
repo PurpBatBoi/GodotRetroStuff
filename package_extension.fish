@@ -79,8 +79,6 @@ copy_if_exists "$source_bin/linux/librlsvisuals.linux.template_release.x86_64.so
 copy_if_exists "$source_bin/windows/librlsvisuals.windows.template_debug.x86_64.dll" "$package_root/bin/windows/librlsvisuals.windows.template_debug.x86_64.dll"
 copy_if_exists "$source_bin/windows/librlsvisuals.windows.template_release.x86_64.dll" "$package_root/bin/windows/librlsvisuals.windows.template_release.x86_64.dll"
 
-copy_if_exists "$source_bin/web/librlsvisuals.web.template_debug.wasm32.wasm" "$package_root/bin/web/librlsvisuals.web.template_debug.wasm32.wasm"
-copy_if_exists "$source_bin/web/librlsvisuals.web.template_release.wasm32.wasm" "$package_root/bin/web/librlsvisuals.web.template_release.wasm32.wasm"
 copy_if_exists "$source_bin/web/librlsvisuals.web.template_debug.wasm32.nothreads.wasm" "$package_root/bin/web/librlsvisuals.web.template_debug.wasm32.nothreads.wasm"
 copy_if_exists "$source_bin/web/librlsvisuals.web.template_release.wasm32.nothreads.wasm" "$package_root/bin/web/librlsvisuals.web.template_release.wasm32.nothreads.wasm"
 
@@ -96,9 +94,7 @@ set gdextension_lines \
     'linux.debug.x86_64 = "./bin/linux/librlsvisuals.linux.template_debug.x86_64.so"' \
     'linux.release.x86_64 = "./bin/linux/librlsvisuals.linux.template_release.x86_64.so"' \
     'windows.debug.x86_64 = "./bin/windows/librlsvisuals.windows.template_debug.x86_64.dll"' \
-    'windows.release.x86_64 = "./bin/windows/librlsvisuals.windows.template_release.x86_64.dll"' \
-    'web.debug.threads.wasm32 = "./bin/web/librlsvisuals.web.template_debug.wasm32.wasm"' \
-    'web.release.threads.wasm32 = "./bin/web/librlsvisuals.web.template_release.wasm32.wasm"'
+    'windows.release.x86_64 = "./bin/windows/librlsvisuals.windows.template_release.x86_64.dll"'
 
 if test -f "$package_root/bin/web/librlsvisuals.web.template_debug.wasm32.nothreads.wasm"
     set gdextension_lines $gdextension_lines 'web.debug.wasm32 = "./bin/web/librlsvisuals.web.template_debug.wasm32.nothreads.wasm"'
