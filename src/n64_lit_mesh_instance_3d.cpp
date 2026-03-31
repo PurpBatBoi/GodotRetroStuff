@@ -2,6 +2,7 @@
 
 #include "n64_vertex_light_manager_3d.h"
 
+#include <godot_cpp/classes/mesh.hpp>
 #include <godot_cpp/classes/material.hpp>
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -29,7 +30,6 @@ N64LitMeshInstance3D::N64LitMeshInstance3D() {
 }
 
 void N64LitMeshInstance3D::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("is_ignoring_fake_point_lights"), &N64LitMeshInstance3D::is_ignoring_fake_point_lights);
 }
 
 void N64LitMeshInstance3D::_notification(int p_what) {
@@ -196,30 +196,55 @@ bool N64LitMeshInstance3D::_sync_runtime_shader_material() {
 }
 
 bool N64LitMeshInstance3D::_sync_surface_shader_materials() {
-	const int32_t surface_count = get_surface_override_material_count();
-	Vector<uint64_t> current_surface_material_ids;
-	current_surface_material_ids.resize(surface_count);
+	const Ref<Mesh> mesh = get_mesh();
+	const int32_t mesh_surface_count = mesh.is_valid() ? mesh->get_surface_count() : 0;
+	const int32_t override_surface_count = get_surface_override_material_count();
+	const int32_t surface_count = MAX(mesh_surface_count, override_surface_count);
+
+	Vector<uint64_t> observed_surface_material_ids;
+	observed_surface_material_ids.resize(surface_count);
 
 	for (int32_t i = 0; i < surface_count; i++) {
-		Ref<Material> material = get_surface_override_material(i);
-		current_surface_material_ids.set(i, material.is_valid() ? material->get_instance_id() : 0);
+		Ref<Material> material;
+		if (i < override_surface_count) {
+			material = get_surface_override_material(i);
+		}
+		if (material.is_null() && mesh.is_valid() && i < mesh_surface_count) {
+			material = mesh->surface_get_material(i);
+		}
+
+		observed_surface_material_ids.set(i, material.is_valid() ? material->get_instance_id() : 0);
 	}
 
-	if (current_surface_material_ids == last_surface_material_instance_ids) {
+	if (observed_surface_material_ids == last_surface_material_instance_ids) {
 		return false;
 	}
 
-	last_surface_material_instance_ids = current_surface_material_ids;
 	runtime_surface_shader_materials.clear();
+	runtime_surface_shader_materials.resize(surface_count);
+	Vector<uint64_t> synced_surface_material_ids;
+	synced_surface_material_ids.resize(surface_count);
 
+	// Surface lighting should work no matter where the shader material was
+	// authored. Mesh-surface materials get duplicated into per-instance surface
+	// overrides here, which makes them behave like explicit overrides afterward.
 	for (int32_t i = 0; i < surface_count; i++) {
-		Ref<Material> material = get_surface_override_material(i);
+		Ref<Material> material;
+		if (i < override_surface_count) {
+			material = get_surface_override_material(i);
+		}
+		if (material.is_null() && mesh.is_valid() && i < mesh_surface_count) {
+			material = mesh->surface_get_material(i);
+		}
+
 		if (material.is_null()) {
+			synced_surface_material_ids.set(i, 0);
 			continue;
 		}
 
 		Ref<ShaderMaterial> shader_material = material;
 		if (shader_material.is_null()) {
+			synced_surface_material_ids.set(i, material->get_instance_id());
 			continue;
 		}
 
@@ -232,10 +257,11 @@ bool N64LitMeshInstance3D::_sync_surface_shader_materials() {
 		unique_material->set_local_to_scene(true);
 
 		set_surface_override_material(i, unique_material);
-		runtime_surface_shader_materials.push_back(unique_material);
-		last_surface_material_instance_ids.set(i, unique_material->get_instance_id());
+		runtime_surface_shader_materials.set(i, unique_material);
+		synced_surface_material_ids.set(i, unique_material->get_instance_id());
 	}
 
+	last_surface_material_instance_ids = synced_surface_material_ids;
 	return true;
 }
 

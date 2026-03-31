@@ -35,8 +35,19 @@ struct LocalLightCandidate {
 	Type type = Type::POINT;
 	N64PointLight3D *point_light = nullptr;
 	N64SpotLight3D *spot_light = nullptr;
+	float contribution_score = 0.0f;
 	float distance_squared = 0.0f;
 };
+
+float compute_light_color_intensity(const Color &p_color) {
+	return (p_color.r * 0.2126f) + (p_color.g * 0.7152f) + (p_color.b * 0.0722f);
+}
+
+float compute_distance_attenuation(float p_distance, float p_range, float p_exponent) {
+	const float range = MAX(p_range, 0.0001f);
+	const float exponent = p_exponent > 0.0f ? p_exponent : 1.0f;
+	return Math::pow(1.0f - Math::smoothstep(0.0f, range, p_distance), exponent);
+}
 
 } // namespace
 
@@ -290,6 +301,12 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 			candidate.type = LocalLightCandidate::Type::POINT;
 			candidate.point_light = light;
 			candidate.distance_squared = mesh_origin.distance_squared_to(light->get_global_transform().origin);
+			const float distance = Math::sqrt(candidate.distance_squared);
+			const float attenuation = compute_distance_attenuation(distance, light->get_range(), light->get_attenuation());
+			candidate.contribution_score = compute_light_color_intensity(light->get_color()) * light->get_energy() * attenuation;
+			if (candidate.contribution_score <= static_cast<float>(CMP_EPSILON)) {
+				continue;
+			}
 			local_candidates.push_back(candidate);
 		}
 
@@ -302,10 +319,45 @@ void N64VertexLightManager3D::_apply_mesh_lighting(N64LitMeshInstance3D *p_mesh)
 			candidate.type = LocalLightCandidate::Type::SPOT;
 			candidate.spot_light = light;
 			candidate.distance_squared = mesh_origin.distance_squared_to(light->get_global_transform().origin);
+			const float distance = Math::sqrt(candidate.distance_squared);
+			const float attenuation = compute_distance_attenuation(distance, light->get_range(), light->get_attenuation());
+			if (attenuation <= static_cast<float>(CMP_EPSILON)) {
+				continue;
+			}
+
+			const Vector3 to_light = light->get_global_transform().origin - mesh_origin;
+			if (to_light.length_squared() <= static_cast<float>(CMP_EPSILON * CMP_EPSILON)) {
+				continue;
+			}
+
+			const Vector3 light_dir = to_light.normalized();
+			const Vector3 spot_dir = light->get_light_direction().normalized();
+			const float outer_angle_radians = Math::deg_to_rad(light->get_spot_angle());
+			const float inner_angle_radians = outer_angle_radians * (1.0f - light->get_spot_blend());
+			const float inner_cos = Math::cos(inner_angle_radians);
+			const float outer_cos = Math::cos(outer_angle_radians);
+			const float cone_dot = spot_dir.dot(-light_dir);
+
+			float cone_attenuation = 0.0f;
+			if (inner_cos <= outer_cos + 0.0001f) {
+				cone_attenuation = cone_dot >= outer_cos ? 1.0f : 0.0f;
+			} else {
+				cone_attenuation = Math::smoothstep(outer_cos, inner_cos, cone_dot);
+			}
+
+			candidate.contribution_score = compute_light_color_intensity(light->get_color()) * light->get_energy() * attenuation * cone_attenuation;
+			if (candidate.contribution_score <= static_cast<float>(CMP_EPSILON)) {
+				continue;
+			}
 			local_candidates.push_back(candidate);
 		}
 
+		// Rank by estimated influence at the mesh origin so closer but fully
+		// culled lights do not steal one of the limited local-light slots.
 		std::sort(local_candidates.begin(), local_candidates.end(), [](const LocalLightCandidate &p_a, const LocalLightCandidate &p_b) {
+			if (!Math::is_equal_approx(p_a.contribution_score, p_b.contribution_score)) {
+				return p_a.contribution_score > p_b.contribution_score;
+			}
 			return p_a.distance_squared < p_b.distance_squared;
 		});
 

@@ -69,8 +69,8 @@ shader_parameter/global_ambient = Color(0.12, 0.12, 0.16, 1)
 shader_parameter/direct_light_additive_mix = 0.50000002375
 shader_parameter/ignore_fake_point_lights = false
 shader_parameter/light_count = 1
-shader_parameter/light_vector_type = PackedVector4Array(0.67181253, -0.3878547, -0.63105994, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-shader_parameter/light_color_energy = PackedVector4Array(1, 0.3, 0, 1.3342155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_vector_type = PackedVector4Array(0.4166567, -0.8458354, -0.33310625, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/light_color_energy = PackedVector4Array(1, 0.3777947, 0.18478355, 2.1564808, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 shader_parameter/light_spot_direction_inner = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 shader_parameter/light_range = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0)
 shader_parameter/light_attenuation = PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1)
@@ -115,13 +115,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33, 0, 33)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 0, 33)
 
 [node name="N64PointLight3D" type="N64PointLight3D" parent="." unique_id=1070815038]
-color = Color(1, 0.3, 0, 1)
-energy = 9.15
-range = 6.8654137
+color = Color(1, 0.3777947, 0.18478355, 1)
+energy = 5.85
+range = 5.8885927
 fake_point_light = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2847447, 3.8569922, -5.0888753)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2261238, 3.3018246, -2.9531791)
 
 [node name="MeshInstance3D" type="N64LitMeshInstance3D" parent="." unique_id=1596180450]
-transform = Transform3D(1.765, 0, 0, 0, 1.765, 0, 0, 0, 1.765, 1.7822144, 5.879093, -1.7988108)
+transform = Transform3D(1.765, 0, 0, 0, 1.765, 0, 0, 0, 1.765, 1.7822144, 6.233038, -1.7988108)
 mesh = SubResource("SphereMesh_ksc5k")
 surface_material_override/0 = SubResource("ShaderMaterial_f7iwt")

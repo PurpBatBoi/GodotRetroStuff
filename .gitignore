@@ -32,6 +32,8 @@ build_profile.json
 # Build and Export
 build/
 /bin/
+/packaged/
+*.zip
 
 # Python
 __pycache__/
